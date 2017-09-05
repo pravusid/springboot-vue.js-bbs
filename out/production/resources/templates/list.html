@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="includes :: header"></head>
+
+<body>
+
+<div th:replace="includes :: navi"></div>
+
+<div class="container">
+  <div class="row">
+    <h1>회원 목록</h1>
+  </div>
+  <div class="row">
+    <table>
+      <thead>
+      <tr>
+        <th>아이디</th>
+        <th>이름</th>
+        <th>이메일</th>
+        <th>수정하기</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr data-th-each="data : ${list}">
+        <td th:text="${data.userId}"></td>
+        <td th:text="${data.name}"></td>
+        <td th:text="${data.email}"></td>
+        <td>
+          <a th:href="|/user/${data.id}|"><button class="btn">정보수정</button></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div th:replace="includes :: footer"></div>
+
+</body>
+</html>

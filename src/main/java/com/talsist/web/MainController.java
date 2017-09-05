@@ -8,15 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MainController {
 
     @GetMapping("/")
-    public @ResponseBody
-    String mainPage() {
-        return "Hello World!";
-    }
-
-    @GetMapping("/test")
-    public @ResponseBody
-    String test() {
-        return "여기는 한글 TEST";
+    public @ResponseBody String mainPage() {
+        return "index";
     }
 
 }

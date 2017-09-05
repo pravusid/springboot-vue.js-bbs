@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header">
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+</head>
+
+<body>
+
+  <nav th:fragment="navi">
+    <div class="nav-wrapper">
+      <a href="/" class="brand-logo">IDPRAVUS</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="/signup">회원 가입</a></li>
+        <li><a href="/user">회원 목록</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div th:fragment="footer">
+
+  </div>
+
+</body>
+
+</html>
