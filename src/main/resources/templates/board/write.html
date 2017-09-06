@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="includes :: header"></head>
+
+<body>
+
+  <div th:replace="includes :: navi"></div>
+
+  <div class="container">
+    <div class="row">
+      <h1>게시물 작성</h1>
+    </div>
+    <form method="post" action="/board">
+    <div class="row">
+      <div class="input-field">
+        <i class="material-icons prefix">account_circle</i>
+        <input id="name" name="userId" type="text" class="validate" th:value="${session.user.userId}" disabled>
+        <label for="name">작성자</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <i class="material-icons prefix">account_circle</i>
+        <input id="title" name="title" type="text" class="validate">
+        <label for="title">제목</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <i class="material-icons prefix">mode_edit</i>
+        <textarea id="content" name="content" class="materialize-textarea"></textarea>
+        <label for="content">내용</label>
+      </div>
+    </div>
+    <div class="row center">
+      <button class="btn" type="submit">작성 완료</button>
+      <a class="btn grey" href="/board">취소</a>
+    </div>
+    </form>
+  </div>
+
+  <div th:replace="includes :: footer"></div>
+
+</body>
+</html>

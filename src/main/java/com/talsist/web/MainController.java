@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MainController {
 
     @GetMapping("/")
-    public @ResponseBody String mainPage() {
-        return "index";
+    public String mainPage() {
+        return "redirect:/board";
     }
 
 }

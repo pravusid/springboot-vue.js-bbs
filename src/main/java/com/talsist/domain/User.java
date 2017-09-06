@@ -1,24 +1,17 @@
 package com.talsist.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 @Entity
-public class User {
+public class User extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 입력값이 없어도 증가된 값을 자동으로 넣어줌
-    private Long id;
-
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String userId;
 
     private String password;
     private String name;
     private String email;
-
-    public Long getId() {
-        return id;
-    }
 
     public String getUserId() {
         return userId;
@@ -26,10 +19,6 @@ public class User {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
@@ -58,8 +47,17 @@ public class User {
         this.email = newUser.email;
     }
 
+    public boolean verifyId(Long reqId) {
+        return reqId.equals(getId());
+    }
+
+    public boolean verifyPassword(User reqUser) {
+        return reqUser.password.equals(password);
+    }
+
     @Override
     public String toString() {
-        return userId + password + name + email;
+        return super.toString() + userId + name + email;
     }
+
 }

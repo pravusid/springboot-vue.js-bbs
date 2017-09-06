@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="includes :: header"></head>
+
+<body>
+
+  <div th:replace="includes :: navi"></div>
+
+  <div class="container">
+    <div class="section">
+      <h3 th:text="${detail.title}">제목</h3>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <h5>작성자: <span th:text="${detail.user.name}"></span></h5>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <p th:text="${detail.content}"></p>
+    </div>
+    <div class="row right-align">
+      <a class="btn" th:href="|/board/${detail.id}/modify?page=${page}|"
+        th:if="${session.user != null && session.user.id == detail.user.id}">게시물 수정</a>
+      <a class="btn grey" th:href="|/board?page=${page}|">목록</a>
+    </div>
+    <div class="divider"></div>
+    
+    <div class="section">
+      <h5>댓글</h5>
+      
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">작성자&nbsp;<small>2017.09.06 12:22</small></span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action right-align">
+              <a href="#">대댓글</a>
+              <a href="#">수정</a>
+              <a href="#">삭제</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="section row">
+        <textarea class="materialize-textarea col s10"></textarea>
+        <button class="btn col s2">댓글작성</button> 
+    </div>
+  </div>
+
+  <div th:replace="includes :: footer"></div>
+
+</body>
+</html>

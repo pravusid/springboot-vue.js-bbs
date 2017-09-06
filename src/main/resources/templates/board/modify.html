@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="includes :: header"></head>
+
+<body>
+
+  <div th:replace="includes :: navi"></div>
+
+  <div class="container">
+    <div class="row">
+      <h1>게시물 수정</h1>
+    </div>
+    <form method="post" action="/board">
+    <input type="hidden" name="_method" value="put">
+    <input type="hidden" name="id" th:value="${detail.id}">
+    <input type="hidden" name="page" th:value="${page}">
+    <div class="row">
+      <div class="input-field">
+        <i class="material-icons prefix">account_circle</i>
+        <input id="name" type="text" class="validate" th:value="${detail.user.name}" disabled>
+        <label for="name">작성자</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <i class="material-icons prefix">account_circle</i>
+        <input id="title" name="title" type="text" class="validate" th:value="${detail.title}">
+        <label for="title">제목</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <i class="material-icons prefix">mode_edit</i>
+        <textarea id="content" name="content" class="materialize-textarea" th:text="${detail.content}"></textarea>
+        <label for="content">내용</label>
+      </div>
+    </div>
+    <div class="row center">
+      <button class="btn" type="submit">수정하기</button>
+      <a class="btn grey" th:href="|/board/${detail.id}?page=${page}|">취소</a>
+    </div>
+    </form>
+  </div>
+
+  <div th:replace="includes :: footer"></div>
+
+</body>
+</html>

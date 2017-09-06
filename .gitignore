@@ -17,4 +17,5 @@
 *.ipr
 
 bin/
+out/
 application.properties
