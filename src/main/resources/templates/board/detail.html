@@ -19,41 +19,62 @@
       <p th:text="${detail.content}"></p>
     </div>
     <div class="row right-align">
-      <a class="btn" th:href="|/board/${detail.id}/modify?page=${page}|"
-        th:if="${session.user != null && session.user.id == detail.user.id}">게시물 수정</a>
+      <th:block th:if="${session.user != null && session.user.id == detail.user.id}">
+        <a class="btn" th:href="|/board/${detail.id}/modify?page=${page}|">수정</a>
+        <button id="deleteBtn" class="btn red" th:value="${detail.id}">삭제</button>
+      </th:block>
       <a class="btn grey" th:href="|/board?page=${page}|">목록</a>
     </div>
     <div class="divider"></div>
     
-    <div class="section">
-      <h5>댓글</h5>
-      
-      <div class="row">
-        <div class="col s12">
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">작성자&nbsp;<small>2017.09.06 12:22</small></span>
-              <p>I am a very simple card. I am good at containing small bits of information.
-              I am convenient because I require little markup to use effectively.</p>
-            </div>
-            <div class="card-action right-align">
-              <a href="#">대댓글</a>
-              <a href="#">수정</a>
-              <a href="#">삭제</a>
+    <div id="comment" class="section">
+      <h5>댓글&nbsp;<small>(<span th:text="${detail.numberOfComments}"></span>)</small></h5>
+     
+      <th:block th:each="comment : ${detail.comments}">
+        <form method="post" th:action="|/board/${detail.id}/comment|">
+        <input type="hidden" name="_method" value="delete">
+        <input type="hidden" name="id" th:value="${comment.id}">
+        <div class="row">
+          <div class="col s12">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                  <span th:text="${comment.user.name}"></span>&nbsp;
+                  <small th:text="${comment.regdate}"></small>
+                </span>
+                <p th:text="${comment.content}"></p>
+              </div>
+              <div class="card-action right-align">
+                <th:block th:if="${session.user!=null}">
+                  <a href="#">대댓글</a>
+                  <th:block th:if="${comment.user.id==session.user.id}">
+                    <a href="#">수정</a>
+                    <a href="#">삭제</a>
+                  </th:block>
+                </th:block>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        </form>
+      </th:block>
       
     </div>
     
     <div class="section row">
-        <textarea class="materialize-textarea col s10"></textarea>
-        <button class="btn col s2">댓글작성</button> 
+      <form method="post" th:action="|/board/${detail.id}/comment|">
+        <input type="hidden" name="page" th:value="${page}">
+        <textarea class="materialize-textarea col s10" name="content"
+            th:placeholder="${session.user!=null}? '댓글을 입력하세요': '로그인 후 댓글작성 가능합니다'"
+            th:disabled="${session.user==null}"></textarea>
+        <button class="btn col s2" th:disabled="${session.user==null}">댓글작성</button>
+      </form> 
     </div>
+    
   </div>
 
   <div th:replace="includes :: footer"></div>
-
+  <script src="/js/detail.js"></script>
+  
 </body>
 </html>

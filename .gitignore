@@ -19,3 +19,4 @@
 bin/
 out/
 application.properties
+.tern-project

@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.talsist.domain.Board;
 import com.talsist.domain.BoardRepository;
 import com.talsist.domain.User;
 import com.talsist.exception.NotAllowedException;
 import com.talsist.exception.NotLoggedInException;
+import com.talsist.service.BoardService;
 import com.talsist.util.HttpSessionUtils;
 import com.talsist.util.Pagination;
 
@@ -28,24 +31,22 @@ import com.talsist.util.Pagination;
 public class BoardController {
 
 	@Autowired
-	private BoardRepository boardRepo;
+	private BoardService boardSvc;
 
 	@GetMapping("/board")
-	public String findAll(
-			@PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable,
+	public String list(@PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable,
 			Pagination pagination, Model model) {
-		Page<Board> list = boardRepo.findAll(pageable);
+		Page<Board> list = boardSvc.findAll(pageable);
 		model.addAttribute("pagination", pagination.calcPage(list, 5));
 		model.addAttribute("list", list);
 		return "board/list";
 	}
 
 	@PostMapping("/board")
-	public String insert(Board board, HttpServletRequest request, HttpSession session) {
+	public String write(Board board, HttpServletRequest request, HttpSession session) {
 		try {
-			permissionCheck(session);
-			board.setUser(HttpSessionUtils.getSessionUser(session));
-			boardRepo.save(board);
+			HttpSessionUtils.loginCheck(session);
+			boardSvc.save(board, HttpSessionUtils.getSessionUser(session));
 			return "redirect:/board";
 
 		} catch (Exception e) {
@@ -54,12 +55,9 @@ public class BoardController {
 	}
 
 	@PutMapping("/board")
-	public String update(Long id, Board reqBoard, int page, HttpServletRequest request, HttpSession session) {
+	public String modify(Long id, Board reqBoard, int page, HttpServletRequest request, HttpSession session) {
 		try {
-			Board board = boardRepo.findOne(id);
-			permissionCheck(session, board);
-			board.Update(reqBoard);
-			boardRepo.save(board);
+			boardSvc.update(id, HttpSessionUtils.getSessionUser(session).getId(), reqBoard);
 			return "redirect:/board/" + id + "?page=" + page;
 
 		} catch (Exception e) {
@@ -68,24 +66,30 @@ public class BoardController {
 	}
 
 	@DeleteMapping("/board")
-	public String delete(Board board, HttpSession session) {
-		return "redirect:/board";
+	public @ResponseBody String delete(@RequestBody Long id, HttpSession session) {
+		try {
+			System.out.println("아이디는"+id);
+			boardSvc.delete(id, HttpSessionUtils.getSessionUser(session).getId());
+			
+		} catch (Exception e) {
+			return "게시물 삭제 중 오류발생";
+		}
+		return "/board";
 	}
 
 	@GetMapping("/board/{id}")
-	public String findOne(@PathVariable long id, int page, Model model) {
+	public String detail(@PathVariable Long id, int page, Model model) {
 		model.addAttribute("page", page);
-		model.addAttribute("detail", boardRepo.findOne(id));
+		model.addAttribute("detail", boardSvc.findOneAndHit(id));
 		return "board/detail";
 	}
 
 	@GetMapping("/board/{id}/modify")
 	public String modify(@PathVariable Long id, int page, HttpServletRequest request, HttpSession session, Model model) {
 		try {
-			Board board = boardRepo.findOne(id);
-			permissionCheck(session, board);
 			model.addAttribute("page", page);
-			model.addAttribute("detail", board);
+			model.addAttribute("detail",
+					boardSvc.findOneForMod(id, HttpSessionUtils.getSessionUser(session).getId()));
 			return "board/modify";
 
 		} catch (Exception e) {
@@ -96,24 +100,11 @@ public class BoardController {
 	@GetMapping("/board/write")
 	public String write(HttpServletRequest request, HttpSession session) {
 		try {
-			permissionCheck(session);
+			HttpSessionUtils.loginCheck(session);
 			return "board/write";
 		} catch (Exception e) {
 			return HttpSessionUtils.redirctToLoginPage(request, session);
 		}
 	}
 	
-	private void permissionCheck(HttpSession session) throws NotLoggedInException {
-		if (!HttpSessionUtils.isLogin(session)) {
-			throw new NotLoggedInException();
-		}
-	}
-
-	private void permissionCheck(HttpSession session, Board board) throws NotAllowedException {
-		User sessionUser = HttpSessionUtils.getSessionUser(session);
-		if (sessionUser == null || !board.verifyUser(sessionUser)) {
-			throw new NotAllowedException();
-		}
-	}
-
 }

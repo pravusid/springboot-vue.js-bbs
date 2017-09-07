@@ -1,11 +1,15 @@
 package com.talsist.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class Board extends AbstractEntity {
@@ -19,6 +23,12 @@ public class Board extends AbstractEntity {
     
     @Lob
     private String content;
+    
+    @OneToMany(mappedBy="board")
+    @OrderBy("id ASC")
+    private List<Comment> comments;
+    
+    private int hit;
     
 	public User getUser() {
 		return user;
@@ -44,13 +54,33 @@ public class Board extends AbstractEntity {
 		this.content = content;
 	}
 	
+	public List<Comment> getComments() {
+		return comments;
+	}
+	
+	public int getNumberOfComments() {
+		return comments.size();
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public int getHit() {
+		return hit;
+	}
+
+	public void increaseHit() {
+		this.hit += 1;
+	}
+
 	public void Update(Board reqBoard) {
 		this.title = reqBoard.title;
 		this.content = reqBoard.content;
 	}
 	
-	public boolean verifyUser(User reqUser) {
-		return this.user.equals(reqUser);
+	public boolean verifyUser(Long reqId) {
+		return this.user.verifyId(reqId);
 	}
 	
 }

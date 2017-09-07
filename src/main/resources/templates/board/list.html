@@ -14,19 +14,25 @@
     <div class="collection">
       <th:block th:each="data : ${list}">
         <a class="collection-item row" th:href="|/board/${data.id}?page=${list.number}|">
-          <span class="col s8 truncate" th:text="${data.title}">게시물</span>
-          <span class="col s2 center-align" th:text="${data.user.name}">작성자</span>
-          <span class="col s2 center-align" th:text="${data.regdate}">작성시각</span>
+          <span class="col s7">
+            <span th:text="${data.title}">게시물</span>&nbsp;
+            <span class="red-text" th:if="${data.numberOfComments!=0}">
+              [<span th:text="${data.numberOfComments}"></span>]
+            </span>
+          </span>
+          <small class="col s2 center-align" th:text="${data.user.name}">작성자</small>
+          <small class="col s2 center-align" th:text="${data.regdate}">작성시각</small>
+          <small class="col s1 center-align" th:text="${data.hit}">조회수</small>
         </a>
       </th:block>
     </div>
     
     <div class="row">
       <div class="col s6">
-        <a class="btn">검색</a>
+        <a class="waves-effect btn" href="#">검색</a>
       </div>
       <div class="col s6 right-align">
-        <a class="btn" href="/board/write">글쓰기</a>
+        <a class="waves-effect btn" href="/board/write">글쓰기</a>
       </div>
     </div>
     
