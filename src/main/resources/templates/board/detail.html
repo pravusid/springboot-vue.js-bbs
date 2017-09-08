@@ -40,7 +40,7 @@
                   <span th:text="${comment.user.name}"></span>&nbsp;
                   <small th:text="${comment.regdate}"></small>
                 </span>
-                <p th:text="${comment.content}">댓글</p>
+                <p th:utext="${comment.content}">댓글</p>
               </div>
                 <div class="card-action right-align">
                   <th:block th:if="${session.user!=null}">
