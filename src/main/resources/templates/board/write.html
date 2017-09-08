@@ -4,13 +4,13 @@
 
 <body>
 
-  <div th:replace="includes :: navi"></div>
+<div th:replace="includes :: navi"></div>
 
-  <div class="container">
-    <div class="row">
-      <h1>게시물 작성</h1>
-    </div>
-    <form method="post" action="/board">
+<div class="container">
+  <div class="row">
+    <h1>게시물 작성</h1>
+  </div>
+  <form method="post" action="/board">
     <div class="row">
       <div class="input-field">
         <i class="material-icons prefix">account_circle</i>
@@ -34,17 +34,17 @@
       <button class="btn" type="submit">작성 완료</button>
       <a class="btn grey" href="/board">취소</a>
     </div>
-    </form>
-  </div>
+  </form>
+</div>
 
-  <div th:replace="includes :: footer"></div>
-  <script src="/js/trumbowyg.min.js"></script>
-  <script type="text/javascript" src="/js/ko.min.js"></script>
-  <script>
-    $('#content').trumbowyg({
-        lang: 'ko'
-    });
-  </script>
+<div th:replace="includes :: footer"></div>
+<script src="/js/trumbowyg.min.js"></script>
+<script type="text/javascript" src="/js/ko.min.js"></script>
+<script>
+  $('#content').trumbowyg({
+    lang: 'ko'
+  });
+</script>
 
 </body>
 </html>

@@ -4,13 +4,13 @@
 
 <body>
 
-  <div th:replace="includes :: navi"></div>
+<div th:replace="includes :: navi"></div>
 
-  <div class="container">
-    <div class="row">
-      <h1>게시물 수정</h1>
-    </div>
-    <form method="post" action="/board">
+<div class="container">
+  <div class="row">
+    <h1>게시물 수정</h1>
+  </div>
+  <form method="post" action="/board">
     <input type="hidden" name="_method" value="put">
     <input type="hidden" name="id" th:value="${detail.id}">
     <input type="hidden" name="page" th:value="${page}">
@@ -37,17 +37,17 @@
       <button class="btn" type="submit">수정하기</button>
       <a class="btn grey" th:href="|/board/${detail.id}?page=${page}|">취소</a>
     </div>
-    </form>
-  </div>
+  </form>
+</div>
 
-  <div th:replace="includes :: footer"></div>
-  <script src="/js/trumbowyg.min.js"></script>
-  <script type="text/javascript" src="/js/ko.min.js"></script>
-  <script>
-    $('#content').trumbowyg({
-        lang: 'ko'
-    });
-  </script>
+<div th:replace="includes :: footer"></div>
+<script src="/js/trumbowyg.min.js"></script>
+<script type="text/javascript" src="/js/ko.min.js"></script>
+<script>
+  $('#content').trumbowyg({
+    lang: 'ko'
+  });
+</script>
 
 </body>
 </html>

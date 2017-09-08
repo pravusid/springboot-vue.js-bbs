@@ -1,8 +1,9 @@
 package com.talsist.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.talsist.domain.User;
+import com.talsist.exception.NotLoggedInException;
+import com.talsist.service.UserService;
+import com.talsist.util.HttpSessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import com.talsist.domain.User;
-import com.talsist.exception.NotLoggedInException;
-import com.talsist.service.UserService;
-import com.talsist.util.HttpSessionUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
@@ -27,7 +26,7 @@ public class UserController {
         model.addAttribute("list", userSvc.findAll());
         return "user/list";
     }
-    
+
     @PostMapping("/user")
     public String signup(User user) {
         userSvc.save(user);
@@ -37,24 +36,24 @@ public class UserController {
     @GetMapping("/user/{id}")
     public String detail(@PathVariable Long id, Model model, HttpServletRequest request, HttpSession session) {
         try {
-        	model.addAttribute("detail",
-        			userSvc.findOne(HttpSessionUtils.getSessionUser(session), id));
-        	return "user/detail";
-			
-		} catch (Exception e) {
-			return HttpSessionUtils.redirctToLoginPage(request, session);
-		}
+            model.addAttribute("detail",
+                    userSvc.findOne(HttpSessionUtils.getSessionUser(session), id));
+            return "user/detail";
+
+        } catch (Exception e) {
+            return HttpSessionUtils.redirctToLoginPage(request, session);
+        }
     }
 
     @PutMapping("/user/{id}")
     public String modify(@PathVariable Long id, User reqUser, HttpServletRequest request, HttpSession session) {
-	   try {
-           	userSvc.update(HttpSessionUtils.getSessionUser(session), id, reqUser);
+        try {
+            userSvc.update(HttpSessionUtils.getSessionUser(session), id, reqUser);
             return "redirect:/user";
-   			
-   		} catch (NotLoggedInException e) {
-   			return HttpSessionUtils.redirctToLoginPage(request, session);
-   		}
+
+        } catch (NotLoggedInException e) {
+            return HttpSessionUtils.redirctToLoginPage(request, session);
+        }
     }
 
     @GetMapping("/signup")
@@ -69,19 +68,19 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(User reqUser, HttpSession session) {
-    	try {
-    		User user = userSvc.login(reqUser);
-    		session.setAttribute("user", user);
-    		if (session.getAttribute("prevPage") != null) {
-    			String prev = (String) session.getAttribute("prevPage");
-    			session.removeAttribute("prevPage");
-    			return "redirect:" + prev;
-    		}
-    		return "redirect:/";
-			
-		} catch (NotLoggedInException e) {
-			return "redirect:/login";
-		}
+        try {
+            User user = userSvc.login(reqUser);
+            session.setAttribute("user", user);
+            if (session.getAttribute("prevPage") != null) {
+                String prev = (String) session.getAttribute("prevPage");
+                session.removeAttribute("prevPage");
+                return "redirect:" + prev;
+            }
+            return "redirect:/";
+
+        } catch (NotLoggedInException e) {
+            return "redirect:/login";
+        }
     }
 
     @GetMapping("/logout")

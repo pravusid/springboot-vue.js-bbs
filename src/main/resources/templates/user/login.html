@@ -4,13 +4,13 @@
 
 <body>
 
-  <div th:replace="includes :: navi"></div>
+<div th:replace="includes :: navi"></div>
 
-  <div class="container">
-    <div class="row">
-      <h1>로그인</h1>
-    </div>
-    <form method="post" action="/login">
+<div class="container">
+  <div class="row">
+    <h1>로그인</h1>
+  </div>
+  <form method="post" action="/login">
     <div class="row">
       <div class="input-field col s12">
         <input id="userId" name="userId" type="text" class="validate">
@@ -26,10 +26,10 @@
     <button class="btn waves-effect waves-light" type="submit" name="action">로그인
       <i class="material-icons right">send</i>
     </button>
-    </form>
-  </div>
+  </form>
+</div>
 
-  <div th:replace="includes :: footer"></div>
+<div th:replace="includes :: footer"></div>
 
 </body>
 </html>

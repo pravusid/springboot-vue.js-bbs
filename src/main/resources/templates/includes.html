@@ -11,28 +11,28 @@
 
 <body>
 
-  <nav th:fragment="navi" class="teal">
-    <div class="nav-wrapper container teal">
-      <a href="/" class="brand-logo">IDPRAVUS</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="/board">게시판</a></li>
-        <li><a href="/user">회원 목록</a></li>
-        <th:block th:if="${session.user==null}">
-          <li><a href="/signup">회원 가입</a></li>
-          <li><a href="/login">로그인</a></li>
-        </th:block>
-        <th:block th:if="${session.user!=null}">
-          <li><a th:href="|/user/${session.user.id}|">정보수정</a></li>
-          <li><a href="/logout">로그아웃</a></li>
-        </th:block>
-      </ul>
-    </div>
-  </nav>
-
-  <div th:fragment="footer">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+<nav th:fragment="navi" class="teal">
+  <div class="nav-wrapper container teal">
+    <a href="/" class="brand-logo">IDPRAVUS</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="/board">게시판</a></li>
+      <li><a href="/user">회원 목록</a></li>
+      <th:block th:if="${session.user==null}">
+        <li><a href="/signup">회원 가입</a></li>
+        <li><a href="/login">로그인</a></li>
+      </th:block>
+      <th:block th:if="${session.user!=null}">
+        <li><a th:href="|/user/${session.user.id}|">정보수정</a></li>
+        <li><a href="/logout">로그아웃</a></li>
+      </th:block>
+    </ul>
   </div>
+</nav>
+
+<div th:fragment="footer">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+</div>
 
 </body>
 
