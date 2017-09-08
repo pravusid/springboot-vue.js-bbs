@@ -16,7 +16,7 @@
     </div>
     <div class="divider"></div>
     <div class="section">
-      <p th:text="${detail.content}"></p>
+      <p th:utext="${detail.content}"></p>
     </div>
     <div class="row right-align">
       <th:block th:if="${session.user != null && session.user.id == detail.user.id}">
