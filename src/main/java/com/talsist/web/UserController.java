@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping("/user")
     public String signup(User user) {
         userSvc.save(user);
-        return "redirect:/user";
+        return "redirect:/login";
     }
 
     @GetMapping("/user/{id}")
@@ -71,11 +71,13 @@ public class UserController {
     public String login(User reqUser, HttpSession session) {
     	try {
     		User user = userSvc.login(reqUser);
-    		String prevURI = (String) session.getAttribute("prevPage");
-    		session.removeAttribute("prevPage");
-    		
     		session.setAttribute("user", user);
-    		return (prevURI != null)? "redirect:"+prevURI: "redirect:/";
+    		if (session.getAttribute("prevPage") != null) {
+    			String prev = (String) session.getAttribute("prevPage");
+    			session.removeAttribute("prevPage");
+    			return "redirect:" + prev;
+    		}
+    		return "redirect:/";
 			
 		} catch (NotLoggedInException e) {
 			return "redirect:/login";

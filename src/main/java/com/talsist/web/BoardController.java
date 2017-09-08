@@ -1,8 +1,11 @@
 package com.talsist.web;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.talsist.domain.Board;
-import com.talsist.domain.BoardRepository;
-import com.talsist.domain.User;
-import com.talsist.exception.NotAllowedException;
-import com.talsist.exception.NotLoggedInException;
 import com.talsist.service.BoardService;
 import com.talsist.util.HttpSessionUtils;
 import com.talsist.util.Pagination;
@@ -66,13 +65,13 @@ public class BoardController {
 	}
 
 	@DeleteMapping("/board")
-	public @ResponseBody String delete(@RequestBody Long id, HttpSession session) {
+	public @ResponseBody String delete(@RequestBody Board board, HttpSession session) {
 		try {
-			System.out.println("아이디는"+id);
-			boardSvc.delete(id, HttpSessionUtils.getSessionUser(session).getId());
+			System.out.println("아이디는"+board.getId());
+			boardSvc.delete(board.getId(), HttpSessionUtils.getSessionUser(session).getId());
 			
 		} catch (Exception e) {
-			return "게시물 삭제 중 오류발생";
+			System.out.println("삭제 중 오류발생");
 		}
 		return "/board";
 	}

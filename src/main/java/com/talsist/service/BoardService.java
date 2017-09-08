@@ -54,12 +54,12 @@ public class BoardService {
 	public void delete(Long boardId, Long userId) {
 		Board board = boardRepo.findOne(boardId);
 		permissionCheck(board, userId);
-		board.getComments().forEach(c -> commentRepo.delete(c.getId()));
+		commentRepo.delete(board.getComments());
 		boardRepo.delete(boardId);
 	}
 	
 	private void permissionCheck(Board board, Long userId) throws NotAllowedException {
-		if (board.verifyUser(userId)) {
+		if (!board.verifyUser(userId)) {
 			throw new NotAllowedException();
 		}
 	}

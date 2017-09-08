@@ -15,7 +15,7 @@ public class Pagination {
 
 	public Pagination calcPage(Page<? extends Object> page, int blockSize) {
 		this.currPage = page.getNumber() + 1;
-		this.totalPages = page.getTotalPages();
+		this.totalPages = (page.getTotalPages() == 0) ? 1 : page.getTotalPages();
 
 		firstBlock = currPage - ((currPage - 1) % blockSize);
 		lastBlock = ((firstBlock + blockSize - 1) > totalPages) ? totalPages : firstBlock + blockSize - 1;

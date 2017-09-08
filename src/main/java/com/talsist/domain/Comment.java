@@ -1,5 +1,6 @@
 package com.talsist.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -19,7 +20,14 @@ public class Comment extends AbstractEntity {
 	
 	@Lob
 	private String content;
-
+	
+	@Column(columnDefinition="bigint DEFAULT 0")
+	private Long replyRoot = Long.valueOf(0);
+	@Column(columnDefinition="bigint DEFAULT 0")
+	private Long replyDepth = Long.valueOf(0);
+	@Column(columnDefinition="bigint DEFAULT 0")
+	private Long replyOrder = Long.valueOf(0);
+	
 	public User getUser() {
 		return user;
 	}
@@ -42,6 +50,47 @@ public class Comment extends AbstractEntity {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	public Long getReplyRoot() {
+		return replyRoot;
+	}
+
+	public void setReplyRoot(Long replyRoot) {
+		this.replyRoot = replyRoot;
+	}
+
+	public Long getReplyDepth() {
+		return replyDepth;
+	}
+
+	public void setReplyDepth(Long replyDepth) {
+		this.replyDepth = replyDepth;
+	}
+
+	public Long getReplyOrder() {
+		return replyOrder;
+	}
+
+	public void setReplyOrder(Long replyOrder) {
+		this.replyOrder = replyOrder;
+	}
+	
+	public void initReplyRoot() {
+		this.replyRoot = getId();
+	}
+	
+	public void adjustDepthAndOrder() {
+		this.replyDepth += 1;
+		this.replyOrder += 1;
+	}
+
+	public void update(Comment reqComment) {
+		this.content = reqComment.content;
+	}
+	
+	public boolean verifyUser(Long reqId) {
+		return this.user.verifyId(reqId);
 	}
 
 }

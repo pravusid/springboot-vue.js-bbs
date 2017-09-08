@@ -25,7 +25,7 @@ public class Board extends AbstractEntity {
     private String content;
     
     @OneToMany(mappedBy="board")
-    @OrderBy("id ASC")
+    @OrderBy("reply_root ASC, reply_order ASC")
     private List<Comment> comments;
     
     private int hit;
