@@ -7,25 +7,31 @@
 <div th:replace="includes :: navi"></div>
 
 <div class="container">
-  <div class="row">
+  <div class="row center-align">
     <h1>로그인</h1>
   </div>
   <form method="post" action="/login">
     <div class="row">
-      <div class="input-field col s12">
-        <input id="userId" name="userId" type="text" class="validate">
-        <label for="userId">사용자 아이디</label>
+      <div class="col s3"></div>
+      <div class="col s6">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="userId" name="userId" type="text" class="validate">
+            <label for="userId">사용자 아이디</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="password" name="password" type="password" class="validate">
+            <label for="password">비밀번호</label>
+          </div>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">로그인
+          <i class="material-icons right">send</i>
+        </button>
       </div>
+      <div class="col s3"></div>
     </div>
-    <div class="row">
-      <div class="input-field col s12">
-        <input id="password" name="password" type="password" class="validate">
-        <label for="password">비밀번호</label>
-      </div>
-    </div>
-    <button class="btn waves-effect waves-light" type="submit" name="action">로그인
-      <i class="material-icons right">send</i>
-    </button>
   </form>
 </div>
 

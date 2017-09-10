@@ -1,9 +1,10 @@
 package com.talsist.service;
 
 import com.talsist.domain.User;
-import com.talsist.domain.UserRepository;
 import com.talsist.exception.NotAllowedException;
 import com.talsist.exception.NotLoggedInException;
+import com.talsist.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -12,7 +12,8 @@
   </div>
   <div class="divider"></div>
   <div class="section">
-    <h5>작성자: <span th:text="${detail.user.name}"></span></h5>
+    <h5>작성자 : <span th:text="${detail.user.name}"></span>&nbsp;&nbsp;
+        <small th:text="${detail.regdate}"></small></h5>
   </div>
   <div class="divider"></div>
   <div class="section">
@@ -38,7 +39,7 @@
           <div class="card">
             <div class="card-content">
                 <span class="card-title">
-                  <span th:text="${comment.user.name}"></span>&nbsp;
+                  <span th:text="${comment.user.name}"></span>&nbsp;&nbsp;
                   <small th:text="${comment.regdate}"></small>
                 </span>
               <p th:utext="${comment.content}">댓글</p>
@@ -48,8 +49,7 @@
                 <a href="javascript:" class="replyBtn" th:value="${comment.id}">대댓글</a>
                 <th:block th:if="${comment.user.id==session.user.id}">
                   <a href="javascript:" class="modBtn" th:value="${comment.id}">수정</a>
-                  <form th:id="|del${comment.id}|" method="post" th:action="|/board/${detail.id}/comment|"
-                        style="display: inline;">
+                  <form class="inline" th:id="|del${comment.id}|" method="post" th:action="|/board/${detail.id}/comment|">
                     <input type="hidden" name="_method" value="delete">
                     <input type="hidden" name="page" th:value="${page}">
                     <input type="hidden" name="id" th:value="${comment.id}">

@@ -2,15 +2,25 @@ package com.talsist.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class User extends AbstractEntity {
-
+	
+	@NotNull
     @Column(nullable = false, unique = true)
     private String userId;
-
+    
+	@NotNull
+    @Column(nullable = false)
     private String password;
+    
+	@NotNull
+    @Column(nullable = false)
     private String name;
+    
+	@NotNull
+    @Column(nullable = false, unique = true)
     private String email;
 
     public String getUserId() {

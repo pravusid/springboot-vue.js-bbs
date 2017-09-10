@@ -23,9 +23,9 @@ public class BoardController {
     private BoardService boardSvc;
 
     @GetMapping("/board")
-    public String list(@PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable,
-                       Pagination pagination, Model model) {
-        Page<Board> list = boardSvc.findAll(pageable);
+    public String list(@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
+    		Pagination pagination, Model model) {
+       	Page<Board> list = boardSvc.findAll(pageable, pagination);
         model.addAttribute("pagination", pagination.calcPage(list, 5));
         model.addAttribute("list", list);
         return "board/list";

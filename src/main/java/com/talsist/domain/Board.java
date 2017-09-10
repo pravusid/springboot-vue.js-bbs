@@ -1,6 +1,8 @@
 package com.talsist.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 @Entity
@@ -9,10 +11,12 @@ public class Board extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_board_user"))
     private User user;
-
+    
+    @NotNull
     @Column(nullable = false)
     private String title;
 
+    @NotNull
     @Lob
     private String content;
 
@@ -21,7 +25,7 @@ public class Board extends AbstractEntity {
     private List<Comment> comments;
 
     private int hit;
-
+    
     public User getUser() {
         return user;
     }

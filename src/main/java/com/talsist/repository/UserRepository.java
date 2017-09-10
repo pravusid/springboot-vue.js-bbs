@@ -1,9 +1,11 @@
-package com.talsist.domain;
+package com.talsist.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.talsist.domain.User;
+
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findByUserId(String userId);
+    public User findByUserId(String userId);
 
 }

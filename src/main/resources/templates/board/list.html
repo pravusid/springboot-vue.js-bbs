@@ -7,8 +7,26 @@
 <div th:replace="includes :: navi"></div>
 
 <div class="container">
-  <div class="row">
-    <h1>게시판</h1>
+  <div class="row valign-wrapper">
+    <div class="col s6">
+      <h1>게시판</h1>
+    </div>
+    <div class="col s2">
+      <select id="filter" th:value="${pagination.filter}">
+        <option class="filter" value="title">제목</option>
+        <option class="filter" value="content">내용</option>
+        <option class="filter" value="user">작성자</option>
+        <option class="filter" value="comment">댓글</option>
+        <option class="filter" value="all">제목+내용+작성자</option>
+      </select>
+    </div>
+    <div class="col s3">
+      <input id="keyword" type="text" class="validate" th:value="${pagination.keyword}">
+    </div>
+    <div class="col s1">
+      <button id="searchBtn" class="col s12 waves-effect btn teal lighten-2">
+         <i class="material-icons center">search</i></button>
+    </div>
   </div>
 
   <div class="collection">
@@ -27,22 +45,13 @@
     </th:block>
   </div>
 
-  <div class="row">
+  <div class="row valign-wrapper">
     <div class="col s6">
-      <a class="waves-effect btn" href="#">검색</a>
-    </div>
-    <div class="col s6 right-align">
-      <a class="waves-effect btn" href="/board/write">글쓰기</a>
-    </div>
-  </div>
-
-  <div class="row center">
-    <div class="col s12">
       <ul class="pagination">
         <li class="waves-effect"><a th:href="|?page=${pagination.prev}|"><i class="material-icons">chevron_left</i></a>
         </li>
         <th:block th:each="page : ${#numbers.sequence(__${pagination.firstBlock}__, __${pagination.lastBlock}__)}">
-          <li th:class="${page==pagination.currPage}? active : waves-effect">
+          <li th:class="${page==pagination.currPage}? 'active teal lighten-2' : 'waves-effect'">
             <a th:href="|/board?page=${page}|" th:text="${page + 1}"></a>
           </li>
         </th:block>
@@ -50,10 +59,15 @@
         </li>
       </ul>
     </div>
+    <div class="col s6 right-align">
+      <a class="waves-effect btn" href="/board/write">글쓰기</a>
+    </div>
   </div>
+
 </div>
 
 <div th:replace="includes :: footer"></div>
+<script src="/js/list.js"></script>
 
 </body>
 </html>

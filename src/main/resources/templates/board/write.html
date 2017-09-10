@@ -14,13 +14,13 @@
     <div class="row">
       <div class="input-field">
         <i class="material-icons prefix">account_circle</i>
-        <input id="name" name="userId" type="text" class="validate" th:value="${session.user.userId}" disabled>
+        <input id="name" name="userId" type="text" class="validate" th:value="${session.user.name}" disabled>
         <label for="name">작성자</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field">
-        <i class="material-icons prefix">account_circle</i>
+        <i class="material-icons prefix">subject</i>
         <input id="title" name="title" type="text" class="validate">
         <label for="title">제목</label>
       </div>
