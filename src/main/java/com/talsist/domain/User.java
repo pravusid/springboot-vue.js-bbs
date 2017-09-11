@@ -1,27 +1,51 @@
 package com.talsist.domain;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @Entity
-public class User extends AbstractEntity {
-	
-	@NotNull
+public class User extends AbstractEntity implements UserDetails {
+
+    @NotNull
     @Column(nullable = false, unique = true)
     private String userId;
-    
-	@NotNull
+
+    @NotNull
     @Column(nullable = false)
     private String password;
-    
-	@NotNull
+
+    @NotNull
     @Column(nullable = false)
-    private String name;
-    
-	@NotNull
+    private String username;
+
+    @NotNull
     @Column(nullable = false, unique = true)
     private String email;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(name="authority")
+    private List<Authority> authorities;
+
+    public User() {
+        this.authorities = new ArrayList<>();
+        authorities.add(Authority.USER);
+    }
 
     public String getUserId() {
         return userId;
@@ -31,16 +55,16 @@ public class User extends AbstractEntity {
         this.userId = userId;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -53,7 +77,7 @@ public class User extends AbstractEntity {
 
     public void update(User newUser) {
         this.password = newUser.password;
-        this.name = newUser.name;
+        this.username = newUser.username;
         this.email = newUser.email;
     }
 
@@ -61,13 +85,34 @@ public class User extends AbstractEntity {
         return reqId.equals(getId());
     }
 
-    public boolean verifyPassword(User reqUser) {
-        return reqUser.password.equals(password);
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
     }
 
     @Override
-    public String toString() {
-        return super.toString() + userId + name + email;
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }

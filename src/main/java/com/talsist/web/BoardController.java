@@ -2,7 +2,7 @@ package com.talsist.web;
 
 import com.talsist.domain.Board;
 import com.talsist.service.BoardService;
-import com.talsist.util.HttpSessionUtils;
+import com.talsist.util.HttpUtils;
 import com.talsist.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,33 +24,33 @@ public class BoardController {
 
     @GetMapping("/board")
     public String list(@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
-    		Pagination pagination, Model model) {
-       	Page<Board> list = boardSvc.findAll(pageable, pagination);
+                       Pagination pagination, Model model) {
+        Page<Board> list = boardSvc.findAll(pageable, pagination);
         model.addAttribute("pagination", pagination.calcPage(list, 5));
         model.addAttribute("list", list);
         return "board/list";
     }
 
     @PostMapping("/board")
-    public String write(Board board, HttpServletRequest request, HttpSession session) {
+    public String write(Board board, HttpServletRequest request) {
         try {
-            HttpSessionUtils.loginCheck(session);
-            boardSvc.save(board, HttpSessionUtils.getSessionUser(session));
+            HttpUtils.loginCheck(request.getSession());
+            boardSvc.save(board, HttpUtils.getSessionUser(request.getSession()));
             return "redirect:/board";
 
         } catch (Exception e) {
-            return HttpSessionUtils.redirctToLoginPage(request, session);
+            return HttpUtils.redirctToLoginPage(request);
         }
     }
 
     @PutMapping("/board")
-    public String modify(Long id, Board reqBoard, int page, HttpServletRequest request, HttpSession session) {
+    public String modify(Long id, Board reqBoard, String query, HttpServletRequest request) {
         try {
-            boardSvc.update(id, HttpSessionUtils.getSessionUser(session).getId(), reqBoard);
-            return "redirect:/board/" + id + "?page=" + page;
+            boardSvc.update(id, HttpUtils.getSessionUser(request.getSession()).getId(), reqBoard);
+            return "redirect:/board/" + id + "?" + query;
 
         } catch (Exception e) {
-            return HttpSessionUtils.redirctToLoginPage(request, session);
+            return HttpUtils.redirctToLoginPage(request);
         }
     }
 
@@ -58,8 +58,7 @@ public class BoardController {
     public @ResponseBody
     String delete(@RequestBody Board board, HttpSession session) {
         try {
-            System.out.println("아이디는" + board.getId());
-            boardSvc.delete(board.getId(), HttpSessionUtils.getSessionUser(session).getId());
+            boardSvc.delete(board.getId(), HttpUtils.getSessionUser(session).getId());
 
         } catch (Exception e) {
             System.out.println("삭제 중 오류발생");
@@ -68,32 +67,33 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public String detail(@PathVariable Long id, int page, Model model) {
-        model.addAttribute("page", page);
+    public String detail(@PathVariable Long id, HttpServletRequest request, Model model) {
+        model.addAttribute("query", request.getQueryString());
         model.addAttribute("detail", boardSvc.findOneAndHit(id));
         return "board/detail";
     }
 
     @GetMapping("/board/{id}/modify")
-    public String modify(@PathVariable Long id, int page, HttpServletRequest request, HttpSession session, Model model) {
+    public String modify(@PathVariable Long id, HttpServletRequest request, Model model) {
         try {
-            model.addAttribute("page", page);
+            model.addAttribute("query", request.getQueryString());
             model.addAttribute("detail",
-                    boardSvc.findOneForMod(id, HttpSessionUtils.getSessionUser(session).getId()));
+                    boardSvc.findOneForMod(id, HttpUtils.getSessionUser(request.getSession()).getId()));
             return "board/modify";
 
         } catch (Exception e) {
-            return HttpSessionUtils.redirctToLoginPage(request, session);
+            return HttpUtils.redirctToLoginPage(request);
         }
     }
 
     @GetMapping("/board/write")
-    public String write(HttpServletRequest request, HttpSession session) {
+    public String write(HttpServletRequest request) {
         try {
-            HttpSessionUtils.loginCheck(session);
+            HttpUtils.loginCheck(request.getSession());
             return "board/write";
+
         } catch (Exception e) {
-            return HttpSessionUtils.redirctToLoginPage(request, session);
+            return HttpUtils.redirctToLoginPage(request);
         }
     }
 

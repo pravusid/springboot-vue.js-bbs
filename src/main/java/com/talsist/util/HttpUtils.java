@@ -6,7 +6,7 @@ import com.talsist.exception.NotLoggedInException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class HttpSessionUtils {
+public class HttpUtils {
 
     private static boolean isLogin(HttpSession session) {
         Object user = session.getAttribute("user");
@@ -14,7 +14,7 @@ public class HttpSessionUtils {
     }
 
     public static void loginCheck(HttpSession session) throws NotLoggedInException {
-        if (!HttpSessionUtils.isLogin(session)) {
+        if (!HttpUtils.isLogin(session)) {
             throw new NotLoggedInException();
         }
     }
@@ -26,9 +26,16 @@ public class HttpSessionUtils {
         throw new NotLoggedInException();
     }
 
-    public static String redirctToLoginPage(HttpServletRequest request, HttpSession session) {
-        String query = (request.getQueryString() != null) ? "?" + request.getQueryString() : "";
-        session.setAttribute("prevPage", request.getRequestURI() + query);
+    public static String getQueryString(HttpServletRequest request) {
+        return (request.getQueryString() != null) ? "?" + request.getQueryString() : "";
+    }
+
+    public static String getPreviousPage(HttpServletRequest request) {
+        return request.getRequestURI() + getQueryString(request);
+    }
+
+    public static String redirctToLoginPage(HttpServletRequest request) {
+        request.getSession().setAttribute("prevPage", getPreviousPage(request));
         return "redirect:/login";
     }
 

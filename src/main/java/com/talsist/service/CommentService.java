@@ -5,7 +5,6 @@ import com.talsist.domain.User;
 import com.talsist.exception.NotAllowedException;
 import com.talsist.repository.BoardRepository;
 import com.talsist.repository.CommentRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

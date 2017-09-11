@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="includes :: header"></head>
 
 <body>
@@ -25,20 +25,20 @@
     </div>
     <div class="col s1">
       <button id="searchBtn" class="col s12 waves-effect btn teal lighten-2">
-         <i class="material-icons center">search</i></button>
+        <i class="material-icons center">search</i></button>
     </div>
   </div>
 
   <div class="collection">
     <th:block th:each="data : ${list}">
-      <a class="collection-item row" th:href="|/board/${data.id}?page=${list.number}|">
+      <a class="collection-item row" th:href="|/board/${data.id}?page=${list.number}${pagination.searchQuery}|">
           <span class="col s7">
             <span th:text="${data.title}">게시물</span>&nbsp;
             <span class="red-text" th:if="${data.numberOfComments!=0}">
               [<span th:text="${data.numberOfComments}"></span>]
             </span>
           </span>
-        <small class="col s2 center-align" th:text="${data.user.name}">작성자</small>
+        <small class="col s2 center-align" th:text="${data.user.username}">작성자</small>
         <small class="col s2 center-align" th:text="${data.regdate}">작성시각</small>
         <small class="col s1 center-align" th:text="${data.hit}">조회수</small>
       </a>
@@ -48,14 +48,16 @@
   <div class="row valign-wrapper">
     <div class="col s6">
       <ul class="pagination">
-        <li class="waves-effect"><a th:href="|?page=${pagination.prev}|"><i class="material-icons">chevron_left</i></a>
+        <li class="waves-effect"><a th:href="|?page=${pagination.prev}${pagination.searchQuery}|"><i
+            class="material-icons">chevron_left</i></a>
         </li>
         <th:block th:each="page : ${#numbers.sequence(__${pagination.firstBlock}__, __${pagination.lastBlock}__)}">
           <li th:class="${page==pagination.currPage}? 'active teal lighten-2' : 'waves-effect'">
-            <a th:href="|/board?page=${page}|" th:text="${page + 1}"></a>
+            <a th:href="|/board?page=${page}${pagination.searchQuery}|" th:text="${page + 1}"></a>
           </li>
         </th:block>
-        <li class="waves-effect"><a th:href="|?page=${pagination.next}|"><i class="material-icons">chevron_right</i></a>
+        <li class="waves-effect"><a th:href="|?page=${pagination.next}${pagination.searchQuery}|"><i
+            class="material-icons">chevron_right</i></a>
         </li>
       </ul>
     </div>

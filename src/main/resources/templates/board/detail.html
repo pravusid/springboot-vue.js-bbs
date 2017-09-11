@@ -12,8 +12,9 @@
   </div>
   <div class="divider"></div>
   <div class="section">
-    <h5>작성자 : <span th:text="${detail.user.name}"></span>&nbsp;&nbsp;
-        <small th:text="${detail.regdate}"></small></h5>
+    <h5>작성자 : <span th:text="${detail.user.username}"></span>&nbsp;&nbsp;
+      <small th:text="${detail.regdate}"></small>
+    </h5>
   </div>
   <div class="divider"></div>
   <div class="section">
@@ -21,10 +22,10 @@
   </div>
   <div class="row right-align">
     <th:block th:if="${session.user != null && session.user.id == detail.user.id}">
-      <a class="btn" th:href="|/board/${detail.id}/modify?page=${page}|">수정</a>
+      <a class="btn" th:href="|/board/${detail.id}/modify?${query}|">수정</a>
       <button id="deleteArticle" class="btn red" th:value="${detail.id}">삭제</button>
     </th:block>
-    <a class="btn grey" th:href="|/board?page=${page}|">목록</a>
+    <a class="btn grey" th:href="|/board?${query}|">목록</a>
   </div>
   <div class="divider"></div>
 
@@ -39,7 +40,7 @@
           <div class="card">
             <div class="card-content">
                 <span class="card-title">
-                  <span th:text="${comment.user.name}"></span>&nbsp;&nbsp;
+                  <span th:text="${comment.user.username}"></span>&nbsp;&nbsp;
                   <small th:text="${comment.regdate}"></small>
                 </span>
               <p th:utext="${comment.content}">댓글</p>
@@ -49,10 +50,11 @@
                 <a href="javascript:" class="replyBtn" th:value="${comment.id}">대댓글</a>
                 <th:block th:if="${comment.user.id==session.user.id}">
                   <a href="javascript:" class="modBtn" th:value="${comment.id}">수정</a>
-                  <form class="inline" th:id="|del${comment.id}|" method="post" th:action="|/board/${detail.id}/comment|">
+                  <form class="inline" th:id="|del${comment.id}|" method="post"
+                        th:action="|/board/${detail.id}/comment|">
                     <input type="hidden" name="_method" value="delete">
-                    <input type="hidden" name="page" th:value="${page}">
                     <input type="hidden" name="id" th:value="${comment.id}">
+                    <input type="hidden" name="query" th:value="${query}">
                     <a href="javascript:" class="deleteBtn" th:value="${comment.id}">삭제</a>
                   </form>
                 </th:block>
@@ -67,8 +69,8 @@
             <div th:id="|mod${comment.id}|" th:class="|col s12 hide ${comment.id}|">
               <form method="post" th:action="|/board/${detail.id}/comment|">
                 <input type="hidden" name="_method" value="put">
-                <input type="hidden" name="page" th:value="${page}">
                 <input type="hidden" name="id" th:value="${comment.id}">
+                <input type="hidden" name="query" th:value="${query}">
                 <textarea class="materialize-textarea col s10" name="content"
                           th:text="${comment.content}"></textarea>
                 <button class="btn col s2" th:disabled="${session.user==null}">댓글수정</button>
@@ -77,7 +79,7 @@
             <!-- 대댓글 -->
             <div th:id="|re${comment.id}|" th:class="|col s12 hide ${comment.id}|">
               <form method="post" th:action="|/board/${detail.id}/comment|">
-                <input type="hidden" name="page" th:value="${page}">
+                <input type="hidden" name="query" th:value="${query}">
                 <input type="hidden" name="replyRoot" th:value="${comment.replyRoot}">
                 <input type="hidden" name="replyDepth" th:value="${comment.replyDepth}">
                 <input type="hidden" name="replyOrder" th:value="${comment.replyOrder}">
@@ -94,7 +96,7 @@
 
   <div class="section row">
     <form method="post" th:action="|/board/${detail.id}/comment|">
-      <input type="hidden" name="page" th:value="${page}">
+      <input type="hidden" name="query" th:value="${query}">
       <textarea class="materialize-textarea col s10" name="content"
                 th:placeholder="${session.user!=null}? '댓글을 입력하세요': '로그인 후 댓글작성 가능합니다'"
                 th:disabled="${session.user==null}"></textarea>
