@@ -1,27 +1,37 @@
 package com.talsist.service;
 
-import com.talsist.domain.Comment;
-import com.talsist.domain.User;
-import com.talsist.exception.NotAllowedException;
-import com.talsist.repository.BoardRepository;
-import com.talsist.repository.CommentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Service;
+
+import com.talsist.domain.Comment;
+import com.talsist.domain.User;
+import com.talsist.repository.BoardRepository;
+import com.talsist.repository.CommentRepository;
+import com.talsist.util.SecurityContextUtils;
 
 @Service
 public class CommentService {
 
-    @Autowired
     private BoardRepository boardRepo;
-    @Autowired
     private CommentRepository commentRepo;
 
+    @Autowired
+    public CommentService(BoardRepository boardRepo, CommentRepository commentRepo) {
+        this.boardRepo = boardRepo;
+        this.commentRepo = commentRepo;
+    }
+
     @Transactional
-    public void save(Comment comment, User user, Long boardId) {
+    public void save(Comment comment, Long boardId) {
+        User user = SecurityContextUtils.getAuthenticatedUser();
+        
         if (comment.getReplyRoot().longValue() == 0) {
             comment.setUser(user);
             comment.setBoard(boardRepo.findOne(boardId));
@@ -35,8 +45,7 @@ public class CommentService {
 
             // comment가 들어갈 자리 이후의 comment order 값 증가
             targets.stream()
-                    .filter(c -> c.getReplyOrder() >= replyOrder)
-                    .forEach(c -> c.setReplyOrder(c.getReplyOrder() + 1));
+                    .filter(c -> c.getReplyOrder() >= replyOrder).forEach(c -> c.increaseOrder());
             commentRepo.save(targets);
 
             comment.adjustDepthAndOrder();
@@ -47,17 +56,17 @@ public class CommentService {
         }
     }
 
-    public void update(Comment reqComment, Long commentId, Long userId) throws NotAllowedException {
+    public void update(Comment reqComment, Long commentId) throws AuthenticationException {
         Comment comment = commentRepo.findOne(commentId);
-        permissionCheck(comment, userId);
+        permissionCheck(comment);
         comment.update(reqComment);
         commentRepo.save(comment);
     }
 
     @Transactional
-    public void delete(Long boardId, Long commentId, Long userId) throws NotAllowedException {
+    public void delete(Long boardId, Long commentId) throws AuthenticationException {
         Comment comment = commentRepo.findOne(commentId);
-        permissionCheck(comment, userId);
+        permissionCheck(comment);
 
         List<Comment> targets = findTargets(boardRepo.findOne(boardId).getComments(), comment);
         Long replyOrder = findReplyOrder(targets, comment);
@@ -91,9 +100,9 @@ public class CommentService {
                         .mapToLong(c -> c.getReplyOrder() + 1).max().orElse(comment.getReplyOrder() + 1));
     }
 
-    private void permissionCheck(Comment comment, Long userId) throws NotAllowedException {
-        if (!comment.verifyUser(userId)) {
-            throw new NotAllowedException();
+    private void permissionCheck(Comment comment) throws AuthenticationException {
+        if (!comment.verifyUser(SecurityContextUtils.getAuthenticatedUser().getId())) {
+            throw new AuthenticationCredentialsNotFoundException("권한이 없습니다");
         }
     }
 

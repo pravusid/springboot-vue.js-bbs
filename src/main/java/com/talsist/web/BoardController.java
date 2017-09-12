@@ -1,26 +1,38 @@
 package com.talsist.web;
 
-import com.talsist.domain.Board;
-import com.talsist.service.BoardService;
-import com.talsist.util.HttpUtils;
-import com.talsist.util.Pagination;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import com.talsist.domain.Board;
+import com.talsist.service.BoardService;
+import com.talsist.util.Pagination;
 
 @Controller
 public class BoardController {
 
-    @Autowired
     private BoardService boardSvc;
+
+    @Autowired
+    public BoardController(BoardService boardSvc) {
+        this.boardSvc = boardSvc;
+    }
 
     @GetMapping("/board")
     public String list(@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
@@ -31,70 +43,51 @@ public class BoardController {
         return "board/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/board")
-    public String write(Board board, HttpServletRequest request) {
-        try {
-            HttpUtils.loginCheck(request.getSession());
-            boardSvc.save(board, HttpUtils.getSessionUser(request.getSession()));
-            return "redirect:/board";
-
-        } catch (Exception e) {
-            return HttpUtils.redirctToLoginPage(request);
-        }
+    public String write(Board board) {
+        boardSvc.save(board);
+        return "redirect:/board";
+    }
+    
+    @GetMapping("/board/{id}")
+    public String detail(@PathVariable Long id, HttpServletRequest request, Authentication auth, Model model) {
+        model.addAttribute("auth", auth);
+        model.addAttribute("query", request.getQueryString());
+        model.addAttribute("detail", boardSvc.findOneAndHit(id));
+        return "board/detail";
     }
 
-    @PutMapping("/board")
-    public String modify(Long id, Board reqBoard, String query, HttpServletRequest request) {
-        try {
-            boardSvc.update(id, HttpUtils.getSessionUser(request.getSession()).getId(), reqBoard);
-            return "redirect:/board/" + id + "?" + query;
-
-        } catch (Exception e) {
-            return HttpUtils.redirctToLoginPage(request);
-        }
+    @PutMapping("/board/{id}")
+    public String modify(@PathVariable Long id, Board board, String query) {
+        boardSvc.update(id, board);
+        return "redirect:/board/" + id + "?" + query;
     }
 
     @DeleteMapping("/board")
     public @ResponseBody
-    String delete(@RequestBody Board board, HttpSession session) {
+    String delete(@RequestBody Board board) {
         try {
-            boardSvc.delete(board.getId(), HttpUtils.getSessionUser(session).getId());
-
+            boardSvc.delete(board.getId());
+            
         } catch (Exception e) {
             System.out.println("삭제 중 오류발생");
         }
         return "/board";
     }
 
-    @GetMapping("/board/{id}")
-    public String detail(@PathVariable Long id, HttpServletRequest request, Model model) {
-        model.addAttribute("query", request.getQueryString());
-        model.addAttribute("detail", boardSvc.findOneAndHit(id));
-        return "board/detail";
-    }
-
-    @GetMapping("/board/{id}/modify")
-    public String modify(@PathVariable Long id, HttpServletRequest request, Model model) {
-        try {
-            model.addAttribute("query", request.getQueryString());
-            model.addAttribute("detail",
-                    boardSvc.findOneForMod(id, HttpUtils.getSessionUser(request.getSession()).getId()));
-            return "board/modify";
-
-        } catch (Exception e) {
-            return HttpUtils.redirctToLoginPage(request);
-        }
-    }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/board/write")
     public String write(HttpServletRequest request) {
-        try {
-            HttpUtils.loginCheck(request.getSession());
-            return "board/write";
-
-        } catch (Exception e) {
-            return HttpUtils.redirctToLoginPage(request);
-        }
+        return "board/write";
+    }
+    
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/board/{id}/modify")
+    public String modify(@PathVariable Long id, HttpServletRequest request, Model model) {
+        model.addAttribute("query", request.getQueryString());
+        model.addAttribute("detail", boardSvc.findOneForMod(id));
+        return "board/modify";
     }
 
 }

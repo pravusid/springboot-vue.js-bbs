@@ -11,10 +11,11 @@
     <h1>게시물 작성</h1>
   </div>
   <form method="post" action="/board">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <div class="row">
       <div class="input-field">
         <i class="material-icons prefix">account_circle</i>
-        <input id="name" name="userId" type="text" class="validate" th:value="${session.user.username}" disabled>
+        <input id="name" name="username" type="text" class="validate" th:value="${#authentication.principal.username}" disabled>
         <label for="name">작성자</label>
       </div>
     </div>

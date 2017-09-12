@@ -4,22 +4,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.Transient;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 public class User extends AbstractEntity implements UserDetails {
+
+    @OneToOne(mappedBy = "user")
+    private PersistentLogins persistentLogins;
 
     @NotNull
     @Column(nullable = false, unique = true)
@@ -43,7 +46,7 @@ public class User extends AbstractEntity implements UserDetails {
     private List<Authority> authorities;
 
     public User() {
-        this.authorities = new ArrayList<>();
+        authorities = new ArrayList<>();
         authorities.add(Authority.USER);
     }
 
@@ -76,9 +79,9 @@ public class User extends AbstractEntity implements UserDetails {
     }
 
     public void update(User newUser) {
-        this.password = newUser.password;
-        this.username = newUser.username;
-        this.email = newUser.email;
+        if (!newUser.password.isEmpty()) { this.password = newUser.password; }
+        if (!newUser.username.isEmpty()) { this.username = newUser.username; }
+        if (!newUser.email.isEmpty()) { this.email = newUser.email; }
     }
 
     public boolean verifyId(Long reqId) {

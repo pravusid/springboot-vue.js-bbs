@@ -1,27 +1,33 @@
 package com.talsist.service;
 
-import com.talsist.domain.Board;
-import com.talsist.domain.User;
-import com.talsist.exception.NotAllowedException;
-import com.talsist.repository.BoardRepository;
-import com.talsist.repository.BoardSpecification;
-import com.talsist.repository.CommentRepository;
-import com.talsist.util.Pagination;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import com.talsist.domain.Board;
+import com.talsist.repository.BoardRepository;
+import com.talsist.repository.BoardSpecification;
+import com.talsist.repository.CommentRepository;
+import com.talsist.util.Pagination;
+import com.talsist.util.SecurityContextUtils;
 
 @Service
 public class BoardService {
 
-    @Autowired
     private BoardRepository boardRepo;
-    @Autowired
     private CommentRepository commentRepo;
+
+    @Autowired
+    public BoardService(BoardRepository boardRepo, CommentRepository commentRepo) {
+        this.boardRepo = boardRepo;
+        this.commentRepo = commentRepo;
+    }
 
     public Page<Board> findAll(Pageable pageable, Pagination pagination) {
         if (pagination.getKeyword() == null) {
@@ -38,14 +44,14 @@ public class BoardService {
         return list;
     }
 
-    public void save(Board board, User user) {
-        board.setUser(user);
+    public void save(Board board) {
+        board.setUser(SecurityContextUtils.getAuthenticatedUser());
         boardRepo.save(board);
     }
 
-    public void update(Long boardId, Long userId, Board reqBoard) throws NotAllowedException {
+    public void update(Long boardId, Board reqBoard) throws AuthenticationException {
         Board board = boardRepo.findOne(boardId);
-        permissionCheck(board, userId);
+        permissionCheck(board);
         board.Update(reqBoard);
         boardRepo.save(board);
     }
@@ -56,24 +62,24 @@ public class BoardService {
         boardRepo.save(board);
         return board;
     }
-
-    public Board findOneForMod(Long boardId, Long userId) {
-        Board board = boardRepo.findOne(boardId);
-        permissionCheck(board, userId);
+    
+    public Board findOneForMod(Long id) throws AuthenticationException {
+        Board board = boardRepo.findOne(id);
+        permissionCheck(board);
         return board;
     }
 
     @Transactional
-    public void delete(Long boardId, Long userId) {
+    public void delete(Long boardId) {
         Board board = boardRepo.findOne(boardId);
-        permissionCheck(board, userId);
+        permissionCheck(board);
         commentRepo.delete(board.getComments());
         boardRepo.delete(boardId);
     }
 
-    private void permissionCheck(Board board, Long userId) throws NotAllowedException {
-        if (!board.verifyUser(userId)) {
-            throw new NotAllowedException();
+    private void permissionCheck(Board board) throws AuthenticationException {
+        if (!board.verifyUser(SecurityContextUtils.getAuthenticatedUser().getId())) {
+            throw new AuthenticationCredentialsNotFoundException("권한이 없습니다");
         }
     }
 

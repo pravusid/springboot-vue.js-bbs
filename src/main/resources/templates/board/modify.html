@@ -10,15 +10,14 @@
   <div class="row">
     <h1>게시물 수정</h1>
   </div>
-  <form method="post" action="/board">
+  <form method="post" th:action="|/board/${detail.id}?${_csrf.parameterName}=${_csrf.token}|">
     <input type="hidden" name="_method" value="put">
-    <input type="hidden" name="id" th:value="${detail.id}">
     <input type="hidden" name="query" th:value="${query}">
     <div class="row">
       <div class="input-field">
         <i class="material-icons prefix">account_circle</i>
-        <input id="name" type="text" class="validate" th:value="${detail.user.username}" disabled>
-        <label for="name">작성자</label>
+        <input id="username" type="text" class="validate" th:value="${detail.user.username}" disabled>
+        <label for="username">작성자</label>
       </div>
     </div>
     <div class="row">

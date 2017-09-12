@@ -40,7 +40,8 @@ public class Comment extends AbstractEntity {
     }
 
     public String getContent() {
-        return content.replace("\n", "<br>");
+        return content.replace("\n", "<br>")
+                .replace("<script>", "&lt;script&gt;").replace("</script>", "&lt;/script&gt;");
     }
 
     public void setContent(String content) {
@@ -73,6 +74,10 @@ public class Comment extends AbstractEntity {
 
     public void initReplyRoot() {
         this.replyRoot = getId();
+    }
+    
+    public void increaseOrder() {
+        this.replyOrder += 1;
     }
 
     public void adjustDepthAndOrder() {
