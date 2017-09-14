@@ -1,8 +1,9 @@
 package com.talsist.web;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import com.talsist.util.Pagination;
 @Controller
 public class BoardController {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private BoardService boardSvc;
 
     @Autowired
@@ -38,6 +40,7 @@ public class BoardController {
     public String list(@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
                        Pagination pagination, Model model) {
         Page<Board> list = boardSvc.findAll(pageable, pagination);
+        logger.info("검색요청: 필터-{}, 검색어-{}", pagination.getFilter(), pagination.getKeyword());
         model.addAttribute("pagination", pagination.calcPage(list, 5));
         model.addAttribute("list", list);
         return "board/list";
@@ -69,9 +72,9 @@ public class BoardController {
     String delete(@RequestBody Board board) {
         try {
             boardSvc.delete(board.getId());
-            
+
         } catch (Exception e) {
-            System.out.println("삭제 중 오류발생");
+            logger.info("게시물 {} 삭제 중 오류 발생", board.getId());
         }
         return "/board";
     }
