@@ -52,7 +52,7 @@ public class BoardController {
         boardSvc.save(board);
         return "redirect:/board";
     }
-    
+
     @GetMapping("/board/{id}")
     public String detail(@PathVariable Long id, HttpServletRequest request, Authentication auth, Model model) {
         model.addAttribute("auth", auth);
@@ -84,7 +84,7 @@ public class BoardController {
     public String write(HttpServletRequest request) {
         return "board/write";
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/board/{id}/modify")
     public String modify(@PathVariable Long id, HttpServletRequest request, Model model) {
