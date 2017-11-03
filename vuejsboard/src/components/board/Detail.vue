@@ -1,0 +1,99 @@
+<template>
+  <div class="container">
+    <div class="section">
+      <h3 th:text="${detail.title}">제목</h3>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <h5>작성자 : <span th:text="${detail.user.username}"></span>&nbsp;&nbsp;
+        <small th:text="${detail.regdate}"></small>
+      </h5>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <p th:utext="${detail.content}"></p>
+    </div>
+    <div class="row right-align">
+      <th:block th:if="${auth != null && auth.principal.id == detail.user.id}">
+        <a class="btn" th:href="|/board/${detail.id}/modify?${query}|">수정</a>
+        <button id="deleteArticle" class="btn red" th:value="${detail.id}">삭제</button>
+      </th:block>
+      <a class="btn grey" th:href="|/board?${query}|">목록</a>
+    </div>
+    <div class="divider"></div>
+
+    <div id="comment" class="section">
+      <h5>댓글&nbsp;<small>(<span th:text="${detail.numberOfComments}"></span>)</small>
+      </h5>
+
+      <th:block th:each="comment : ${detail.comments}">
+        <div class="row">
+          <div th:class="|col s${comment.replyDepth}|"></div>
+          <div th:class="|col s${12-comment.replyDepth}|">
+            <div class="card">
+              <div class="card-content">
+                  <span class="card-title">
+                    <span th:text="${comment.user.username}"></span>&nbsp;&nbsp;
+                    <small th:text="${comment.regdate}"></small>
+                  </span>
+                <p th:utext="${comment.content}">댓글</p>
+              </div>
+              <div class="card-action right-align">
+                <th:block sec:authorize="isAuthenticated()">
+                  <a href="javascript:" class="replyBtn" th:value="${comment.id}">대댓글</a>
+                  <th:block th:if="${auth != null && auth.principal.id == comment.user.id}">
+                    <a href="javascript:" class="modBtn" th:value="${comment.id}">수정</a>
+                    <form class="inline" th:id="|del${comment.id}|" method="post"
+                          th:action="|/board/${detail.id}/comment/${comment.id}?${_csrf.parameterName}=${_csrf.token}||">
+                      <input type="hidden" name="_method" value="delete">
+                      <input type="hidden" name="id" th:value="${comment.id}">
+                      <input type="hidden" name="query" th:value="${query}">
+                      <a href="javascript:" class="deleteBtn" th:value="${comment.id}">삭제</a>
+                    </form>
+                  </th:block>
+                </th:block>
+              </div>
+            </div>
+          </div>
+          <div th:class="|col s${comment.replyDepth}|"></div>
+          <div th:class="|col s${12-comment.replyDepth}|">
+            <div class="row">
+              <!-- 수정 -->
+              <div th:id="|mod${comment.id}|" th:class="|col s12 hide ${comment.id}|">
+                <form method="post" th:action="|/board/${detail.id}/comment/${comment.id}?${_csrf.parameterName}=${_csrf.token}||">
+                  <input type="hidden" name="_method" value="put">
+                  <input type="hidden" name="id" th:value="${comment.id}">
+                  <input type="hidden" name="query" th:value="${query}">
+                  <textarea class="materialize-textarea col s10" name="content" th:text="${comment.content}"></textarea>
+                  <button class="btn col s2">댓글수정</button>
+                </form>
+              </div>
+              <!-- 대댓글 -->
+              <div th:id="|re${comment.id}|" th:class="|col s12 hide ${comment.id}|">
+                <form method="post" th:action="|/board/${detail.id}/comment|">
+                  <input type="hidden" name="query" th:value="${query}">
+                  <input type="hidden" name="replyRoot" th:value="${comment.replyRoot}">
+                  <input type="hidden" name="replyDepth" th:value="${comment.replyDepth}">
+                  <input type="hidden" name="replyOrder" th:value="${comment.replyOrder}">
+                  <textarea class="materialize-textarea col s10" name="content" placeholder="대댓글을 입력하세요"></textarea>
+                  <button class="btn col s2">대댓글작성</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </th:block>
+    </div>
+
+    <div class="section row">
+      <form method="post" th:action="|/board/${detail.id}/comment|">
+        <input type="hidden" name="query" th:value="${query}">
+        <textarea class="materialize-textarea col s10" name="content"
+                  th:placeholder="${auth != null}? '댓글을 입력하세요': '로그인 후 댓글작성 가능합니다'"
+                  th:disabled="${auth == null}"></textarea>
+        <button class="btn col s2" th:disabled="${auth == null}">댓글작성</button>
+      </form>
+    </div>
+
+  </div>
+</template>

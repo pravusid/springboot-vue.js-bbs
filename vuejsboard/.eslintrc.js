@@ -11,5 +11,6 @@ module.exports = {
   rules: {
     // override/add rules' settings here
     'vue/valid-v-if': 'error',
+    "linebreak-style": 0,
   },
 };

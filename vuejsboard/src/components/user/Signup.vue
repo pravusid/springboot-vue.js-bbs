@@ -1,0 +1,45 @@
+<template>
+  <div class="container">
+    <div class="row">
+      <h1>회원 가입</h1>
+    </div>
+    <div class="row">
+      <form class="col s12" action="/user" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="userId" name="userId" type="text" class="validate">
+            <label for="userId">사용자 아이디</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="password" name="password" type="password" class="validate">
+            <label for="password">비밀번호</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="passwordre" name="passwordre" type="password" class="validate">
+            <label for="password">비밀번호확인</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="name" name="username" type="text" class="validate">
+            <label for="name">이름</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="email" name="email" type="email" class="validate">
+            <label for="email">이메일</label>
+          </div>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action">회원가입
+          <i class="material-icons right">send</i>
+        </button>
+      </form>
+    </div>
+  </div>
+</template>
