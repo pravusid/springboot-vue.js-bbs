@@ -19,4 +19,8 @@
 bin/
 out/
 application.properties
+application.yml
 .tern-project
+vuejsboard/
+
+logs/
