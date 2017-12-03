@@ -21,7 +21,7 @@
 - Spring Boot
 - Spring data JPA(Hibernate)
 - MariaDB
-- ~~Spring Security~~
+- Spring Security
 
 #### Server 제작 내용
 
@@ -43,7 +43,9 @@
 
 템플릿엔진으로 기존에 사용해봤던 JSP 이외의 후보에서 선택한 Thymeleaf를 사용한다.
 
-Spring boot starter thymeleaf는 3버전이 아니어서 다소 문제가 발생했다. 따라서 기존 문법을 사용하였다.
+Spring boot starter thymeleaf는 ~~3버전이 아니어서 다소 문제가 발생했다. 따라서 기존 문법을 사용하였다.~~
+
+thymeleaf를 3버전으로 변경하고 최신 문법을 적용하였다.
 
 #### Thymeleaf 클라이언트 사용 기술
 

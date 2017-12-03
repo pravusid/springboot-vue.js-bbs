@@ -35,6 +35,17 @@
           <small class="col s2 center-align">작성시각</small>
           <small class="col s1 center-align">조회수</small>
         </a>
+        <a class="collection-item row" v-for="one in boardList" :key="one.id">
+          <span class="col s7">
+            <span>{{ one.title }}</span>&nbsp;
+            <span class="red-text">
+              [<span>0</span>]
+            </span>
+          </span>
+          <small class="col s2 center-align">{{ one.writer }}</small>
+          <small class="col s2 center-align">작성시각</small>
+          <small class="col s1 center-align">조회수</small>
+        </a>
       </div>
 
       <div class="row valign-wrapper">
@@ -62,6 +73,14 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      // dummy data
+      boardList: [
+        { id: 1, title: '제목1', writer: '홍길동' },
+        { id: 2, title: '제목2', writer: '홍길순' },
+      ],
+    };
+  },
 };
 </script>
