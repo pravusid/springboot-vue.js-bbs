@@ -36,6 +36,7 @@
           <small class="col s1 center-align">조회수</small>
         </a>
         <a class="collection-item row" v-for="one in boardList" :key="one.id">
+          <router-link :to="{ path: '/board/' + one.id }">
           <span class="col s7">
             <span>{{ one.title }}</span>&nbsp;
             <span class="red-text">
@@ -45,6 +46,7 @@
           <small class="col s2 center-align">{{ one.writer }}</small>
           <small class="col s2 center-align">작성시각</small>
           <small class="col s1 center-align">조회수</small>
+          </router-link>
         </a>
       </div>
 
@@ -76,11 +78,16 @@ export default {
   data() {
     return {
       // dummy data
-      boardList: [
+      boardListOrigin: [
         { id: 1, title: '제목1', writer: '홍길동' },
         { id: 2, title: '제목2', writer: '홍길순' },
       ],
     };
+  },
+  computed: {
+    boardList() {
+      return this.boardListOrigin.slice().reverse();
+    },
   },
 };
 </script>
