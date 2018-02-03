@@ -23,7 +23,6 @@ public class BoardService {
     private BoardRepository boardRepo;
     private CommentRepository commentRepo;
 
-    @Autowired
     public BoardService(BoardRepository boardRepo, CommentRepository commentRepo) {
         this.boardRepo = boardRepo;
         this.commentRepo = commentRepo;

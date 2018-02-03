@@ -1,8 +1,7 @@
 package com.talsist.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.talsist.domain.Authority;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -13,8 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
-import com.talsist.domain.Authority;
+import java.util.Arrays;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -24,7 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     private UserDetailsService userDetailsService;
 
-    @Autowired
     public SecurityConfig(UserDetailsService customUserDetailsService) {
         this.userDetailsService = customUserDetailsService;
     }
@@ -41,6 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/board/**").permitAll()
                 .antMatchers("/mypage/**").hasAnyAuthority(Authority.USER.getAuthority(), Authority.ADMIN.getAuthority())
                 .antMatchers("/admin/**").hasAuthority(Authority.ADMIN.getAuthority())
+                .antMatchers("/h2-console/**").permitAll()
+                .and()
+            .csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .and()
+            .headers()
+                .addHeaderWriter(new XFrameOptionsHeaderWriter(new WhiteListedAllowFromStrategy(Arrays.asList("localhost"))))
                 .and()
             .formLogin()
                 .loginPage("/login").failureUrl("/login?error").permitAll()

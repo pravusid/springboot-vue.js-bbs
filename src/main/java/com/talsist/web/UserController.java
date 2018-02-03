@@ -17,7 +17,6 @@ public class UserController {
 
     private UserService userSvc;
     
-    @Autowired
     public UserController(UserService userSvc) {
         this.userSvc = userSvc;
     }

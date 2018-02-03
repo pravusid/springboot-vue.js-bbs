@@ -18,7 +18,6 @@ public class CommentController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private CommentService commentSvc;
 
-    @Autowired
     public CommentController(CommentService commentSvc) {
         this.commentSvc = commentSvc;
     }

@@ -1,7 +1,7 @@
-package com.talsist.api.user.v1;
+package com.talsist.api.v1.comment;
 
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UserApi {
+public class CommentApi {
 }

@@ -15,10 +15,16 @@ import com.talsist.repository.UserRepository;
 
 public class PersistentTokenRepositoryImpl implements PersistentTokenRepository {
 
-    @Autowired
     private PersistentLoginsRepository persistentLoginsRepository;
-    @Autowired
     private UserRepository userRepository;
+
+    public void setPersistentLoginsRepository(PersistentLoginsRepository persistentLoginsRepository) {
+        this.persistentLoginsRepository = persistentLoginsRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void createNewToken(PersistentRememberMeToken token) {

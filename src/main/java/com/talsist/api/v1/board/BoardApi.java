@@ -1,4 +1,4 @@
-package com.talsist.api.board.v1;
+package com.talsist.api.v1.board;
 
 import com.talsist.domain.Board;
 import com.talsist.service.BoardService;
@@ -11,12 +11,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/board/v1")
+@RequestMapping("/api/v1/board")
 public class BoardApi {
 
     private BoardService boardSvc;
 
-    @Autowired
     public BoardApi(BoardService boardSvc) {
         this.boardSvc = boardSvc;
     }

@@ -22,7 +22,6 @@ public class CommentService {
     private BoardRepository boardRepo;
     private CommentRepository commentRepo;
 
-    @Autowired
     public CommentService(BoardRepository boardRepo, CommentRepository commentRepo) {
         this.boardRepo = boardRepo;
         this.commentRepo = commentRepo;

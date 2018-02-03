@@ -31,7 +31,6 @@ public class BoardController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private BoardService boardSvc;
 
-    @Autowired
     public BoardController(BoardService boardSvc) {
         this.boardSvc = boardSvc;
     }

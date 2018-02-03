@@ -31,7 +31,8 @@ dependencies {
     compile("org.thymeleaf:thymeleaf-spring4:${thymeleafVersion}")
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:${thymeleafVersion}")
     compile("net.sourceforge.nekohtml:nekohtml:1.9.22")
-    runtime("mysql:mysql-connector-java")
+    runtime('com.h2database:h2')
+//    runtime("mysql:mysql-connector-java")
     runtime("org.springframework.boot:spring-boot-devtools")
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }

@@ -1,0 +1,41 @@
+#server:
+#  port: 80
+
+spring:
+  profiles.active: logging-debug
+  thymeleaf:
+    mode: LEGACYHTML5
+  h2:
+    console:
+      enabled: true
+  datasource:
+#    url: jdbc:mysql://localhost/dbname?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+#    username: user
+#    password: pwd
+    url: jdbc:h2:mem:dbname
+    username: sa
+    password:
+
+  # JPA로 사용할 데이터베이스 명시
+  jpa:
+#    database: mysql
+    database: h2
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+#      ddl-auto: create-drop
+
+---
+spring.profiles: logging-debug
+logging:
+  file: logs/application.log
+  level:
+    org.thymeleaf: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.quartz.core: DEBUG
+
+---
+spring.profiles: logging-daily
+logging:
+  config: classpath:logback-spring.xml
