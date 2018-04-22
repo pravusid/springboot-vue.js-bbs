@@ -8,8 +8,8 @@
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div class="row">
           <div class="input-field col s12">
-            <input id="name" name="name" type="text" class="validate">
-            <label for="name">사용자 아이디</label>
+            <input id="username" name="username" type="text" class="validate">
+            <label for="username">사용자 아이디</label>
           </div>
         </div>
         <div class="row">

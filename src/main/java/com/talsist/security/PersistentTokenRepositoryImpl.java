@@ -31,7 +31,6 @@ public class PersistentTokenRepositoryImpl implements PersistentTokenRepository 
         User user = userRepository.findByUsername(token.getUsername());
         PersistentLogins persistentLogins = new PersistentLogins(user, token.getSeries(), token.getTokenValue(),
                 dateToLocalDate(token.getDate()));
-
         persistentLoginsRepository.save(persistentLogins);
     }
 

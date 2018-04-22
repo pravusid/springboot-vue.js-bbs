@@ -19,7 +19,7 @@
           <tr>
             <td>
               <input type="hidden" name="id" th:value="${detail.id}">
-              <input type="text" name="name" th:value="${detail.name}" disabled>
+              <input type="text" name="username" th:value="${detail.username}" disabled>
             </td>
             <td>
               <input type="password" name="password">
