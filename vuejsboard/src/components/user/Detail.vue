@@ -19,13 +19,13 @@
           <tr>
             <td>
               <input type="hidden" name="id" th:value="${detail.id}">
-              <input type="text" name="userId" th:value="${detail.userId}" disabled>
+              <input type="text" name="name" th:value="${detail.name}" disabled>
             </td>
             <td>
               <input type="password" name="password">
             </td>
             <td>
-              <input type="text" name="username" th:value="${detail.username}">
+              <input type="text" name="name" th:value="${detail.name}">
             </td>
             <td>
               <input type="email" name="email" th:value="${detail.email}">

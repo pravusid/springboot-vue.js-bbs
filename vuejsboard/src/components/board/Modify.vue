@@ -9,8 +9,8 @@
       <div class="row">
         <div class="input-field">
           <i class="material-icons prefix">account_circle</i>
-          <input id="username" type="text" class="validate" th:value="${detail.user.username}" disabled>
-          <label for="username">작성자</label>
+          <input id="name" type="text" class="validate" th:value="${detail.user.name}" disabled>
+          <label for="name">작성자</label>
         </div>
       </div>
       <div class="row">

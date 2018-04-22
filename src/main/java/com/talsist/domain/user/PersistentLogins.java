@@ -1,34 +1,30 @@
-package com.talsist.domain;
+package com.talsist.domain.user;
 
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
 public class PersistentLogins {
 
     @NotNull
     @OneToOne
-    @JoinColumn(foreignKey=@ForeignKey(name = "fk_persistent_logins"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_persistent_logins"))
     private User user;
-    
+
     @Id
     private String series;
-    
+
     @NotNull
     private String token;
-    
+
     @NotNull
-    private Date lastUsed;
+    private LocalDate lastUsed;
 
-    public PersistentLogins() {}
+    public PersistentLogins() {
+    }
 
-    public PersistentLogins(User user, String series, String token, Date lastUsed) {
+    public PersistentLogins(User user, String series, String token, LocalDate lastUsed) {
         this.user = user;
         this.series = series;
         this.token = token;
@@ -59,15 +55,15 @@ public class PersistentLogins {
         this.token = token;
     }
 
-    public Date getLastUsed() {
+    public LocalDate getLastUsed() {
         return lastUsed;
     }
 
-    public void setLastUsed(Date lastUsed) {
+    public void setLastUsed(LocalDate lastUsed) {
         this.lastUsed = lastUsed;
     }
-    
-    public void update(String newSeries, String newToken, Date newLastUsed) {
+
+    public void update(String newSeries, String newToken, LocalDate newLastUsed) {
         this.series = newSeries;
         this.token = newToken;
         this.lastUsed = newLastUsed;

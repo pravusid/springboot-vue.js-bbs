@@ -1,4 +1,4 @@
-package com.talsist.domain;
+package com.talsist.domain.user;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -1,11 +1,15 @@
-package com.talsist.domain;
+package com.talsist.domain.board;
+
+import com.talsist.domain.BaseEntity;
+import com.talsist.domain.comment.Comment;
+import com.talsist.domain.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-public class Board extends AbstractEntity {
+public class Board extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_board_user"))

@@ -1,6 +1,5 @@
-package com.talsist.repository;
+package com.talsist.domain.comment;
 
-import com.talsist.domain.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {

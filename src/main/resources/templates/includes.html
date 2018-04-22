@@ -19,17 +19,17 @@
     <ul id="nav-mobile" class="right hide-on-med-and-down">
       <li><a href="/board">게시판</a></li>
       <li><a href="/user">회원 목록</a></li>
-    <th:block sec:authorize="isAnonymous()">
-      <li><a href="/signup">회원 가입</a></li>
-      <li><a href="/login">로그인</a></li>
-    </th:block>
-    <th:block sec:authorize="isAuthenticated()">
-      <form id="logout" class="inline" method="post" th:action="|/logout?${_csrf.parameterName}=${_csrf.token}|">
-      <input type="hidden" id="auth" th:value="${#authentication.principal.id}">
-      <li><a th:href="|/user/${#authentication.principal.id}|">정보수정</a></li>
-      <li><a href="javascript:logout()">로그아웃</a></li>
-      </form>
-    </th:block>
+      <th:block sec:authorize="isAnonymous()">
+        <li><a href="/signup">회원 가입</a></li>
+        <li><a href="/login">로그인</a></li>
+      </th:block>
+      <th:block sec:authorize="isAuthenticated()">
+        <form id="logout" class="inline" method="post" th:action="|/logout?${_csrf.parameterName}=${_csrf.token}|">
+          <input type="hidden" id="auth" th:value="${#authentication.principal.id}">
+          <li><a th:href="|/user/${#authentication.principal.id}|">정보수정</a></li>
+          <li><a href="javascript:logout()">로그아웃</a></li>
+        </form>
+      </th:block>
     </ul>
   </div>
 </nav>

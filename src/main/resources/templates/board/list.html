@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="includes :: header"></head>
 
 <body>
@@ -38,7 +38,7 @@
               [<span th:text="${data.numberOfComments}"></span>]
             </span>
           </span>
-        <small class="col s2 center-align" th:text="${data.user.username}">작성자</small>
+        <small class="col s2 center-align" th:text="${data.user.name}">작성자</small>
         <small class="col s2 center-align" th:text="${data.regdate}">작성시각</small>
         <small class="col s1 center-align" th:text="${data.hit}">조회수</small>
       </a>

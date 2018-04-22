@@ -5,7 +5,7 @@
     </div>
     <div class="divider"></div>
     <div class="section">
-      <h5>작성자 : <span th:text="${detail.user.username}"></span>&nbsp;&nbsp;
+      <h5>작성자 : <span th:text="${detail.user.name}"></span>&nbsp;&nbsp;
         <small th:text="${detail.regdate}"></small>
       </h5>
     </div>
@@ -33,7 +33,7 @@
             <div class="card">
               <div class="card-content">
                   <span class="card-title">
-                    <span th:text="${comment.user.username}"></span>&nbsp;&nbsp;
+                    <span th:text="${comment.user.name}"></span>&nbsp;&nbsp;
                     <small th:text="${comment.regdate}"></small>
                   </span>
                 <p th:utext="${comment.content}">댓글</p>

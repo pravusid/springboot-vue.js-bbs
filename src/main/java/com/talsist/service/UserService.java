@@ -1,23 +1,22 @@
 package com.talsist.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.talsist.domain.user.User;
+import com.talsist.domain.user.UserRepository;
+import com.talsist.dto.UserDto;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.talsist.domain.User;
-import com.talsist.repository.UserRepository;
+import java.util.List;
 
 @Service
 public class UserService {
 
     private UserRepository userRepo;
     private PasswordEncoder passwordEncoder;
-    
+
     public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
@@ -27,22 +26,25 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public void save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user = userRepo.save(user);
-        // 로그인 처리
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    public void save(UserDto userDto) {
+        User user = userRepo.save(userDto.toEntity(passwordEncoder));
+        applyAuthToCtxHolder(user);
     }
 
     public User findOne(Long id) {
         return userRepo.findOne(id);
     }
 
-    public void update(Long id, User reqUser) {
-        User user = userRepo.findOne(id);
-        user.update(reqUser);
+    public void update(UserDto userDto) {
+        User user = userRepo.findOne(userDto.getId());
+        user.update(userDto.toEntity(passwordEncoder));
         userRepo.save(user);
+        applyAuthToCtxHolder(user);
+    }
+
+    private void applyAuthToCtxHolder(User user) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }

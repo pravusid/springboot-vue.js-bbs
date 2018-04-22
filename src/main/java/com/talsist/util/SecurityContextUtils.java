@@ -1,8 +1,7 @@
 package com.talsist.util;
 
+import com.talsist.domain.user.User;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import com.talsist.domain.User;
 
 public class SecurityContextUtils {
 

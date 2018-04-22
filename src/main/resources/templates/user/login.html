@@ -16,14 +16,14 @@
     </p>
   </div>
   <form method="post" action="/login">
-  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <div class="row">
       <div class="col s3"></div>
       <div class="col s6">
         <div class="row">
           <div class="input-field col s12">
-            <input id="userId" name="userId" type="text" class="validate" autofocus="autofocus">
-            <label for="userId">사용자 아이디</label>
+            <input id="username" name="username" type="text" class="validate" autofocus="autofocus">
+            <label for="username">사용자 아이디</label>
           </div>
         </div>
         <div class="row">
@@ -34,7 +34,7 @@
         </div>
         <div class="row">
           <div class="col s12 right-align">
-            <input type="checkbox" class="filled-in" id="rememberMe" name="REMEMBER_ME" />
+            <input type="checkbox" class="filled-in" id="rememberMe" name="REMEMBER_ME"/>
             <label for="rememberMe">자동 로그인</label>
           </div>
         </div>

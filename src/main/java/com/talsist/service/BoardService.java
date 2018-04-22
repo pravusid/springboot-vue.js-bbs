@@ -1,8 +1,11 @@
 package com.talsist.service;
 
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.talsist.domain.board.Board;
+import com.talsist.domain.board.BoardRepository;
+import com.talsist.domain.board.BoardSpecification;
+import com.talsist.domain.comment.CommentRepository;
+import com.talsist.dto.PaginationDto;
+import com.talsist.util.SecurityContextUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specifications;
@@ -10,12 +13,7 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
-import com.talsist.domain.Board;
-import com.talsist.repository.BoardRepository;
-import com.talsist.repository.BoardSpecification;
-import com.talsist.repository.CommentRepository;
-import com.talsist.util.Pagination;
-import com.talsist.util.SecurityContextUtils;
+import javax.transaction.Transactional;
 
 @Service
 public class BoardService {
@@ -28,14 +26,14 @@ public class BoardService {
         this.commentRepo = commentRepo;
     }
 
-    public Page<Board> findAll(Pageable pageable, Pagination pagination) {
+    public Page<Board> findAll(Pageable pageable, PaginationDto pagination) {
         if (pagination.getKeyword() == null) {
             return boardRepo.findAll(pageable);
         }
 
         Page<Board> list = null;
         String keyword = pagination.getKeyword();
-        if (pagination.filterMatcher(Pagination.FilterType.ALL)) {
+        if (pagination.filterMatcher(PaginationDto.FilterType.ALL)) {
             list = boardRepo.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable);
         } else {
             list = boardRepo.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
@@ -61,7 +59,7 @@ public class BoardService {
         boardRepo.save(board);
         return board;
     }
-    
+
     public Board findOneForMod(Long id) throws AuthenticationException {
         Board board = boardRepo.findOne(id);
         permissionCheck(board);

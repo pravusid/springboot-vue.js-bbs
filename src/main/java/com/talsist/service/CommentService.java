@@ -1,20 +1,17 @@
 package com.talsist.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.talsist.domain.board.BoardRepository;
+import com.talsist.domain.comment.Comment;
+import com.talsist.domain.comment.CommentRepository;
+import com.talsist.domain.user.User;
+import com.talsist.util.SecurityContextUtils;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
-import com.talsist.domain.Comment;
-import com.talsist.domain.User;
-import com.talsist.repository.BoardRepository;
-import com.talsist.repository.CommentRepository;
-import com.talsist.util.SecurityContextUtils;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -30,7 +27,7 @@ public class CommentService {
     @Transactional
     public void save(Comment comment, Long boardId) {
         User user = SecurityContextUtils.getAuthenticatedUser();
-        
+
         if (comment.getReplyRoot().longValue() == 0) {
             comment.setUser(user);
             comment.setBoard(boardRepo.findOne(boardId));

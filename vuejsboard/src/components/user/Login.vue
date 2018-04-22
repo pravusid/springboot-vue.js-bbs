@@ -15,8 +15,8 @@
         <div class="col s6">
           <div class="row">
             <div class="input-field col s12">
-              <input id="userId" name="userId" type="text" class="validate" autofocus="autofocus">
-              <label for="userId">사용자 아이디</label>
+              <input id="name" name="name" type="text" class="validate" autofocus="autofocus">
+              <label for="name">사용자 아이디</label>
             </div>
           </div>
           <div class="row">

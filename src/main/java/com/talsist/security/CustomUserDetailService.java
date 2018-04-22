@@ -1,8 +1,7 @@
 package com.talsist.security;
 
-import com.talsist.domain.User;
-import com.talsist.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.talsist.domain.user.User;
+import com.talsist.domain.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,10 +17,10 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepo.findByUserId(userId);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepo.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException(userId);
+            throw new UsernameNotFoundException(username);
         }
         return user;
     }

@@ -1,7 +1,6 @@
-package com.talsist.repository;
+package com.talsist.domain.board;
 
-import com.talsist.domain.Board;
-import com.talsist.util.Pagination;
+import com.talsist.dto.PaginationDto;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -10,15 +9,15 @@ import javax.persistence.criteria.Root;
 
 public class BoardSpecification {
 
-    public static Specification<Board> findByFilter(final Pagination pagination) {
+    public static Specification<Board> findByFilter(final PaginationDto pagination) {
         return (Root<Board> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             String keyword = pagination.getKeyword().toLowerCase();
             query.distinct(true);
 
-            if (pagination.filterMatcher(Pagination.FilterType.USER)) {
+            if (pagination.filterMatcher(PaginationDto.FilterType.USER)) {
                 return cb.like(cb.lower(root.get(pagination.getFilter()).get("username")), "%" + keyword + "%");
 
-            } else if (pagination.filterMatcher(Pagination.FilterType.COMMENT)) {
+            } else if (pagination.filterMatcher(PaginationDto.FilterType.COMMENT)) {
                 return cb.like(cb.lower(root.join("comments").get("content")), "%" + keyword + "%");
 
             } else {

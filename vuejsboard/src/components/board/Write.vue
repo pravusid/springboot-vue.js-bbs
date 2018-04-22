@@ -7,7 +7,7 @@
       <div class="row">
         <div class="input-field">
           <i class="material-icons prefix">account_circle</i>
-          <input id="name" name="username" type="text" class="validate" disabled>
+          <input id="name" name="name" type="text" class="validate" disabled>
           <label for="name">작성자</label>
         </div>
       </div>

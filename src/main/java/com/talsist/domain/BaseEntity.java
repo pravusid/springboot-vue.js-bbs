@@ -9,38 +9,32 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.Optional;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractEntity {
+public abstract class BaseEntity {
 
     @Id
     @GeneratedValue
     private Long id;
 
     @CreatedDate
-    private Date regdate;
+    private LocalDateTime regdate;
 
     @LastModifiedDate
-    private Date moddate;
+    private LocalDateTime moddate;
 
     public Long getId() {
         return id;
     }
 
     public String getRegdate() {
-        if (regdate == null) {
-            return "";
-        }
-        return LocalDateTime
-                .ofInstant(regdate.toInstant(), ZoneId.systemDefault())
-                .format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+        return Optional.ofNullable(regdate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))).orElse("");
     }
 
-    public Date getModdate() {
+    public LocalDateTime getModdate() {
         return moddate;
     }
 
@@ -60,7 +54,7 @@ public abstract class AbstractEntity {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AbstractEntity other = (AbstractEntity) obj;
+        BaseEntity other = (BaseEntity) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

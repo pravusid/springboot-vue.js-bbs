@@ -14,8 +14,8 @@
         </thead>
         <tbody>
         <tr data-th-each="data : ${list}">
-          <td th:text="${data.userId}"></td>
-          <td th:text="${data.username}"></td>
+          <td th:text="${data.name}"></td>
+          <td th:text="${data.name}"></td>
           <td th:text="${data.email}"></td>
         </tr>
         </tbody>

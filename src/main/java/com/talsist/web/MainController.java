@@ -13,7 +13,8 @@ public class MainController {
     }
 
     @GetMapping("/denied")
-    public @ResponseBody String accessDenied() {
+    public @ResponseBody
+    String accessDenied() {
         return "403ERROR";
     }
 

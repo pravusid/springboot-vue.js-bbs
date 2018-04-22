@@ -1,9 +1,13 @@
-package com.talsist.domain;
+package com.talsist.domain.comment;
+
+import com.talsist.domain.BaseEntity;
+import com.talsist.domain.board.Board;
+import com.talsist.domain.user.User;
 
 import javax.persistence.*;
 
 @Entity
-public class Comment extends AbstractEntity {
+public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_user"))
@@ -75,7 +79,7 @@ public class Comment extends AbstractEntity {
     public void initReplyRoot() {
         this.replyRoot = getId();
     }
-    
+
     public void increaseOrder() {
         this.replyOrder += 1;
     }

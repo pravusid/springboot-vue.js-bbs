@@ -12,7 +12,7 @@
   </div>
   <div class="divider"></div>
   <div class="section">
-    <h5>작성자 : <span th:text="${detail.user.username}"></span>&nbsp;&nbsp;
+    <h5>작성자 : <span th:text="${detail.user.name}"></span>&nbsp;&nbsp;
       <small th:text="${detail.regdate}"></small>
     </h5>
   </div>
@@ -40,7 +40,7 @@
           <div class="card">
             <div class="card-content">
                 <span class="card-title">
-                  <span th:text="${comment.user.username}"></span>&nbsp;&nbsp;
+                  <span th:text="${comment.user.name}"></span>&nbsp;&nbsp;
                   <small th:text="${comment.regdate}"></small>
                 </span>
               <p th:utext="${comment.content}">댓글</p>
@@ -67,7 +67,8 @@
           <div class="row">
             <!-- 수정 -->
             <div th:id="|mod${comment.id}|" th:class="|col s12 hide ${comment.id}|">
-              <form method="post" th:action="|/board/${detail.id}/comment/${comment.id}?${_csrf.parameterName}=${_csrf.token}||">
+              <form method="post"
+                    th:action="|/board/${detail.id}/comment/${comment.id}?${_csrf.parameterName}=${_csrf.token}||">
                 <input type="hidden" name="_method" value="put">
                 <input type="hidden" name="id" th:value="${comment.id}">
                 <input type="hidden" name="query" th:value="${query}">

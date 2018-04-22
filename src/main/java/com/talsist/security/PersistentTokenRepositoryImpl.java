@@ -1,59 +1,69 @@
 package com.talsist.security;
 
+import com.talsist.domain.user.PersistentLogins;
+import com.talsist.domain.user.PersistentLoginsRepository;
+import com.talsist.domain.user.User;
+import com.talsist.domain.user.UserRepository;
+import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-
-import com.talsist.domain.PersistentLogins;
-import com.talsist.domain.User;
-import com.talsist.repository.PersistentLoginsRepository;
-import com.talsist.repository.UserRepository;
-
+@Component
 public class PersistentTokenRepositoryImpl implements PersistentTokenRepository {
 
     private PersistentLoginsRepository persistentLoginsRepository;
     private UserRepository userRepository;
 
-    public void setPersistentLoginsRepository(PersistentLoginsRepository persistentLoginsRepository) {
+    public PersistentTokenRepositoryImpl(PersistentLoginsRepository persistentLoginsRepository,
+                                         UserRepository userRepository) {
         this.persistentLoginsRepository = persistentLoginsRepository;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public void createNewToken(PersistentRememberMeToken token) {
-        User user = userRepository.findByUserId(token.getUsername());
-        PersistentLogins persistentLogins =
-                new PersistentLogins(user, token.getSeries(), token.getTokenValue(), token.getDate());
-        
+        User user = userRepository.findByUsername(token.getUsername());
+        PersistentLogins persistentLogins = new PersistentLogins(user, token.getSeries(), token.getTokenValue(),
+                dateToLocalDate(token.getDate()));
+
         persistentLoginsRepository.save(persistentLogins);
     }
 
     @Override
     public void updateToken(String series, String tokenValue, Date lastUsed) {
         PersistentLogins persistentLogins = persistentLoginsRepository.findOne(series);
-        persistentLogins.update(series, tokenValue, lastUsed);
+        persistentLogins.update(series, tokenValue, dateToLocalDate(lastUsed));
         persistentLoginsRepository.save(persistentLogins);
     }
 
     @Override
     public PersistentRememberMeToken getTokenForSeries(String series) {
         PersistentLogins persistentLogins = persistentLoginsRepository.findOne(series);
-        return new PersistentRememberMeToken(persistentLogins.getUser().getUserId(), series,
-                persistentLogins.getToken(), persistentLogins.getLastUsed());
+        return new PersistentRememberMeToken(persistentLogins.getUser().getUsername(), series,
+                persistentLogins.getToken(), localDateToDate(persistentLogins.getLastUsed()));
     }
 
     @Transactional
     @Override
     public void removeUserTokens(String username) {
-        User user = userRepository.findByUserId(username);
-        persistentLoginsRepository.deleteByUserId(user.getId());
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            persistentLoginsRepository.deleteByUserId(user.getId());
+        }
     }
-    
+
+    private LocalDate dateToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    private Date localDateToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
 }

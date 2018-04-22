@@ -1,8 +1,6 @@
-package com.talsist.repository;
+package com.talsist.domain.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.talsist.domain.PersistentLogins;
 
 public interface PersistentLoginsRepository extends JpaRepository<PersistentLogins, String> {
 

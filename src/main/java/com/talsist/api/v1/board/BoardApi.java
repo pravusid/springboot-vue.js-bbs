@@ -1,9 +1,8 @@
 package com.talsist.api.v1.board;
 
-import com.talsist.domain.Board;
+import com.talsist.domain.board.Board;
+import com.talsist.dto.PaginationDto;
 import com.talsist.service.BoardService;
-import com.talsist.util.Pagination;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +21,7 @@ public class BoardApi {
 
     @GetMapping("/")
     public Page<Board> list(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-    Pagination pagination) {
+                            PaginationDto pagination) {
         Page<Board> list = boardSvc.findAll(pageable, pagination);
         pagination.calcPage(list, 5);
         return list;
