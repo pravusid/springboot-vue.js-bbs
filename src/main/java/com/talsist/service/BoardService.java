@@ -5,7 +5,7 @@ import com.talsist.domain.board.BoardRepository;
 import com.talsist.domain.board.BoardSpecification;
 import com.talsist.domain.comment.CommentRepository;
 import com.talsist.dto.BoardDto;
-import com.talsist.dto.PaginationDto;
+import com.talsist.dto.Pagination;
 import com.talsist.util.SecurityContextUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +27,13 @@ public class BoardService {
         this.commentRepo = commentRepo;
     }
 
-    public Page<BoardDto> findAll(Pageable pageable, PaginationDto pagination) {
+    public Page<BoardDto> findAll(Pageable pageable, Pagination pagination) {
         if (pagination.getKeyword() == null) {
             return boardRepo.findAll(pageable).map(BoardDto::new);
         }
 
         String keyword = pagination.getKeyword();
-        Page<Board> list = (pagination.filterMatcher(PaginationDto.FilterType.ALL))?
+        Page<Board> list = (pagination.filterMatcher(Pagination.FilterType.ALL))?
                 boardRepo.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable):
                 boardRepo.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
         return list.map(BoardDto::new);

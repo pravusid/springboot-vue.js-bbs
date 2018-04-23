@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.talsist.dto.BoardDto;
-import com.talsist.dto.PaginationDto;
+import com.talsist.dto.Pagination;
 import com.talsist.service.BoardService;
 
 @Controller
@@ -36,7 +36,7 @@ public class BoardController {
 
     @GetMapping("/board")
     public String list(@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
-                       PaginationDto pagination, Model model) {
+                       Pagination pagination, Model model) {
         Page<BoardDto> list = boardSvc.findAll(pageable, pagination);
         logger.info("검색요청: 필터-{}, 검색어-{}", pagination.getFilter(), pagination.getKeyword());
         model.addAttribute("pagination", pagination.calcPage(list, 5));

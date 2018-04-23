@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.talsist.dto.BoardDto;
-import com.talsist.dto.PaginationDto;
+import com.talsist.dto.Pagination;
 import com.talsist.service.BoardService;
 
 @RestController
@@ -27,7 +27,7 @@ public class BoardApi {
 
     @GetMapping("/")
     public Page<BoardDto> list(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                            PaginationDto pagination) {
+                            Pagination pagination) {
         Page<BoardDto> list = boardSvc.findAll(pageable, pagination);
         pagination.calcPage(list, 5);
         return list;

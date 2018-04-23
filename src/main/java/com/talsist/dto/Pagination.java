@@ -2,7 +2,7 @@ package com.talsist.dto;
 
 import org.springframework.data.domain.Page;
 
-public class PaginationDto {
+public class Pagination {
 
     private int currPage;
     private int totalPages;
@@ -21,7 +21,7 @@ public class PaginationDto {
         TITLE, CONTENT, USER, COMMENT, ALL;
     }
 
-    public PaginationDto calcPage(Page<? extends Object> page, int blockSize) {
+    public Pagination calcPage(Page<? extends Object> page, int blockSize) {
         this.currPage = page.getNumber() + 1;
         this.totalPages = (page.getTotalPages() == 0) ? 1 : page.getTotalPages();
 
@@ -68,7 +68,7 @@ public class PaginationDto {
     }
 
     public boolean filterMatcher(FilterType type) {
-        return PaginationDto.FilterType.valueOf(this.filter.toUpperCase()).equals(type);
+        return Pagination.FilterType.valueOf(this.filter.toUpperCase()).equals(type);
     }
 
     public String getKeyword() {

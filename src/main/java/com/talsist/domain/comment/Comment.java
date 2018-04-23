@@ -1,10 +1,15 @@
 package com.talsist.domain.comment;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+
 import com.talsist.domain.BaseEntity;
 import com.talsist.domain.board.Board;
 import com.talsist.domain.user.User;
-
-import javax.persistence.*;
 
 @Entity
 public class Comment extends BaseEntity {
@@ -21,72 +26,62 @@ public class Comment extends BaseEntity {
     private String content;
 
     @Column(columnDefinition = "bigint DEFAULT 0")
-    private Long replyRoot = Long.valueOf(0);
+    private long replyRoot;
     @Column(columnDefinition = "bigint DEFAULT 0")
-    private Long replyDepth = Long.valueOf(0);
+    private long replyDepth;
     @Column(columnDefinition = "bigint DEFAULT 0")
-    private Long replyOrder = Long.valueOf(0);
+    private long replyOrder;
+
+    public Comment(User user, Board board, String content, long replyRoot, long replyDepth, long replyOrder) {
+        this.user = user;
+        this.board = board;
+        this.content = content;
+        this.replyRoot = replyRoot;
+        this.replyDepth = replyDepth;
+        this.replyOrder = replyOrder;
+    }
+
+    private Comment() {
+    }
 
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Board getBoard() {
         return board;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
     public String getContent() {
-        return content.replace("\n", "<br>")
-                .replace("<script>", "&lt;script&gt;").replace("</script>", "&lt;/script&gt;");
+        return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Long getReplyRoot() {
+    public long getReplyRoot() {
         return replyRoot;
     }
 
-    public void setReplyRoot(Long replyRoot) {
-        this.replyRoot = replyRoot;
-    }
-
-    public Long getReplyDepth() {
+    public long getReplyDepth() {
         return replyDepth;
     }
 
-    public void setReplyDepth(Long replyDepth) {
-        this.replyDepth = replyDepth;
-    }
-
-    public Long getReplyOrder() {
+    public long getReplyOrder() {
         return replyOrder;
     }
 
-    public void setReplyOrder(Long replyOrder) {
-        this.replyOrder = replyOrder;
-    }
-
     public void initReplyRoot() {
-        this.replyRoot = getId();
+        replyRoot = getId();
     }
 
-    public void increaseOrder() {
-        this.replyOrder += 1;
-    }
-
-    public void adjustDepthAndOrder() {
+    public void increaseDepth() {
         this.replyDepth += 1;
-        this.replyOrder += 1;
+    }
+
+    public void adjustReplyOrder(long... order) {
+        if (order.length == 0) {
+            replyOrder += 1;
+        } else {
+            replyOrder = order[0];
+        }
     }
 
     public void update(Comment reqComment) {

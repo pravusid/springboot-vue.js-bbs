@@ -33,7 +33,6 @@ public class Board extends BaseEntity {
     private int hit;
 
     public Board(User user, String title, String content) {
-        this();
         this.user = user;
         this.title = title;
         this.content = content;

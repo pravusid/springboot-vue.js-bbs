@@ -1,9 +1,11 @@
 package com.talsist.service;
 
+import com.talsist.domain.board.Board;
 import com.talsist.domain.board.BoardRepository;
 import com.talsist.domain.comment.Comment;
 import com.talsist.domain.comment.CommentRepository;
 import com.talsist.domain.user.User;
+import com.talsist.dto.CommentDto;
 import com.talsist.util.SecurityContextUtils;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.AuthenticationException;
@@ -25,42 +27,48 @@ public class CommentService {
     }
 
     @Transactional
-    public void save(Comment comment, Long boardId) {
+    public void save(CommentDto commentDto, Long boardId) {
         User user = SecurityContextUtils.getAuthenticatedUser();
 
-        if (comment.getReplyRoot().longValue() == 0) {
-            comment.setUser(user);
-            comment.setBoard(boardRepo.findOne(boardId));
-            Comment saved = commentRepo.save(comment);
-            saved.initReplyRoot();
-            commentRepo.save(saved);
-
+        if (commentDto.getReplyRoot() == 0) {
+            saveParentComment(user, commentDto, boardId);
         } else {
-            List<Comment> targets = findTargets(boardRepo.findOne(boardId).getComments(), comment);
-            Long replyOrder = findReplyOrder(targets, comment);
-
-            // comment가 들어갈 자리 이후의 comment order 값 증가
-            targets.stream()
-                    .filter(c -> c.getReplyOrder() >= replyOrder).forEach(c -> c.increaseOrder());
-            commentRepo.save(targets);
-
-            comment.adjustDepthAndOrder();
-            comment.setUser(user);
-            comment.setBoard(boardRepo.findOne(boardId));
-            comment.setReplyOrder(replyOrder);
-            commentRepo.save(comment);
+            saveChildComment(user, commentDto, boardId);
         }
     }
+    
+    private void saveParentComment(User user, CommentDto commentDto, Long boardId) {
+        Comment saved = commentRepo.save(commentDto.toEntity(user, boardRepo.findOne(boardId)));
+        saved.initReplyRoot();
+        commentRepo.save(saved);
+    }
+    
+    private void saveChildComment(User user, CommentDto commentDto, Long boardId) {
+        Board board = boardRepo.findOne(boardId);
+        Comment comment = commentDto.toEntity(user, board);
+        List<Comment> targets = findTargets(board.getComments(), comment);
+        Long replyOrder = findReplyOrder(targets, comment);
 
-    public void update(Comment reqComment, Long commentId) throws AuthenticationException {
+        // comment가 들어갈 자리 이후의 comment order 값 증가
+        targets.stream()
+                .filter(c -> c.getReplyOrder() >= replyOrder).forEach(c -> c.adjustReplyOrder());
+        commentRepo.save(targets);
+
+        comment.increaseDepth();
+        comment.adjustReplyOrder(replyOrder);
+        commentRepo.save(comment);
+    }
+
+    public void update(CommentDto commentDto, Long commentId) {
+        User user = SecurityContextUtils.getAuthenticatedUser();
         Comment comment = commentRepo.findOne(commentId);
         permissionCheck(comment);
-        comment.update(reqComment);
+        comment.update(commentDto.toEntity(user, comment.getBoard()));
         commentRepo.save(comment);
     }
 
     @Transactional
-    public void delete(Long boardId, Long commentId) throws AuthenticationException {
+    public void delete(Long boardId, Long commentId) {
         Comment comment = commentRepo.findOne(commentId);
         permissionCheck(comment);
 
@@ -74,7 +82,7 @@ public class CommentService {
         commentRepo.delete(delList);
 
         targets.removeAll(delList);
-        targets.forEach(c -> c.setReplyOrder(c.getReplyOrder() - replyOrder + comment.getReplyOrder()));
+        targets.forEach(c -> c.adjustReplyOrder(c.getReplyOrder() - replyOrder + comment.getReplyOrder()));
         commentRepo.save(targets);
     }
 
@@ -86,14 +94,14 @@ public class CommentService {
     }
 
     private Long findReplyOrder(List<Comment> targets, Comment comment) {
-        return (comment.getReplyDepth().longValue() == 0) ?
+        return (comment.getReplyDepth() == 0) ?
                 // 최상위 depth 처리
                 targets.stream().mapToLong(c -> c.getReplyOrder() + 1).max().orElse(comment.getReplyOrder() + 1) :
                 // 같은 depth인 바로 다음 댓글과 depth + 1인 마지막 댓글 또는 현재 댓글 + 1의 순서중 선택 됨
                 targets.stream().filter(c -> c.getReplyDepth() == comment.getReplyDepth())
                         .mapToLong(c -> c.getReplyOrder()).min().orElse(targets.stream()
-                        .filter(c -> c.getReplyDepth() == comment.getReplyDepth() + 1)
-                        .mapToLong(c -> c.getReplyOrder() + 1).max().orElse(comment.getReplyOrder() + 1));
+                                .filter(c -> c.getReplyDepth() == comment.getReplyDepth() + 1)
+                                .mapToLong(c -> c.getReplyOrder() + 1).max().orElse(comment.getReplyOrder() + 1));
     }
 
     private void permissionCheck(Comment comment) throws AuthenticationException {
