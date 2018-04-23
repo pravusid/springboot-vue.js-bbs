@@ -1,12 +1,14 @@
 package com.talsist.dto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public abstract class BaseDto {
 
-    private Long id;
-    private LocalDateTime regdate;
-    private LocalDateTime moddate;
+    protected Long id;
+    protected LocalDateTime regdate;
+    protected LocalDateTime moddate;
 
     public Long getId() {
         return id;
@@ -16,20 +18,12 @@ public abstract class BaseDto {
         this.id = id;
     }
 
-    public LocalDateTime getRegdate() {
-        return regdate;
+    public String getRegdate() {
+        return Optional.ofNullable(regdate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))).orElse("");
     }
 
-    public void setRegdate(LocalDateTime regdate) {
-        this.regdate = regdate;
-    }
-
-    public LocalDateTime getModdate() {
-        return moddate;
-    }
-
-    public void setModdate(LocalDateTime moddate) {
-        this.moddate = moddate;
+    public String getModdate() {
+        return Optional.ofNullable(moddate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))).orElse("");
     }
 
 }

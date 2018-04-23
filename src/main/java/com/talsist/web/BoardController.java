@@ -1,8 +1,7 @@
 package com.talsist.web;
 
-import com.talsist.domain.board.Board;
-import com.talsist.dto.PaginationDto;
-import com.talsist.service.BoardService;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,9 +12,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
+import com.talsist.dto.BoardDto;
+import com.talsist.dto.PaginationDto;
+import com.talsist.service.BoardService;
 
 @Controller
 public class BoardController {
@@ -30,7 +37,7 @@ public class BoardController {
     @GetMapping("/board")
     public String list(@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
                        PaginationDto pagination, Model model) {
-        Page<Board> list = boardSvc.findAll(pageable, pagination);
+        Page<BoardDto> list = boardSvc.findAll(pageable, pagination);
         logger.info("검색요청: 필터-{}, 검색어-{}", pagination.getFilter(), pagination.getKeyword());
         model.addAttribute("pagination", pagination.calcPage(list, 5));
         model.addAttribute("list", list);
@@ -39,8 +46,8 @@ public class BoardController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/board")
-    public String write(Board board) {
-        boardSvc.save(board);
+    public String write(BoardDto boardDto) {
+        boardSvc.save(boardDto);
         return "redirect:/board";
     }
 
@@ -53,19 +60,19 @@ public class BoardController {
     }
 
     @PutMapping("/board/{id}")
-    public String modify(@PathVariable Long id, Board board, String query) {
-        boardSvc.update(id, board);
+    public String modify(@PathVariable Long id, BoardDto boardDto, String query) {
+        boardSvc.update(id, boardDto);
         return "redirect:/board/" + id + "?" + query;
     }
 
     @DeleteMapping("/board")
     public @ResponseBody
-    String delete(@RequestBody Board board) {
+    String delete(@RequestBody BoardDto boardDto) {
         try {
-            boardSvc.delete(board.getId());
+            boardSvc.delete(boardDto.getId());
 
         } catch (Exception e) {
-            logger.info("게시물 {} 삭제 중 오류 발생", board.getId());
+            logger.error("게시물 {} 삭제 중 오류 발생", boardDto.getId());
         }
         return "/board";
     }

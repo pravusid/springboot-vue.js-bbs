@@ -4,6 +4,7 @@ import com.talsist.domain.board.Board;
 import com.talsist.domain.board.BoardRepository;
 import com.talsist.domain.board.BoardSpecification;
 import com.talsist.domain.comment.CommentRepository;
+import com.talsist.dto.BoardDto;
 import com.talsist.dto.PaginationDto;
 import com.talsist.util.SecurityContextUtils;
 import org.springframework.data.domain.Page;
@@ -26,44 +27,40 @@ public class BoardService {
         this.commentRepo = commentRepo;
     }
 
-    public Page<Board> findAll(Pageable pageable, PaginationDto pagination) {
+    public Page<BoardDto> findAll(Pageable pageable, PaginationDto pagination) {
         if (pagination.getKeyword() == null) {
-            return boardRepo.findAll(pageable);
+            return boardRepo.findAll(pageable).map(BoardDto::new);
         }
 
-        Page<Board> list = null;
         String keyword = pagination.getKeyword();
-        if (pagination.filterMatcher(PaginationDto.FilterType.ALL)) {
-            list = boardRepo.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable);
-        } else {
-            list = boardRepo.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
-        }
-        return list;
+        Page<Board> list = (pagination.filterMatcher(PaginationDto.FilterType.ALL))?
+                boardRepo.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable):
+                boardRepo.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
+        return list.map(BoardDto::new);
     }
 
-    public void save(Board board) {
-        board.setUser(SecurityContextUtils.getAuthenticatedUser());
-        boardRepo.save(board);
+    public void save(BoardDto boardDto) {
+        boardRepo.save(boardDto.toEntity(SecurityContextUtils.getAuthenticatedUser()));
     }
 
-    public void update(Long boardId, Board reqBoard) throws AuthenticationException {
+    public void update(Long boardId, BoardDto reqBoard) {
         Board board = boardRepo.findOne(boardId);
         permissionCheck(board);
-        board.Update(reqBoard);
+        board.update(reqBoard.toEntity(SecurityContextUtils.getAuthenticatedUser()));
         boardRepo.save(board);
     }
 
-    public Board findOneAndHit(Long id) {
+    public BoardDto findOneAndHit(Long id) {
         Board board = boardRepo.findOne(id);
         board.increaseHit();
         boardRepo.save(board);
-        return board;
+        return new BoardDto(board);
     }
 
-    public Board findOneForMod(Long id) throws AuthenticationException {
+    public BoardDto findOneForMod(Long id) {
         Board board = boardRepo.findOne(id);
         permissionCheck(board);
-        return board;
+        return new BoardDto(board);
     }
 
     @Transactional
@@ -74,7 +71,7 @@ public class BoardService {
         boardRepo.delete(boardId);
     }
 
-    private void permissionCheck(Board board) throws AuthenticationException {
+    private void permissionCheck(Board board) {
         if (!board.verifyUser(SecurityContextUtils.getAuthenticatedUser().getId())) {
             throw new AuthenticationCredentialsNotFoundException("권한이 없습니다");
         }

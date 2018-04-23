@@ -30,8 +30,8 @@ public abstract class BaseEntity {
         return id;
     }
 
-    public String getRegdate() {
-        return Optional.ofNullable(regdate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))).orElse("");
+    public LocalDateTime getRegdate() {
+        return regdate;
     }
 
     public LocalDateTime getModdate() {

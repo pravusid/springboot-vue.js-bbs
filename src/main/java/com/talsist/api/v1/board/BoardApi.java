@@ -1,13 +1,19 @@
 package com.talsist.api.v1.board;
 
-import com.talsist.domain.board.Board;
-import com.talsist.dto.PaginationDto;
-import com.talsist.service.BoardService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.talsist.dto.BoardDto;
+import com.talsist.dto.PaginationDto;
+import com.talsist.service.BoardService;
 
 @RestController
 @RequestMapping("/api/v1/board")
@@ -20,9 +26,9 @@ public class BoardApi {
     }
 
     @GetMapping("/")
-    public Page<Board> list(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+    public Page<BoardDto> list(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             PaginationDto pagination) {
-        Page<Board> list = boardSvc.findAll(pageable, pagination);
+        Page<BoardDto> list = boardSvc.findAll(pageable, pagination);
         pagination.calcPage(list, 5);
         return list;
     }

@@ -44,8 +44,12 @@ public class PersistentTokenRepositoryImpl implements PersistentTokenRepository 
     @Override
     public PersistentRememberMeToken getTokenForSeries(String series) {
         PersistentLogins persistentLogins = persistentLoginsRepository.findOne(series);
-        return new PersistentRememberMeToken(persistentLogins.getUser().getUsername(), series,
-                persistentLogins.getToken(), localDateToDate(persistentLogins.getLastUsed()));
+        try {
+            return new PersistentRememberMeToken(persistentLogins.getUser().getUsername(), series,
+                    persistentLogins.getToken(), localDateToDate(persistentLogins.getLastUsed()));
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Transactional

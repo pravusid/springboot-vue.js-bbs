@@ -6,6 +6,9 @@ import com.talsist.domain.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+
 import java.util.List;
 
 @Entity
@@ -29,40 +32,30 @@ public class Board extends BaseEntity {
 
     private int hit;
 
-    public User getUser() {
-        return user;
+    public Board(User user, String title, String content) {
+        this();
+        this.user = user;
+        this.title = title;
+        this.content = content;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    private Board() {
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public List<Comment> getComments() {
         return comments;
-    }
-
-    public int getNumberOfComments() {
-        return comments.size();
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 
     public int getHit() {
@@ -73,7 +66,10 @@ public class Board extends BaseEntity {
         this.hit += 1;
     }
 
-    public void Update(Board reqBoard) {
+    public void update(Board reqBoard) {
+        if (!user.equals(reqBoard.getUser())) {
+            return;
+        }
         this.title = reqBoard.title;
         this.content = reqBoard.content;
     }
