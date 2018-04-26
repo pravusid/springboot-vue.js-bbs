@@ -20,7 +20,7 @@
 
 - Spring Boot
 - Spring data JPA(Hibernate)
-- MariaDB
+- H2 Database
 - Spring Security
 
 #### Server 제작 내용
@@ -59,7 +59,7 @@ View를 작성하는데 이용되는 자바스크립트 기술의 이해를 위�
 
 #### Vue.JS Client 사용기술
 
-- Vue.JS 2
+- Vue.js 2
 - vue-cli
 - [Materialize CSS](http://materializecss.com/)
 - [Trumbowyg Editor](https://github.com/Alex-D/Trumbowyg)

@@ -18,7 +18,7 @@ public class Pagination {
     private String keyword;
 
     public enum FilterType {
-        TITLE, CONTENT, USER, COMMENT, ALL;
+        TITLE, CONTENT, USER, COMMENTS, ALL;
     }
 
     public Pagination calcPage(Page<? extends Object> page, int blockSize) {

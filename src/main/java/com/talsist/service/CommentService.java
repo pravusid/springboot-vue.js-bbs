@@ -49,13 +49,13 @@ public class CommentService {
         Board board = boardRepo.findOne(boardId);
         Comment comment = commentDto.toEntity(user, board);
         List<Comment> targets = findTargets(board.getComments(), comment);
-        Long replyOrder = findReplyOrder(targets, comment);
+        long replyOrder = findReplyOrder(targets, comment);
 
         // comment가 들어갈 자리 이후의 comment order 값 증가
         targets.stream().filter(c -> c.getReplyOrder() >= replyOrder).forEach(c -> c.adjustReplyOrder());
         commentRepo.save(targets);
 
-        comment.increaseDepth();
+        comment.increaseReplyDepth();
         comment.adjustReplyOrder(replyOrder);
         commentRepo.save(comment);
     }
@@ -74,7 +74,7 @@ public class CommentService {
         permissionCheck(comment);
 
         List<Comment> targets = findTargets(boardRepo.findOne(boardId).getComments(), comment);
-        Long replyOrder = findReplyOrder(targets, comment);
+        long replyOrder = findReplyOrder(targets, comment);
 
         List<Comment> delList = targets.stream().filter(c -> c.getReplyOrder() < replyOrder)
                 .collect(Collectors.toList());
@@ -94,7 +94,7 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    private Long findReplyOrder(List<Comment> targets, Comment comment) {
+    private long findReplyOrder(List<Comment> targets, Comment comment) {
         return (comment.getReplyDepth() == 0) ?
         // 최상위 depth 처리
                 targets.stream().mapToLong(c -> c.getReplyOrder() + 1).max().orElse(comment.getReplyOrder() + 1) :

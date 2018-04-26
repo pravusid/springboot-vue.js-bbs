@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,15 +18,15 @@ public class User extends BaseEntity implements UserDetails {
     @OneToOne(mappedBy = "user")
     private PersistentLogins persistentLogins;
 
-    @NotNull
+    @NotNull @Size(min=1)
     @Column(nullable = false, unique = true)
     private String username;
 
-    @NotNull
+    @NotNull @Size(min=1)
     @Column(nullable = false)
     private String password;
 
-    @NotNull
+    @NotNull @Size(min=1)
     @Column(nullable = false)
     private String name;
 

@@ -25,7 +25,7 @@ public class BoardApi {
         this.boardSvc = boardSvc;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public Page<BoardDto> list(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             Pagination pagination) {
         Page<BoardDto> list = boardSvc.findAll(pageable, pagination);
@@ -33,7 +33,7 @@ public class BoardApi {
         return list;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public String write() {
         return null;
     }

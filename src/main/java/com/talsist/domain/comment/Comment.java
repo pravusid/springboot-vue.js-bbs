@@ -72,7 +72,7 @@ public class Comment extends BaseEntity {
         replyRoot = getId();
     }
 
-    public void increaseDepth() {
+    public void increaseReplyDepth() {
         this.replyDepth += 1;
     }
 

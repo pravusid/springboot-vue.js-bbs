@@ -1,4 +1,5 @@
-import List from '../components/board/List.vue';
+import BoardList from '../components/board/List.vue';
+import BoardWrite from '../components/board/Write.vue';
 import UserList from '../components/user/List.vue';
 import Login from '../components/user/Login.vue';
 import Signup from '../components/user/Signup.vue';
@@ -8,12 +9,17 @@ export default [
   {
     path: '/',
     name: 'Board/List',
-    component: List,
+    component: BoardList,
   },
   {
     path: '/board',
     name: 'Board/List',
-    component: List,
+    component: BoardList,
+  },
+  {
+    path: '/board/write',
+    name: 'Board/Write',
+    component: BoardWrite,
   },
   {
     path: '/user',

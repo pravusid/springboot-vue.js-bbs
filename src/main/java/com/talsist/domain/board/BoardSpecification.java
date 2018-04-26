@@ -15,14 +15,18 @@ public class BoardSpecification {
             query.distinct(true);
 
             if (pagination.filterMatcher(Pagination.FilterType.USER)) {
-                return cb.like(cb.lower(root.get(pagination.getFilter()).get("username")), "%" + keyword + "%");
+                return cb.like(cb.lower(root.get(pagination.getFilter()).get("name")), "%" + keyword + "%");
 
-            } else if (pagination.filterMatcher(Pagination.FilterType.COMMENT)) {
-                return cb.like(cb.lower(root.join("comments").get("content")), "%" + keyword + "%");
-
-            } else {
+            } else if (pagination.filterMatcher(Pagination.FilterType.TITLE)) {
                 return cb.like(cb.lower(root.get(pagination.getFilter())), "%" + keyword + "%");
+                
+            } else if (pagination.filterMatcher(Pagination.FilterType.CONTENT)) {
+                return cb.like(cb.lower(root.get(pagination.getFilter())), "%" + keyword + "%");
+                
+            } else if (pagination.filterMatcher(Pagination.FilterType.COMMENTS)) {
+                return cb.like(cb.lower(root.join(pagination.getFilter()).get("content")), "%" + keyword + "%");
             }
+            return null;
         };
     }
 
@@ -31,9 +35,12 @@ public class BoardSpecification {
             String keywordLCase = keyword.toLowerCase();
             query.distinct(true);
             return cb.or(
-                    cb.like(cb.lower(root.get("title")), "%" + keywordLCase + "%"),
-                    cb.like(cb.lower(root.get("user").get("username")), "%" + keywordLCase + "%"),
-                    cb.like(cb.lower(root.get("content")), "%" + keywordLCase + "%")
+                    cb.like(cb.lower(root.get(Pagination.FilterType.USER.toString().toLowerCase()).get("name")),
+                            "%" + keywordLCase + "%"),
+                    cb.like(cb.lower(root.get(Pagination.FilterType.TITLE.toString().toLowerCase())),
+                            "%" + keywordLCase + "%"),
+                    cb.like(cb.lower(root.get(Pagination.FilterType.CONTENT.toString().toLowerCase())),
+                            "%" + keywordLCase + "%")
             );
         };
     }
