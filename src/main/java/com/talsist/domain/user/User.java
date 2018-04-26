@@ -1,16 +1,21 @@
 package com.talsist.domain.user;
 
-import com.talsist.domain.BaseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.talsist.domain.BaseEntity;
 
 @Entity
 public class User extends BaseEntity implements UserDetails {
@@ -18,19 +23,15 @@ public class User extends BaseEntity implements UserDetails {
     @OneToOne(mappedBy = "user")
     private PersistentLogins persistentLogins;
 
-    @NotNull @Size(min=1)
     @Column(nullable = false, unique = true)
     private String username;
 
-    @NotNull @Size(min=1)
     @Column(nullable = false)
     private String password;
 
-    @NotNull @Size(min=1)
     @Column(nullable = false)
     private String name;
 
-    @NotNull
     @Column(nullable = false, unique = true)
     private String email;
 

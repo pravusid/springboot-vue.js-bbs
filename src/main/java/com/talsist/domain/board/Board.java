@@ -1,15 +1,19 @@
 package com.talsist.domain.board;
 
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+
 import com.talsist.domain.BaseEntity;
 import com.talsist.domain.comment.Comment;
 import com.talsist.domain.user.User;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-
-import java.util.List;
 
 @Entity
 public class Board extends BaseEntity {
@@ -18,11 +22,9 @@ public class Board extends BaseEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_board_user"))
     private User user;
 
-    @NotNull
     @Column(nullable = false)
     private String title;
 
-    @NotNull
     @Lob
     private String content;
 

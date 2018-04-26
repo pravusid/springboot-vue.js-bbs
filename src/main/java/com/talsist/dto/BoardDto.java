@@ -3,15 +3,23 @@ package com.talsist.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotNull;
+
 import com.talsist.domain.board.Board;
 import com.talsist.domain.user.User;
 
 public class BoardDto extends BaseDto {
 
     private User user;
+
+    @NotNull
     private String title;
+
+    @NotNull
     private String content;
+
     private List<CommentDto> comments;
+
     private int hit;
 
     public BoardDto(Board board) {
@@ -43,7 +51,8 @@ public class BoardDto extends BaseDto {
     }
 
     public String getContent() {
-        return content;
+        return content.replace("\n", "<br>").replace("<script>", "&lt;script&gt;").replace("</script>",
+                "&lt;/script&gt;");
     }
 
     public void setContent(String content) {
