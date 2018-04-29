@@ -22,7 +22,7 @@
   <logger name="org.thymeleaf" level="INFO"/>
   <logger name="org.hibernate.SQL" level="INFO"/>
   <logger name="org.quartz.core" level="INFO"/>
-  <logger name="com.talsist" level="INFO"/>
+  <logger name="kr.pravusid" level="INFO"/>
 
   <root level="INFO">
     <appender-ref ref="dailyRollingFileAppender"/>

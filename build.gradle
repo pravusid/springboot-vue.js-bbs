@@ -39,7 +39,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes  'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'com.talsist.TalsistApplication'
+        attributes  'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'kr.pravusid.WebApplication'
     }
     dependsOn configurations.runtime
     from {
