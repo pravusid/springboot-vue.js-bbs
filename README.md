@@ -18,17 +18,14 @@
 
 - Spring Boot
 - Spring data JPA(Hibernate)
-- MariaDB
+- H2 Database
 
 #### Server 제작 내용
-
-완성됨
 
 - 기본기능의 회원제 게시판 제작을 목표로 한다
 - 댓글은 무한계층형으로 구현하고 삭제시 동일 노드의 게시물이 모두 삭제 되도록 만든다.
 - 오픈소스 에디터를 적용한다.
 - 게시물, 댓글 검색기능을 적용한다.
-- 회원 가입시 유효성 검사는 client, server 모두에서 진행
 
 ### Thymeleaf 클라이언트
 

@@ -1,14 +1,14 @@
 @charset "UTF-8";
 
 body {
-    font-size: 1em;
-    font-family: 'Nanum Square';
+  font-size: 1em;
+  font-family: 'Nanum Square';
 }
 
 .bold {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .inline {
-    display: inline;
+  display: inline;
 }
