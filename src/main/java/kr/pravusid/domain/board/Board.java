@@ -29,7 +29,7 @@ public class Board extends BaseEntity {
     private String content;
 
     @OneToMany(mappedBy = "board")
-    @OrderBy("reply_root ASC, reply_order ASC")
+    @OrderBy("reply_order ASC")
     private List<Comment> comments;
 
     private int hit;

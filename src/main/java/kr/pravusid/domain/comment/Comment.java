@@ -1,6 +1,5 @@
 package kr.pravusid.domain.comment;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -25,18 +24,13 @@ public class Comment extends BaseEntity {
     @Lob
     private String content;
 
-    @Column(columnDefinition = "bigint DEFAULT 0")
-    private long replyRoot;
-    @Column(columnDefinition = "bigint DEFAULT 0")
     private long replyDepth;
-    @Column(columnDefinition = "bigint DEFAULT 0")
     private long replyOrder;
 
-    public Comment(User user, Board board, String content, long replyRoot, long replyDepth, long replyOrder) {
+    public Comment(User user, Board board, String content, long replyDepth, long replyOrder) {
         this.user = user;
         this.board = board;
         this.content = content;
-        this.replyRoot = replyRoot;
         this.replyDepth = replyDepth;
         this.replyOrder = replyOrder;
     }
@@ -56,10 +50,6 @@ public class Comment extends BaseEntity {
         return content;
     }
 
-    public long getReplyRoot() {
-        return replyRoot;
-    }
-
     public long getReplyDepth() {
         return replyDepth;
     }
@@ -68,12 +58,8 @@ public class Comment extends BaseEntity {
         return replyOrder;
     }
 
-    public void initReplyRoot() {
-        replyRoot = getId();
-    }
-
-    public void increaseReplyDepth() {
-        this.replyDepth += 1;
+    public void adjustReplyDepth() {
+        replyDepth += 1;
     }
 
     public void adjustReplyOrder(long... order) {

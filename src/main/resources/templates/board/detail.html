@@ -35,8 +35,8 @@
 
     <th:block th:each="comment : ${detail.comments}">
       <div class="row">
-        <div th:class="|col s${comment.replyDepth}|"></div>
-        <div th:class="|col s${12-comment.replyDepth}|">
+        <div th:class="|col s${comment.replyDepth - 1}|"></div>
+        <div th:class="|col s${13-comment.replyDepth}|">
           <div class="card">
             <div class="card-content">
                 <span class="card-title">
@@ -62,8 +62,8 @@
             </div>
           </div>
         </div>
-        <div th:class="|col s${comment.replyDepth}|"></div>
-        <div th:class="|col s${12-comment.replyDepth}|">
+        <div th:class="|col s${comment.replyDepth - 1}|"></div>
+        <div th:class="|col s${13-comment.replyDepth}|">
           <div class="row">
             <!-- 수정 -->
             <div th:id="|mod${comment.id}|" th:class="|col s12 hide ${comment.id}|">
@@ -80,7 +80,6 @@
             <div th:id="|re${comment.id}|" th:class="|col s12 hide ${comment.id}|">
               <form method="post" th:action="|/board/${detail.id}/comment|">
                 <input type="hidden" name="query" th:value="${query}">
-                <input type="hidden" name="replyRoot" th:value="${comment.replyRoot}">
                 <input type="hidden" name="replyDepth" th:value="${comment.replyDepth}">
                 <input type="hidden" name="replyOrder" th:value="${comment.replyOrder}">
                 <textarea class="materialize-textarea col s10" name="content" placeholder="대댓글을 입력하세요"></textarea>

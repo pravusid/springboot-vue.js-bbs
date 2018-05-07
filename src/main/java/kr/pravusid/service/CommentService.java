@@ -28,34 +28,38 @@ public class CommentService {
         this.commentRepo = commentRepo;
     }
 
-    @Transactional
     public void save(CommentDto commentDto, Long boardId) {
         User user = SecurityContextUtils.getAuthenticatedUser();
 
-        if (commentDto.getReplyRoot() == 0) {
+        if (commentDto.getReplyDepth() == 0) {
             saveParentComment(user, commentDto, boardId);
         } else {
             saveChildComment(user, commentDto, boardId);
         }
     }
 
+    @Transactional
     private void saveParentComment(User user, CommentDto commentDto, Long boardId) {
+        commentDto.setReplyOrder(commentRepo.getMaximumReplyOrder() + 1);
         Comment comment = commentRepo.save(commentDto.toEntity(user, boardRepo.findOne(boardId)));
-        comment.initReplyRoot();
+        comment.adjustReplyDepth();
         commentRepo.save(comment);
     }
 
+    @Transactional
     private void saveChildComment(User user, CommentDto commentDto, Long boardId) {
         Board board = boardRepo.findOne(boardId);
         Comment comment = commentDto.toEntity(user, board);
+
         List<Comment> targets = findTargets(board.getComments(), comment);
         long replyOrder = findReplyOrder(targets, comment);
 
-        // comment가 들어갈 자리 이후의 comment order 값 증가
-        targets.stream().filter(c -> c.getReplyOrder() >= replyOrder).forEach(c -> c.adjustReplyOrder());
+        targets.stream()
+                .filter(c -> c.getReplyOrder() >= replyOrder)
+                .forEach(c -> c.adjustReplyOrder());
         commentRepo.save(targets);
 
-        comment.increaseReplyDepth();
+        comment.adjustReplyDepth();
         comment.adjustReplyOrder(replyOrder);
         commentRepo.save(comment);
     }
@@ -76,33 +80,34 @@ public class CommentService {
         List<Comment> targets = findTargets(boardRepo.findOne(boardId).getComments(), comment);
         long replyOrder = findReplyOrder(targets, comment);
 
-        List<Comment> delList = targets.stream().filter(c -> c.getReplyOrder() < replyOrder)
+        List<Comment> delList = targets.stream()
+                .filter(c -> c.getReplyOrder() < replyOrder)
                 .collect(Collectors.toList());
+        targets.removeAll(delList);
 
-        commentRepo.delete(comment);
+        delList.add(comment);
         commentRepo.delete(delList);
 
-        targets.removeAll(delList);
-        targets.forEach(c -> c.adjustReplyOrder(c.getReplyOrder() - replyOrder + comment.getReplyOrder()));
+        targets.forEach(c -> c.adjustReplyOrder(c.getReplyOrder() - delList.size()));
         commentRepo.save(targets);
     }
 
+    // 요청 댓글 이후의 댓글만
     private List<Comment> findTargets(List<Comment> comments, Comment comment) {
-        // 요청 댓글 다음 요소부터 대상을 찾는다
         return comments.stream()
-                .filter(c -> c.getReplyRoot() == comment.getReplyRoot() && c.getReplyOrder() > comment.getReplyOrder())
+                .filter(c -> c.getReplyOrder() > comment.getReplyOrder())
                 .collect(Collectors.toList());
     }
 
+    // 새로운 댓글이 들어갈 위치
     private long findReplyOrder(List<Comment> targets, Comment comment) {
-        return (comment.getReplyDepth() == 0) ?
-        // 최상위 depth 처리
-                targets.stream().mapToLong(c -> c.getReplyOrder() + 1).max().orElse(comment.getReplyOrder() + 1) :
-                // 같은 depth인 바로 다음 댓글과 depth + 1인 마지막 댓글 또는 현재 댓글 + 1의 순서중 선택 됨
-                targets.stream().filter(c -> c.getReplyDepth() == comment.getReplyDepth())
-                        .mapToLong(c -> c.getReplyOrder()).min()
-                        .orElse(targets.stream().filter(c -> c.getReplyDepth() == comment.getReplyDepth() + 1)
-                                .mapToLong(c -> c.getReplyOrder() + 1).max().orElse(comment.getReplyOrder() + 1));
+        return targets.stream()
+                .filter(c -> c.getReplyDepth() <= comment.getReplyDepth())
+                .findFirst().map(Comment::getReplyOrder)
+                .orElse(targets.stream()
+                        .mapToLong(c -> c.getReplyOrder() + 1).max()
+                        .orElse(comment.getReplyOrder() + 1)
+                        );
     }
 
     private void permissionCheck(Comment comment) throws AuthenticationException {

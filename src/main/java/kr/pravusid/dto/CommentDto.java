@@ -9,7 +9,6 @@ public class CommentDto extends BaseDto {
     private User user;
     private BoardDto board;
     private String content;
-    private long replyRoot;
     private long replyDepth;
     private long replyOrder;
 
@@ -18,7 +17,6 @@ public class CommentDto extends BaseDto {
         this.user = comment.getUser();
         this.board = boardDto;
         this.content = comment.getContent();
-        this.replyRoot = comment.getReplyRoot();
         this.replyDepth = comment.getReplyDepth();
         this.replyOrder = comment.getReplyOrder();
     }
@@ -51,14 +49,6 @@ public class CommentDto extends BaseDto {
         this.content = content;
     }
 
-    public long getReplyRoot() {
-        return replyRoot;
-    }
-
-    public void setReplyRoot(long replyRoot) {
-        this.replyRoot = replyRoot;
-    }
-
     public long getReplyDepth() {
         return replyDepth;
     }
@@ -76,7 +66,7 @@ public class CommentDto extends BaseDto {
     }
 
     public Comment toEntity(User user, Board board) {
-        return new Comment(user, board, content, replyRoot, replyDepth, replyOrder);
+        return new Comment(user, board, content, replyDepth, replyOrder);
     }
 
 }
