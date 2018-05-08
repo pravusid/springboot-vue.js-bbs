@@ -1,14 +1,10 @@
 package kr.pravusid.domain.comment;
 
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-
 import kr.pravusid.domain.BaseEntity;
 import kr.pravusid.domain.board.Board;
 import kr.pravusid.domain.user.User;
+
+import javax.persistence.*;
 
 @Entity
 public class Comment extends BaseEntity {
@@ -74,8 +70,8 @@ public class Comment extends BaseEntity {
         this.content = reqComment.content;
     }
 
-    public boolean verifyUser(Long reqId) {
-        return this.user.verifyId(reqId);
+    public boolean verifyUser(String username) {
+        return this.user.verifyUser(username);
     }
 
 }

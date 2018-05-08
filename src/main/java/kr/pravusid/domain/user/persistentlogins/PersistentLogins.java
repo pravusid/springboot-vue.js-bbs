@@ -1,4 +1,6 @@
-package kr.pravusid.domain.user;
+package kr.pravusid.domain.user.persistentlogins;
+
+import kr.pravusid.domain.user.User;
 
 import java.time.LocalDate;
 

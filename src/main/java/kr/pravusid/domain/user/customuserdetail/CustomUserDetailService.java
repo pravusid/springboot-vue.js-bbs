@@ -1,4 +1,4 @@
-package kr.pravusid.security;
+package kr.pravusid.domain.user.customuserdetail;
 
 import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;

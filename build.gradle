@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.6.RELEASE'
+        springBootVersion = '1.5.12.RELEASE'
         thymeleafVersion = '3.0.1.RELEASE'
     }
     repositories {
@@ -16,7 +16,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = 1.8
 
 repositories {
@@ -35,6 +35,7 @@ dependencies {
     runtime('com.h2database:h2')
     runtime("org.springframework.boot:spring-boot-devtools")
     testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.springframework.security:spring-security-test")
 }
 
 jar {

@@ -1,4 +1,4 @@
-package kr.pravusid.domain.user;
+package kr.pravusid.domain.user.customuserdetail;
 
 import org.springframework.security.core.GrantedAuthority;
 

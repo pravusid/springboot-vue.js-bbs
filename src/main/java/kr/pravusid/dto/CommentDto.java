@@ -21,7 +21,7 @@ public class CommentDto extends BaseDto {
         this.replyOrder = comment.getReplyOrder();
     }
 
-    private CommentDto() {
+    public CommentDto() {
     }
 
     public User getUser() {

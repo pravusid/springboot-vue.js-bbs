@@ -31,7 +31,7 @@ public class BoardDto extends BaseDto {
         this.hit = board.getHit();
     }
 
-    private BoardDto() {
+    public BoardDto() {
     }
 
     public User getUser() {

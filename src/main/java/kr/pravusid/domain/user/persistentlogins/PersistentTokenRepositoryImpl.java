@@ -1,7 +1,5 @@
-package kr.pravusid.security;
+package kr.pravusid.domain.user.persistentlogins;
 
-import kr.pravusid.domain.user.PersistentLogins;
-import kr.pravusid.domain.user.PersistentLoginsRepository;
 import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;

@@ -12,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 
+import kr.pravusid.domain.user.customuserdetail.Authority;
+import kr.pravusid.domain.user.persistentlogins.PersistentLogins;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -71,8 +73,8 @@ public class User extends BaseEntity implements UserDetails {
         email = (reqUser.email.isEmpty()) ? email : reqUser.email;
     }
 
-    public boolean verifyId(Long reqId) {
-        return reqId.equals(getId());
+    public boolean verifyUser(String username) {
+        return this.username.equals(username);
     }
 
     @Override

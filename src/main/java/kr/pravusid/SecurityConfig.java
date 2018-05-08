@@ -1,6 +1,6 @@
-package kr.pravusid.security;
+package kr.pravusid;
 
-import kr.pravusid.domain.user.Authority;
+import kr.pravusid.domain.user.customuserdetail.Authority;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/js/**", "/css/**");
+        web.ignoring().antMatchers("/js/**", "/css/**", "/h2-console/**");
     }
 
     @Override

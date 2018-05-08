@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -75,8 +76,8 @@ public class Board extends BaseEntity {
         this.content = reqBoard.content;
     }
 
-    public boolean verifyUser(Long reqId) {
-        return this.user.verifyId(reqId);
+    public boolean verifyUser(String username) {
+        return this.user.verifyUser(username);
     }
 
 }

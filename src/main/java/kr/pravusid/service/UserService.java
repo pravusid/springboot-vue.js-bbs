@@ -3,16 +3,14 @@ package kr.pravusid.service;
 import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import kr.pravusid.dto.UserDto;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import kr.pravusid.util.UserSessionUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements UserSessionUtil {
 
     private UserRepository userRepo;
     private PasswordEncoder passwordEncoder;
@@ -40,11 +38,6 @@ public class UserService {
         user.update(userDto.toEntity(passwordEncoder));
         userRepo.save(user);
         applyAuthToCtxHolder(user);
-    }
-
-    private void applyAuthToCtxHolder(User user) {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }
