@@ -1,23 +1,15 @@
 package kr.pravusid.domain.user;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-
+import kr.pravusid.domain.BaseEntity;
 import kr.pravusid.domain.user.customuserdetail.Authority;
 import kr.pravusid.domain.user.persistentlogins.PersistentLogins;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import kr.pravusid.domain.BaseEntity;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User extends BaseEntity implements UserDetails {
@@ -40,7 +32,7 @@ public class User extends BaseEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @Column(name = "authority")
-    private List<Authority> authorities;
+    private Set<Authority> authorities;
 
     public User(String username, String password, String name, String email) {
         this();
@@ -51,7 +43,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     private User() {
-        authorities = new ArrayList<>();
+        authorities = new HashSet<>();
         authorities.add(Authority.USER);
     }
 
