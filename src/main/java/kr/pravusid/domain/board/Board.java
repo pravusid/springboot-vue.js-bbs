@@ -29,7 +29,7 @@ public class Board extends BaseEntity {
     @Lob
     private String content;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     @OrderBy("reply_order ASC")
     private List<Comment> comments;
 
