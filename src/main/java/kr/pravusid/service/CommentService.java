@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CommentService implements UserSessionUtil {
+public class CommentService {
 
     private UserRepository userRepo;
     private BoardRepository boardRepo;
@@ -31,7 +31,7 @@ public class CommentService implements UserSessionUtil {
 
     @Transactional
     public void save(CommentDto commentDto, Long boardId) {
-        User user = userRepo.findByUsername(getAuthenticatedUsername());
+        User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
 
         if (commentDto.getReplyDepth() == 0) {
             saveParentComment(user, commentDto, boardId);
@@ -65,7 +65,7 @@ public class CommentService implements UserSessionUtil {
     }
 
     public void update(CommentDto commentDto, Long commentId) {
-        User user = userRepo.findByUsername(getAuthenticatedUsername());
+        User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
         Comment comment = commentRepo.findOne(commentId);
         permissionCheck(comment);
         comment.update(commentDto.toEntity(user, comment.getBoard()));
@@ -111,7 +111,7 @@ public class CommentService implements UserSessionUtil {
     }
 
     private void permissionCheck(Comment comment) throws AuthenticationException {
-        if (!comment.verifyUser(getAuthenticatedUsername())) {
+        if (!comment.verifyUser(UserSessionUtil.getAuthenticatedUsername())) {
             throw new AuthenticationCredentialsNotFoundException("권한이 없습니다");
         }
     }

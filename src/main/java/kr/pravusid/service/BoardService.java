@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
-public class BoardService implements UserSessionUtil {
+public class BoardService {
 
     private UserRepository userRepo;
     private BoardRepository boardRepo;
@@ -43,14 +43,14 @@ public class BoardService implements UserSessionUtil {
     }
 
     public void save(BoardDto boardDto) {
-        User user = userRepo.findByUsername(getAuthenticatedUsername());
+        User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
         boardRepo.save(boardDto.toEntity(user));
     }
 
     public void update(Long boardId, BoardDto reqBoard) {
         Board board = boardRepo.findOne(boardId);
         permissionCheck(board);
-        User user = userRepo.findByUsername(getAuthenticatedUsername());
+        User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
         board.update(reqBoard.toEntity(user));
         boardRepo.save(board);
     }
@@ -77,7 +77,7 @@ public class BoardService implements UserSessionUtil {
     }
 
     private void permissionCheck(Board board) {
-        if (!board.verifyUser(getAuthenticatedUsername())) {
+        if (!board.verifyUser(UserSessionUtil.getAuthenticatedUsername())) {
             throw new AuthenticationCredentialsNotFoundException("권한이 없습니다");
         }
     }

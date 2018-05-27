@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService implements UserSessionUtil {
+public class UserService {
 
     private UserRepository userRepo;
     private PasswordEncoder passwordEncoder;
@@ -26,7 +26,7 @@ public class UserService implements UserSessionUtil {
 
     public void save(UserDto userDto) {
         User user = userRepo.save(userDto.toEntity(passwordEncoder));
-        applyAuthToCtxHolder(user);
+        UserSessionUtil.applyAuthToCtxHolder(user);
     }
 
     public User findOne(Long id) {
@@ -37,7 +37,7 @@ public class UserService implements UserSessionUtil {
         User user = userRepo.findOne(userDto.getId());
         user.update(userDto.toEntity(passwordEncoder));
         userRepo.save(user);
-        applyAuthToCtxHolder(user);
+        UserSessionUtil.applyAuthToCtxHolder(user);
     }
 
 }

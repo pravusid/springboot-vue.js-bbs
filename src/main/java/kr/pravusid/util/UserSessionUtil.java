@@ -5,13 +5,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public interface UserSessionUtil {
+public final class UserSessionUtil {
 
-    default String getAuthenticatedUsername() {
+    public static String getAuthenticatedUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-    default void applyAuthToCtxHolder(User user) {
+    public static void applyAuthToCtxHolder(User user) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
