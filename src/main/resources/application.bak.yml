@@ -3,8 +3,6 @@
 
 spring:
   profiles.active: logging-debug
-  thymeleaf:
-    mode: LEGACYHTML5
   h2:
     console:
       enabled: true
