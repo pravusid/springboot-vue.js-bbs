@@ -27,14 +27,4 @@ spring:
 ---
 spring.profiles: logging-debug
 logging:
-  file: logs/application.log
-  level:
-    org.thymeleaf: DEBUG
-    org.springframework.web: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.quartz.core: DEBUG
-
----
-spring.profiles: logging-daily
-logging:
-  config: classpath:logback-spring.xml
+  config: classpath:logback-spring-debug.xml
