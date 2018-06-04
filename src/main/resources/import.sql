@@ -12,3 +12,34 @@ INSERT INTO
 INSERT INTO
     USER_AUTHORITIES (user_id, authority)
     VALUES (1, 'USER');
+
+INSERT INTO
+  oauth_client_details (
+    id,
+    client_id,
+    client_secret,
+    resource_ids,
+    scope,
+    authorized_grant_types,
+    web_server_redirect_uri,
+    authorities,
+    access_token_validity,
+    refresh_token_validity,
+    additional_information,
+    autoapprove
+  )
+  VALUES (
+    1,
+    'vueclient',
+    'vueclientpwd',
+    'spring-boot-application',
+    'read,write',
+    'authorization_code,password,implicit,refresh_token',
+    null,
+    'USER',
+    36000,
+    2592000,
+    null,
+    null
+  );
+

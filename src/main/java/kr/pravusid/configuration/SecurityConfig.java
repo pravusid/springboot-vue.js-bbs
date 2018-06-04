@@ -1,4 +1,4 @@
-package kr.pravusid;
+package kr.pravusid.configuration;
 
 import kr.pravusid.domain.user.customuserdetail.Authority;
 import org.springframework.context.annotation.Bean;
@@ -48,9 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/board/**").permitAll()
-                .antMatchers("/mypage/**").hasAnyAuthority(Authority.USER.getAuthority(), Authority.ADMIN.getAuthority())
                 .antMatchers("/admin/**").hasAuthority(Authority.ADMIN.getAuthority())
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/oauth/token").permitAll()
                 .and()
             .csrf()
                 .ignoringAntMatchers("/h2-console/**")
