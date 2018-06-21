@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/board/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority(Authority.ADMIN.getAuthority())
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/oauth/**").permitAll()
                 .and()
             .csrf()
                 .ignoringAntMatchers("/h2-console/**")

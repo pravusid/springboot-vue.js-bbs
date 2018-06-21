@@ -7,10 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
@@ -23,25 +25,33 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @EnableAuthorizationServer
 public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${resouce.id:spring-boot-application}")
-    private String resourceId;
-
     @Value("${security.oauth2.resource.jwt.key-value}")
     private String publicKey;
 
+    private DataSource dataSource;
     private AuthenticationManager authenticationManager;
-    private ClientDetailsService clientDetailsService;
 
-    public AuthorizationSeverConfig(AuthenticationManager authenticationManager, ClientDetailsService clientDetailsService) {
+    public AuthorizationSeverConfig(DataSource dataSource, AuthenticationManager authenticationManager) {
+        this.dataSource = dataSource;
         this.authenticationManager = authenticationManager;
-        this.clientDetailsService = clientDetailsService;
+    }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.withClientDetails(clientDetailsService());
+    }
+
+    @Bean
+    @Primary
+    public ClientDetailsService clientDetailsService() {
+        return new JdbcClientDetailsService(dataSource);
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore())
-                .accessTokenConverter(accessTokenConverter())
-                .authenticationManager(authenticationManager);
+        endpoints.authenticationManager(authenticationManager)
+                .tokenStore(tokenStore())
+                .accessTokenConverter(accessTokenConverter());
     }
 
     /**
@@ -73,16 +83,5 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     }
 
     // END
-
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(clientDetailsService);
-    }
-
-    @Bean
-    @Primary
-    public JdbcClientDetailsService JdbcClientDetailsService(DataSource dataSource) {
-        return new JdbcClientDetailsService(dataSource);
-    }
 
 }
