@@ -5,6 +5,7 @@ import kr.pravusid.domain.user.customuserdetail.Authority;
 import kr.pravusid.domain.user.persistentlogins.PersistentLogins;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -37,7 +38,7 @@ public class User extends BaseEntity implements UserDetails {
     public User(String username, String password, String name, String email) {
         this();
         this.username = username;
-        this.password = password;
+        this.password = new BCryptPasswordEncoder().encode(password);
         this.name = name;
         this.email = email;
     }

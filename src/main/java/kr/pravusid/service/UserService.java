@@ -13,11 +13,9 @@ import java.util.List;
 public class UserService {
 
     private UserRepository userRepo;
-    private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepo) {
         this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> findAll() {
@@ -25,7 +23,7 @@ public class UserService {
     }
 
     public void save(UserDto userDto) {
-        User user = userRepo.save(userDto.toEntity(passwordEncoder));
+        User user = userRepo.save(userDto.toEntity());
         UserSessionUtil.applyAuthToCtxHolder(user);
     }
 
@@ -35,7 +33,7 @@ public class UserService {
 
     public void update(UserDto userDto) {
         User user = userRepo.findOne(userDto.getId());
-        user.update(userDto.toEntity(passwordEncoder));
+        user.update(userDto.toEntity());
         userRepo.save(user);
         UserSessionUtil.applyAuthToCtxHolder(user);
     }

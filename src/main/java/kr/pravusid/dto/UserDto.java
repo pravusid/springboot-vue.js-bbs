@@ -66,8 +66,8 @@ public class UserDto extends BaseDto {
         this.email = email;
     }
 
-    public User toEntity(PasswordEncoder encoder) {
-        return new User(username, encoder.encode(password), name, email);
+    public User toEntity() {
+        return new User(username, password, name, email);
     }
 
 }
