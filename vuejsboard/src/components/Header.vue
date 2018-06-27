@@ -9,7 +9,7 @@
           <li v-if="!loggedIn"><router-link to="/signup">회원 가입</router-link></li>
           <li v-if="!loggedIn"><a @click="login">로그인</a></li>
           <li v-if="loggedIn"><router-link to="/user/modify">정보수정</router-link></li>
-          <li v-if="loggedIn"><router-link to="javascript:logout()">로그아웃</router-link></li>
+          <li v-if="loggedIn"><a @click="logout">로그아웃</a></li>
         </ul>
       </div>
     </nav>
@@ -18,7 +18,6 @@
 
 <script>
 import qstr from 'querystring';
-import axios from 'axios';
 
 export default {
   data() {
@@ -27,50 +26,60 @@ export default {
       params: {
         response_type: 'token',
         client_id: 'vueclient',
-        redirect_uri: 'http://localhost:3000',
+        redirect_uri: 'http://localhost:3000/login?success',
       },
+      originHost: 'localhost:3000',
     };
   },
-  computed: {
-    redirectUri() {
-      return this.params.redirect_uri.replace('http://', '').replace('https://', '');
-    },
+  mounted() {
+    const { user } = localStorage;
+    if (user) {
+      this.$store.dispatch('setuser', qstr.parse(user));
+      this.loggedIn = true;
+    }
   },
   methods: {
     login() {
       const url = `http://localhost:8080/oauth/authorize?${qstr.stringify(this.params)}`;
       const options = {
         width: 600,
-        height: 500,
+        height: 600,
       };
 
       const popup = window.open(url, 'auth', qstr.stringify(options, ','));
 
-      this.popupWatcher(popup).then((param) => {
-        this.$store.dispatch('setuser', param);
+      this.popupWatcher(popup, this.originHost).then((param) => {
         this.loggedIn = true;
-        axios.defaults.headers.common.Authorization = `bearer ${param.access_token}`;
+        this.$store.dispatch('setuser', param);
       });
     },
-    popupWatcher(window) {
+    popupWatcher(popup, exitUrl) {
       return new Promise((resolve, reject) => {
         const polling = setInterval(() => {
-          if (!window || window.closed || window.closed === undefined) {
+          if (!popup || popup.closed || popup === undefined) {
             clearInterval(polling);
             reject(new Error('로그인 윈도우 종료'));
           }
-          if (window.location.host === this.redirectUri) {
-            const hash = qstr.parse(window.location.hash.substring(1).replace(/[/$]/, ''));
-            if (hash.error) {
-              reject(new Error(hash.error));
-            } else {
-              resolve(hash);
+          try {
+            if (popup.location.host === exitUrl) {
+              const hash = qstr.parse(popup.location.hash.substring(1));
+              if (hash.error) {
+                reject(new Error(hash.error));
+              } else {
+                resolve(hash);
+              }
+              clearInterval(polling);
+              popup.close();
             }
-            clearInterval(polling);
-            window.close();
+          } catch (error) {
+            // cross origin frame exception
           }
         }, 500);
       });
+    },
+    logout() {
+      this.loggedIn = false;
+      this.$store.dispatch('setuser', null);
     },
   },
 };
