@@ -1,6 +1,6 @@
 package kr.pravusid.configuration;
 
-import kr.pravusid.domain.user.customuserdetail.Authority;
+import kr.pravusid.domain.user.Authority;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +16,9 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
@@ -50,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/board/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority(Authority.ADMIN.getAuthority())
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/oauth/**").permitAll()
+                .antMatchers("/oauth/**").hasAuthority(Authority.USER.getAuthority())
                 .and()
             .csrf()
                 .ignoringAntMatchers("/h2-console/**")

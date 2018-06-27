@@ -40,6 +40,6 @@ INSERT INTO
     36000,
     2592000,
     null,
-    null
+    'true'
   );
 

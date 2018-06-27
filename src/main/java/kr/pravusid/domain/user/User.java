@@ -1,7 +1,6 @@
 package kr.pravusid.domain.user;
 
 import kr.pravusid.domain.BaseEntity;
-import kr.pravusid.domain.user.customuserdetail.Authority;
 import kr.pravusid.domain.user.persistentlogins.PersistentLogins;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

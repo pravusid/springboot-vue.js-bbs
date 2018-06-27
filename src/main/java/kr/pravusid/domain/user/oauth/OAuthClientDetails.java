@@ -1,4 +1,4 @@
-package kr.pravusid.domain.user.oauthorization;
+package kr.pravusid.domain.user.oauth;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
