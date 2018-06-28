@@ -2,6 +2,7 @@ package kr.pravusid.configuration;
 
 import kr.pravusid.domain.user.Authority;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -19,6 +20,7 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
@@ -38,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/js/**", "/css/**", "/h2-console/**");
+        web.ignoring()
+            .antMatchers("/js/**", "/css/**", "/h2-console/**");
     }
 
     @Override
@@ -49,6 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+            .cors()
+                .and()
             .authorizeRequests()
                 .antMatchers("/board/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority(Authority.ADMIN.getAuthority())
@@ -101,6 +106,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         persistentTokenBasedRememberMeServices.setParameter("REMEMBER_ME");
         persistentTokenBasedRememberMeServices.setTokenValiditySeconds(60 * 60 * 24 * 30);
         return persistentTokenBasedRememberMeServices;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource()  {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
     }
 
 }
