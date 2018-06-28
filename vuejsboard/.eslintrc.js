@@ -13,5 +13,6 @@ module.exports = {
     'vue/valid-v-if': 'error',
     'linebreak-style': 0,
     'no-param-reassign': 0,
+    'prefer-destructuring': 0,
   }
 };

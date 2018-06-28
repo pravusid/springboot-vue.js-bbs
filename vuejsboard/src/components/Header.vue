@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import qstr from 'querystring';
+import qstr from 'query-string';
 
 export default {
   data() {
@@ -28,11 +28,11 @@ export default {
         client_id: 'vueclient',
         redirect_uri: 'http://localhost:3000/login?success',
       },
-      originHost: 'localhost:3000',
+      originHost: 'http://localhost:3000',
     };
   },
   mounted() {
-    const { user } = localStorage;
+    const user = localStorage.user;
     if (user) {
       this.$store.dispatch('setuser', qstr.parse(user));
       this.loggedIn = true;
@@ -41,12 +41,9 @@ export default {
   methods: {
     login() {
       const url = `http://localhost:8080/oauth/authorize?${qstr.stringify(this.params)}`;
-      const options = {
-        width: 600,
-        height: 600,
-      };
+      const options = 'width=600, height=600';
 
-      const popup = window.open(url, 'auth', qstr.stringify(options, ','));
+      const popup = window.open(url, 'auth', options);
 
       this.popupWatcher(popup, this.originHost).then((param) => {
         this.loggedIn = true;
@@ -54,14 +51,18 @@ export default {
       });
     },
     popupWatcher(popup, exitUrl) {
+      const parseUrl = document.createElement('a');
+      parseUrl.href = exitUrl;
+
       return new Promise((resolve, reject) => {
         const polling = setInterval(() => {
           if (!popup || popup.closed || popup === undefined) {
             clearInterval(polling);
-            reject(new Error('로그인 윈도우 종료'));
+            reject(new Error('로그인 창 종료됨'));
           }
+
           try {
-            if (popup.location.host === exitUrl) {
+            if (popup.location.host === parseUrl.host) {
               const hash = qstr.parse(popup.location.hash.substring(1));
               if (hash.error) {
                 reject(new Error(hash.error));
@@ -74,7 +75,7 @@ export default {
           } catch (error) {
             // cross origin frame exception
           }
-        }, 500);
+        }, 250);
       });
     },
     logout() {
