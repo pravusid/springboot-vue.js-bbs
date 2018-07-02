@@ -3,6 +3,7 @@ package kr.pravusid.service;
 import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import kr.pravusid.dto.UserDto;
+import kr.pravusid.dto.exception.CustomValidationException;
 import kr.pravusid.util.UserSessionUtil;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,13 +34,19 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public void save(UserDto userDto) {
+    public User save(UserDto userDto) {
+        duplicateCheck(userDto);
         User user = userRepo.save(userDto.toEntity());
         UserSessionUtil.applyAuthToCtxHolder(user);
+        return user;
     }
 
     public User findOne(Long id) {
         return userRepo.findOne(id);
+    }
+
+    public User findOne(String username) {
+        return userRepo.findByUsername(username);
     }
 
     public void update(UserDto userDto) {
@@ -47,6 +54,15 @@ public class UserService implements UserDetailsService {
         user.update(userDto.toEntity());
         userRepo.save(user);
         UserSessionUtil.applyAuthToCtxHolder(user);
+    }
+
+    private void duplicateCheck(UserDto dto) {
+        if (userRepo.findByUsername(dto.getUsername()) != null) {
+            throw new CustomValidationException("이미 존재하는 아이디 입니다", "username");
+        }
+        if (userRepo.findByEmail(dto.getEmail()) != null) {
+            throw new CustomValidationException("사용중인 이메일 입니다", "email");
+        }
     }
 
 }

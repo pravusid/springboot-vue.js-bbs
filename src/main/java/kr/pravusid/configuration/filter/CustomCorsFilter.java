@@ -1,4 +1,4 @@
-package kr.pravusid.configuration;
+package kr.pravusid.configuration.filter;
 
 
 import org.springframework.core.Ordered;

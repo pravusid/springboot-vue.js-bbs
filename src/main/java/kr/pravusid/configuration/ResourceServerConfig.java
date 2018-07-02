@@ -33,6 +33,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/**")
                 .and()
             .authorizeRequests()
+                .antMatchers("/api/**/user/signup").permitAll()
                 .antMatchers("/api/**").hasAuthority(Authority.USER.getAuthority())
                 .and()
             .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
