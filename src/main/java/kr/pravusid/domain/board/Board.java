@@ -13,11 +13,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 import kr.pravusid.domain.BaseEntity;
+import kr.pravusid.domain.UserVerifiable;
 import kr.pravusid.domain.comment.Comment;
 import kr.pravusid.domain.user.User;
 
 @Entity
-public class Board extends BaseEntity {
+public class Board extends BaseEntity implements UserVerifiable {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_board_user"))
@@ -76,6 +77,7 @@ public class Board extends BaseEntity {
         this.content = reqBoard.content;
     }
 
+    @Override
     public boolean verifyUser(String username) {
         return this.user.verifyUser(username);
     }

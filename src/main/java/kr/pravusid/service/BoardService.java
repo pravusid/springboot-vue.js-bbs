@@ -47,12 +47,12 @@ public class BoardService {
         boardRepo.save(boardDto.toEntity(user));
     }
 
+    @Transactional
     public void update(Long boardId, BoardDto reqBoard) {
         Board board = boardRepo.findOne(boardId);
-        permissionCheck(board);
+        UserSessionUtil.permissionCheck(board);
         User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
         board.update(reqBoard.toEntity(user));
-        boardRepo.save(board);
     }
 
     public BoardDto findOneAndHit(Long id) {
@@ -64,22 +64,16 @@ public class BoardService {
 
     public BoardDto findOneForMod(Long id) {
         Board board = boardRepo.findOne(id);
-        permissionCheck(board);
+        UserSessionUtil.permissionCheck(board);
         return new BoardDto(board);
     }
 
     @Transactional
     public void delete(Long boardId) {
         Board board = boardRepo.findOne(boardId);
-        permissionCheck(board);
+        UserSessionUtil.permissionCheck(board);
         commentRepo.delete(board.getComments());
         boardRepo.delete(boardId);
-    }
-
-    private void permissionCheck(Board board) {
-        if (!board.verifyUser(UserSessionUtil.getAuthenticatedUsername())) {
-            throw new AuthenticationCredentialsNotFoundException("권한이 없습니다");
-        }
     }
 
 }

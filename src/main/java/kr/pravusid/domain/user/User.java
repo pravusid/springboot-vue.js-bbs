@@ -1,6 +1,7 @@
 package kr.pravusid.domain.user;
 
 import kr.pravusid.domain.BaseEntity;
+import kr.pravusid.domain.UserVerifiable;
 import kr.pravusid.domain.user.persistentlogins.PersistentLogins;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserVerifiable, UserDetails {
 
     @OneToOne(mappedBy = "user")
     private PersistentLogins persistentLogins;
@@ -65,6 +66,7 @@ public class User extends BaseEntity implements UserDetails {
         email = (reqUser.email.isEmpty()) ? email : reqUser.email;
     }
 
+    @Override
     public boolean verifyUser(String username) {
         return this.username.equals(username);
     }

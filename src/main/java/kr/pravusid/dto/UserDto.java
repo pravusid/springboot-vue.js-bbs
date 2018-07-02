@@ -5,9 +5,8 @@ import javax.validation.constraints.Size;
 import kr.pravusid.domain.user.User;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import kr.pravusid.util.FieldsMatcher;
+import kr.pravusid.dto.validation.FieldsMatcher;
 
 @FieldsMatcher(baseField = "password", matchField = "confirmpassword", message = "비밀번호가 일치하지 않습니다")
 public class UserDto extends BaseDto {

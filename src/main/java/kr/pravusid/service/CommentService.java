@@ -8,8 +8,6 @@ import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import kr.pravusid.dto.CommentDto;
 import kr.pravusid.util.UserSessionUtil;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -64,18 +62,18 @@ public class CommentService {
         commentRepo.save(comment);
     }
 
+    @Transactional
     public void update(CommentDto commentDto, Long commentId) {
         User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
         Comment comment = commentRepo.findOne(commentId);
-        permissionCheck(comment);
+        UserSessionUtil.permissionCheck(comment);
         comment.update(commentDto.toEntity(user, comment.getBoard()));
-        commentRepo.save(comment);
     }
 
     @Transactional
     public void delete(Long boardId, Long commentId) {
         Comment comment = commentRepo.findOne(commentId);
-        permissionCheck(comment);
+        UserSessionUtil.permissionCheck(comment);
 
         List<Comment> targets = findTargets(boardRepo.findOne(boardId).getComments(), comment);
         long replyOrder = findReplyOrder(targets, comment);
@@ -108,12 +106,6 @@ public class CommentService {
                         .mapToLong(c -> c.getReplyOrder() + 1).max()
                         .orElse(comment.getReplyOrder() + 1)
                         );
-    }
-
-    private void permissionCheck(Comment comment) throws AuthenticationException {
-        if (!comment.verifyUser(UserSessionUtil.getAuthenticatedUsername())) {
-            throw new AuthenticationCredentialsNotFoundException("권한이 없습니다");
-        }
     }
 
 }

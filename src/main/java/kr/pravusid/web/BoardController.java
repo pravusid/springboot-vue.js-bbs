@@ -79,7 +79,7 @@ public class BoardController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/board/write")
-    public String write(HttpServletRequest request) {
+    public String write() {
         return "board/write";
     }
 

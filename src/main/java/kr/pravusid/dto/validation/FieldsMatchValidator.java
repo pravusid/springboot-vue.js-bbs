@@ -1,4 +1,4 @@
-package kr.pravusid.util;
+package kr.pravusid.dto.validation;
 
 import java.lang.reflect.Field;
 

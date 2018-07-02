@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signup(UserDto userDto) {
+    public String signup() {
         return "user/signup";
     }
 

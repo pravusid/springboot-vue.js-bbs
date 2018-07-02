@@ -1,13 +1,14 @@
 package kr.pravusid.domain.comment;
 
 import kr.pravusid.domain.BaseEntity;
+import kr.pravusid.domain.UserVerifiable;
 import kr.pravusid.domain.board.Board;
 import kr.pravusid.domain.user.User;
 
 import javax.persistence.*;
 
 @Entity
-public class Comment extends BaseEntity {
+public class Comment extends BaseEntity implements UserVerifiable {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_user"))
@@ -70,6 +71,7 @@ public class Comment extends BaseEntity {
         this.content = reqComment.content;
     }
 
+    @Override
     public boolean verifyUser(String username) {
         return this.user.verifyUser(username);
     }
