@@ -4,42 +4,77 @@
       <h1>회원 가입</h1>
     </div>
     <div class="row">
-      <form class="col s12" action="/user" method="post">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="username" name="username" type="text" class="validate">
-            <label for="username">사용자 아이디</label>
-          </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="username" v-model="user.username" type="text" class="validate">
+          <label for="username">사용자 아이디</label>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="password" name="password" type="password" class="validate">
-            <label for="password">비밀번호</label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="password" v-model="user.password" type="password" class="validate">
+          <label for="password">비밀번호</label>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="passwordre" name="passwordre" type="password" class="validate">
-            <label for="password">비밀번호확인</label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="passwordre" v-model="user.confirmpassword" type="password" class="validate">
+          <label for="password">비밀번호확인</label>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="name" name="name" type="text" class="validate">
-            <label for="name">이름</label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="name" v-model="user.name" type="text" class="validate">
+          <label for="name">이름</label>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="email" name="email" type="email" class="validate">
-            <label for="email">이메일</label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="email" v-model="user.email" type="email" class="validate">
+          <label for="email">이메일</label>
         </div>
-        <button class="btn waves-effect waves-light" type="submit" name="action">회원가입
-          <i class="material-icons right">send</i>
-        </button>
-      </form>
+      </div>
+      <button class="btn waves-effect waves-light" @click="signup">회원가입
+        <i class="material-icons right">send</i>
+      </button>
     </div>
   </div>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+
+  data: () => ({
+    user: {
+      username: null,
+      password: null,
+      confirmpassword: null,
+      name: null,
+      email: null,
+    },
+  }),
+
+  methods: {
+    signup() {
+      axios.post('/api/v1/user/signup', this.user)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log('가입성공');
+            this.$notify({
+              group: 'noti',
+              type: 'success',
+              title: '',
+              text: 'rkdlqtjdrhd',
+            });
+            this.$router.push('/');
+          }
+        }).catch(() => {
+          console.log('가입실패');
+        });
+    },
+  },
+
+};
+</script>

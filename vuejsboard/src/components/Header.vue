@@ -20,17 +20,17 @@
 import qstr from 'query-string';
 
 export default {
-  data() {
-    return {
-      loggedIn: false,
-      params: {
-        response_type: 'token',
-        client_id: 'vueclient',
-        redirect_uri: 'http://localhost:3000/login?success',
-      },
-      originHost: 'http://localhost:3000',
-    };
-  },
+
+  data: () => ({
+    loggedIn: false,
+    params: {
+      response_type: 'token',
+      client_id: 'vueclient',
+      redirect_uri: 'http://localhost:3000/login?success',
+    },
+    originHost: 'http://localhost:3000',
+  }),
+
   mounted() {
     const user = localStorage.user;
     if (user) {
@@ -38,9 +38,10 @@ export default {
       this.loggedIn = true;
     }
   },
+
   methods: {
     login() {
-      const url = `http://localhost:8080/oauth/authorize?${qstr.stringify(this.params)}`;
+      const url = `/oauth/authorize?${qstr.stringify(this.params)}`;
       const options = 'width=600, height=600';
 
       const popup = window.open(url, 'auth', options);
@@ -50,6 +51,7 @@ export default {
         this.$store.dispatch('setuser', param);
       });
     },
+
     popupWatcher(popup, exitUrl) {
       const parseUrl = document.createElement('a');
       parseUrl.href = exitUrl;
@@ -78,10 +80,12 @@ export default {
         }, 250);
       });
     },
+
     logout() {
       this.loggedIn = false;
       this.$store.dispatch('setuser', null);
     },
   },
+
 };
 </script>

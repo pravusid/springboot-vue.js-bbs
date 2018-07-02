@@ -1,15 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
-import axios from 'axios';
 import qstr from 'query-string';
 
-Vue.use(Vuex);
+import { setAxiosHeader } from '../lib/axios-option';
 
-const setAxiosHeader = (param) => {
-  const str = (param === null) ? null : `${param.token_type} ${param.access_token}`;
-  axios.defaults.headers.common.Authorization = str;
-};
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
