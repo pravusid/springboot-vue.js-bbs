@@ -43,7 +43,6 @@ public class CommentServiceTest {
         // given comment
         CommentDto dto = new CommentDto();
         dto.setUser(user);
-        dto.setBoard(boDto);
         dto.setContent("테스트댓글");
 
         // when

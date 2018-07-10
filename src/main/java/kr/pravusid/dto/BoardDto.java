@@ -1,12 +1,11 @@
 package kr.pravusid.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.constraints.NotNull;
-
 import kr.pravusid.domain.board.Board;
 import kr.pravusid.domain.user.User;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BoardDto extends BaseDto {
 
@@ -22,16 +21,16 @@ public class BoardDto extends BaseDto {
 
     private int hit;
 
-    public BoardDto(Board board) {
-        assignBaseDtoVariable(board);
+    public BoardDto() {
+    }
+
+    private BoardDto(Board board) {
+        super(board);
         this.user = board.getUser();
         this.title = board.getTitle();
         this.content = board.getContent();
-        this.comments = board.getComments().stream().map(c -> new CommentDto(c, this)).collect(Collectors.toList());
+        this.comments = board.getComments().stream().map(CommentDto::of).collect(Collectors.toList());
         this.hit = board.getHit();
-    }
-
-    public BoardDto() {
     }
 
     public User getUser() {
@@ -51,8 +50,9 @@ public class BoardDto extends BaseDto {
     }
 
     public String getContent() {
-        return content.replace("\n", "<br>").replace("<script>", "&lt;script&gt;").replace("</script>",
-                "&lt;/script&gt;");
+        return content.replace("\n", "<br>")
+                .replace("<script>", "&lt;script&gt;")
+                .replace("</script>", "&lt;/script&gt;");
     }
 
     public void setContent(String content) {
@@ -81,6 +81,10 @@ public class BoardDto extends BaseDto {
 
     public Board toEntity(User user) {
         return new Board(user, title, content);
+    }
+
+    public static BoardDto of(Board it) {
+        return new BoardDto(it);
     }
 
 }

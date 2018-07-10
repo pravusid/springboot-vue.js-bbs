@@ -1,12 +1,11 @@
 package kr.pravusid.dto;
 
-import javax.validation.constraints.Size;
-
 import kr.pravusid.domain.user.User;
+import kr.pravusid.dto.validation.FieldsMatcher;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import kr.pravusid.dto.validation.FieldsMatcher;
+import javax.validation.constraints.Size;
 
 @FieldsMatcher(baseField = "password", matchField = "confirmpassword", message = "비밀번호가 일치하지 않습니다")
 public class UserDto extends BaseDto {
@@ -16,6 +15,7 @@ public class UserDto extends BaseDto {
 
     @Size(min = 4, message = "비밀번호는 4글자 이상 입력해주세요")
     private String password;
+
     private String confirmpassword;
 
     @Size(min = 4, message = "이름은 4글자 이상 입력해주세요")
@@ -25,6 +25,16 @@ public class UserDto extends BaseDto {
     @Email(message = "올바른 이메일주소가 아닙니다")
     private String email;
 
+    public UserDto() {
+    }
+
+    private UserDto(User user) {
+        super(user);
+        this.username = user.getUsername();
+        this.name = user.getName();
+        this.email = user.getEmail();
+    }
+
     public String getUsername() {
         return username;
     }
@@ -33,16 +43,8 @@ public class UserDto extends BaseDto {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getConfirmpassword() {
-        return confirmpassword;
     }
 
     public void setConfirmpassword(String confirmpassword) {
@@ -67,6 +69,10 @@ public class UserDto extends BaseDto {
 
     public User toEntity() {
         return new User(username, password, name, email);
+    }
+
+    public static UserDto of(User it) {
+        return new UserDto(it);
     }
 
 }

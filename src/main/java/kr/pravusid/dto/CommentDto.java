@@ -7,21 +7,22 @@ import kr.pravusid.domain.user.User;
 public class CommentDto extends BaseDto {
 
     private User user;
-    private BoardDto board;
+
     private String content;
+
     private long replyDepth;
+
     private long replyOrder;
 
-    public CommentDto(Comment comment, BoardDto boardDto) {
-        assignBaseDtoVariable(comment);
+    public CommentDto() {
+    }
+
+    private CommentDto(Comment comment) {
+        super(comment);
         this.user = comment.getUser();
-        this.board = boardDto;
         this.content = comment.getContent();
         this.replyDepth = comment.getReplyDepth();
         this.replyOrder = comment.getReplyOrder();
-    }
-
-    public CommentDto() {
     }
 
     public User getUser() {
@@ -32,17 +33,10 @@ public class CommentDto extends BaseDto {
         this.user = user;
     }
 
-    public BoardDto getBoard() {
-        return board;
-    }
-
-    public void setBoard(BoardDto board) {
-        this.board = board;
-    }
-
     public String getContent() {
-        return content.replace("\n", "<br>").replace("<script>", "&lt;script&gt;").replace("</script>",
-                "&lt;/script&gt;");
+        return content.replace("\n", "<br>")
+                .replace("<script>", "&lt;script&gt;")
+                .replace("</script>", "&lt;/script&gt;");
     }
 
     public void setContent(String content) {
@@ -67,6 +61,10 @@ public class CommentDto extends BaseDto {
 
     public Comment toEntity(User user, Board board) {
         return new Comment(user, board, content, replyDepth, replyOrder);
+    }
+
+    public static CommentDto of(Comment it) {
+        return new CommentDto(it);
     }
 
 }

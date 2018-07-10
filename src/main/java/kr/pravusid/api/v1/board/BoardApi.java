@@ -27,7 +27,7 @@ public class BoardApi {
     @GetMapping("")
     public Page<BoardDto> list(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                Pagination pagination) {
-        Page<BoardDto> list = boardSvc.findAll(pageable, pagination);
+        Page<BoardDto> list = boardSvc.findAll(pageable, pagination).map(BoardDto::of);
         pagination.calcPage(list, 5);
         return list;
     }

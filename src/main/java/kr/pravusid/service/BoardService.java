@@ -12,7 +12,6 @@ import kr.pravusid.util.UserSessionUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,16 +29,15 @@ public class BoardService {
         this.commentRepo = commentRepo;
     }
 
-    public Page<BoardDto> findAll(Pageable pageable, Pagination pagination) {
+    public Page<Board> findAll(Pageable pageable, Pagination pagination) {
         if (pagination.getKeyword() == null) {
-            return boardRepo.findAll(pageable).map(BoardDto::new);
+            return boardRepo.findAll(pageable);
         }
 
         String keyword = pagination.getKeyword();
-        Page<Board> list = (pagination.filterMatcher(Pagination.FilterType.ALL))?
+        return (pagination.filterMatcher(Pagination.FilterType.ALL))?
                 boardRepo.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable):
                 boardRepo.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
-        return list.map(BoardDto::new);
     }
 
     public void save(BoardDto boardDto) {
@@ -55,17 +53,17 @@ public class BoardService {
         board.update(reqBoard.toEntity(user));
     }
 
-    public BoardDto findOneAndHit(Long id) {
+    public Board findOneAndHit(Long id) {
         Board board = boardRepo.findOne(id);
         board.increaseHit();
         boardRepo.save(board);
-        return new BoardDto(board);
+        return board;
     }
 
-    public BoardDto findOneForMod(Long id) {
+    public Board findOneForMod(Long id) {
         Board board = boardRepo.findOne(id);
         UserSessionUtil.permissionCheck(board);
-        return new BoardDto(board);
+        return board;
     }
 
     @Transactional

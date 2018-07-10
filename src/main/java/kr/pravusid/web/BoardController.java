@@ -1,7 +1,7 @@
 package kr.pravusid.web;
 
-import javax.servlet.http.HttpServletRequest;
-
+import kr.pravusid.dto.BoardDto;
+import kr.pravusid.dto.Pagination;
 import kr.pravusid.service.BoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,16 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import kr.pravusid.dto.BoardDto;
-import kr.pravusid.dto.Pagination;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class BoardController {
@@ -37,8 +30,9 @@ public class BoardController {
     @GetMapping("/board")
     public String list(@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
                        Pagination pagination, Model model) {
-        Page<BoardDto> list = boardSvc.findAll(pageable, pagination);
+        Page<BoardDto> list = boardSvc.findAll(pageable, pagination).map(BoardDto::of);
         logger.info("검색요청: 필터-{}, 검색어-{}", pagination.getFilter(), pagination.getKeyword());
+
         model.addAttribute("pagination", pagination.calcPage(list, 5));
         model.addAttribute("list", list);
         return "board/list";
@@ -55,7 +49,7 @@ public class BoardController {
     public String detail(@PathVariable Long id, HttpServletRequest request, Authentication auth, Model model) {
         model.addAttribute("auth", auth);
         model.addAttribute("query", request.getQueryString());
-        model.addAttribute("detail", boardSvc.findOneAndHit(id));
+        model.addAttribute("detail", BoardDto.of(boardSvc.findOneAndHit(id)));
         return "board/detail";
     }
 
@@ -87,7 +81,7 @@ public class BoardController {
     @GetMapping("/board/{id}/modify")
     public String modify(@PathVariable Long id, HttpServletRequest request, Model model) {
         model.addAttribute("query", request.getQueryString());
-        model.addAttribute("detail", boardSvc.findOneForMod(id));
+        model.addAttribute("detail", BoardDto.of(boardSvc.findOneForMod(id)));
         return "board/modify";
     }
 
