@@ -2,6 +2,7 @@ package kr.pravusid.dto;
 
 import kr.pravusid.domain.board.Board;
 import kr.pravusid.domain.user.User;
+import kr.pravusid.helper.StringHelper;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class BoardDto extends BaseDto {
 
-    private User user;
+    private UserDto user;
 
     @NotNull
     private String title;
@@ -26,18 +27,18 @@ public class BoardDto extends BaseDto {
 
     private BoardDto(Board board) {
         super(board);
-        this.user = board.getUser();
+        this.user = UserDto.of(board.getUser());
         this.title = board.getTitle();
         this.content = board.getContent();
         this.comments = board.getComments().stream().map(CommentDto::of).collect(Collectors.toList());
         this.hit = board.getHit();
     }
 
-    public User getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 
@@ -50,9 +51,7 @@ public class BoardDto extends BaseDto {
     }
 
     public String getContent() {
-        return content.replace("\n", "<br>")
-                .replace("<script>", "&lt;script&gt;")
-                .replace("</script>", "&lt;/script&gt;");
+        return StringHelper.escapeCharacters(content);
     }
 
     public void setContent(String content) {

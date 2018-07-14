@@ -67,8 +67,8 @@ public class Comment extends BaseEntity implements UserVerifiable {
         }
     }
 
-    public void update(Comment reqComment) {
-        this.content = reqComment.content;
+    public void update(String content) {
+        this.content = content;
     }
 
     @Override

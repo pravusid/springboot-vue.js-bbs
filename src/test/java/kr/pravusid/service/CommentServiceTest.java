@@ -8,6 +8,7 @@ import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import kr.pravusid.dto.BoardDto;
 import kr.pravusid.dto.CommentDto;
+import kr.pravusid.dto.UserDto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,11 +43,11 @@ public class CommentServiceTest {
         boDto.setId(board.getId());
         // given comment
         CommentDto dto = new CommentDto();
-        dto.setUser(user);
+        dto.setUser(UserDto.of(user));
         dto.setContent("테스트댓글");
 
         // when
-        commentService.save(dto, board.getId());
+        commentService.save(user.getUsername(), board.getId(), dto);
 
         // then
         Comment result = commentRepository.findOne(1L);

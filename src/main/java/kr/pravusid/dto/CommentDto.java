@@ -3,10 +3,11 @@ package kr.pravusid.dto;
 import kr.pravusid.domain.board.Board;
 import kr.pravusid.domain.comment.Comment;
 import kr.pravusid.domain.user.User;
+import kr.pravusid.helper.StringHelper;
 
 public class CommentDto extends BaseDto {
 
-    private User user;
+    private UserDto user;
 
     private String content;
 
@@ -19,24 +20,22 @@ public class CommentDto extends BaseDto {
 
     private CommentDto(Comment comment) {
         super(comment);
-        this.user = comment.getUser();
+        this.user = UserDto.of(comment.getUser());
         this.content = comment.getContent();
         this.replyDepth = comment.getReplyDepth();
         this.replyOrder = comment.getReplyOrder();
     }
 
-    public User getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 
     public String getContent() {
-        return content.replace("\n", "<br>")
-                .replace("<script>", "&lt;script&gt;")
-                .replace("</script>", "&lt;/script&gt;");
+        return StringHelper.escapeCharacters(content);
     }
 
     public void setContent(String content) {

@@ -1,21 +1,12 @@
 package kr.pravusid.domain.board;
 
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-
 import kr.pravusid.domain.BaseEntity;
 import kr.pravusid.domain.UserVerifiable;
 import kr.pravusid.domain.comment.Comment;
 import kr.pravusid.domain.user.User;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Board extends BaseEntity implements UserVerifiable {
@@ -69,12 +60,9 @@ public class Board extends BaseEntity implements UserVerifiable {
         this.hit += 1;
     }
 
-    public void update(Board reqBoard) {
-        if (!user.equals(reqBoard.getUser())) {
-            return;
-        }
-        this.title = reqBoard.title;
-        this.content = reqBoard.content;
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
     @Override

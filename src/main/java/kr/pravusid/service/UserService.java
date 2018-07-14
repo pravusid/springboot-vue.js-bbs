@@ -1,29 +1,31 @@
 package kr.pravusid.service;
 
+import kr.pravusid.domain.UserVerifiable;
 import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import kr.pravusid.dto.UserDto;
 import kr.pravusid.dto.exception.CustomValidationException;
-import kr.pravusid.util.UserSessionUtil;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    private UserRepository userRepo;
+    private UserRepository userRepository;
 
-    public UserService(UserRepository userRepo) {
-        this.userRepo = userRepo;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
@@ -31,36 +33,40 @@ public class UserService implements UserDetailsService {
     }
 
     public List<User> findAll() {
-        return userRepo.findAll();
+        return userRepository.findAll();
     }
 
-    public User save(UserDto userDto) {
-        duplicateCheck(userDto);
-        User user = userRepo.save(userDto.toEntity());
-        UserSessionUtil.applyAuthToCtxHolder(user);
-        return user;
+    public User save(UserDto dto) {
+        duplicateCheck(dto);
+        return userRepository.save(dto.toEntity());
     }
 
     public User findOne(Long id) {
-        return userRepo.findOne(id);
+        return userRepository.findOne(id);
     }
 
     public User findOne(String username) {
-        return userRepo.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
-    public void update(UserDto userDto) {
-        User user = userRepo.findOne(userDto.getId());
-        user.update(userDto.toEntity());
-        userRepo.save(user);
-        UserSessionUtil.applyAuthToCtxHolder(user);
+    @Transactional
+    public User update(UserDto dto) {
+        User user = userRepository.findOne(dto.getId());
+        user.update(dto.toEntity());
+        return user;
+    }
+
+    public void permissionCheck(String username, UserVerifiable entity) {
+        if (!entity.verifyUser(username)) {
+            throw new AuthenticationCredentialsNotFoundException("권한이 없습니다");
+        }
     }
 
     private void duplicateCheck(UserDto dto) {
-        if (userRepo.findByUsername(dto.getUsername()) != null) {
+        if (userRepository.findByUsername(dto.getUsername()) != null) {
             throw new CustomValidationException("이미 존재하는 아이디 입니다", "username");
         }
-        if (userRepo.findByEmail(dto.getEmail()) != null) {
+        if (userRepository.findByEmail(dto.getEmail()) != null) {
             throw new CustomValidationException("사용중인 이메일 입니다", "email");
         }
     }

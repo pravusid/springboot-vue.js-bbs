@@ -7,7 +7,6 @@ import kr.pravusid.domain.comment.CommentRepository;
 import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import kr.pravusid.dto.CommentDto;
-import kr.pravusid.util.UserSessionUtil;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,37 +16,41 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
 
-    private UserRepository userRepo;
-    private BoardRepository boardRepo;
-    private CommentRepository commentRepo;
+    private UserService userService;
 
-    public CommentService(UserRepository userRepo, BoardRepository boardRepo, CommentRepository commentRepo) {
-        this.userRepo = userRepo;
-        this.boardRepo = boardRepo;
-        this.commentRepo = commentRepo;
+    private UserRepository userRepository;
+    private BoardRepository boardRepository;
+    private CommentRepository commentRepository;
+
+    public CommentService(UserService userService, UserRepository userRepository,
+                          BoardRepository boardRepository, CommentRepository commentRepository) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.boardRepository = boardRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Transactional
-    public void save(CommentDto commentDto, Long boardId) {
-        User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
+    public void save(String username, Long boardId, CommentDto dto) {
+        User user = userRepository.findByUsername(username);
 
-        if (commentDto.getReplyDepth() == 0) {
-            saveParentComment(user, commentDto, boardId);
+        if (dto.getReplyDepth() == 0) {
+            saveParentComment(user, boardId, dto);
         } else {
-            saveChildComment(user, commentDto, boardId);
+            saveChildComment(user, boardId, dto);
         }
     }
 
-    private void saveParentComment(User user, CommentDto commentDto, Long boardId) {
-        commentDto.setReplyOrder(commentRepo.getMaximumReplyOrder() + 1);
-        Comment comment = commentRepo.save(commentDto.toEntity(user, boardRepo.findOne(boardId)));
+    private void saveParentComment(User user, Long boardId, CommentDto dto) {
+        dto.setReplyOrder(commentRepository.getMaximumReplyOrder() + 1);
+        Comment comment = commentRepository.save(dto.toEntity(user, boardRepository.findOne(boardId)));
         comment.adjustReplyDepth();
-        commentRepo.save(comment);
+        commentRepository.save(comment);
     }
 
-    private void saveChildComment(User user, CommentDto commentDto, Long boardId) {
-        Board board = boardRepo.findOne(boardId);
-        Comment comment = commentDto.toEntity(user, board);
+    private void saveChildComment(User user, Long boardId, CommentDto dto) {
+        Board board = boardRepository.findOne(boardId);
+        Comment comment = dto.toEntity(user, board);
 
         List<Comment> targets = findTargets(board.getComments(), comment);
         long replyOrder = findReplyOrder(targets, comment);
@@ -55,27 +58,26 @@ public class CommentService {
         targets.stream()
                 .filter(c -> c.getReplyOrder() >= replyOrder)
                 .forEach(c -> c.adjustReplyOrder());
-        commentRepo.save(targets);
+        commentRepository.save(targets);
 
         comment.adjustReplyDepth();
         comment.adjustReplyOrder(replyOrder);
-        commentRepo.save(comment);
+        commentRepository.save(comment);
     }
 
     @Transactional
-    public void update(CommentDto commentDto, Long commentId) {
-        User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
-        Comment comment = commentRepo.findOne(commentId);
-        UserSessionUtil.permissionCheck(comment);
-        comment.update(commentDto.toEntity(user, comment.getBoard()));
+    public void update(String username, Long id, CommentDto dto) {
+        Comment comment = commentRepository.findOne(id);
+        userService.permissionCheck(username, comment);
+        comment.update(dto.getContent());
     }
 
     @Transactional
-    public void delete(Long boardId, Long commentId) {
-        Comment comment = commentRepo.findOne(commentId);
-        UserSessionUtil.permissionCheck(comment);
+    public void delete(String username, Long boardId, Long id) {
+        Comment comment = commentRepository.findOne(id);
+        userService.permissionCheck(username, comment);
 
-        List<Comment> targets = findTargets(boardRepo.findOne(boardId).getComments(), comment);
+        List<Comment> targets = findTargets(boardRepository.findOne(boardId).getComments(), comment);
         long replyOrder = findReplyOrder(targets, comment);
 
         List<Comment> delList = targets.stream()
@@ -84,10 +86,10 @@ public class CommentService {
         targets.removeAll(delList);
 
         delList.add(comment);
-        commentRepo.delete(delList);
+        commentRepository.delete(delList);
 
         targets.forEach(c -> c.adjustReplyOrder(c.getReplyOrder() - delList.size()));
-        commentRepo.save(targets);
+        commentRepository.save(targets);
     }
 
     // 요청 댓글 이후의 댓글만

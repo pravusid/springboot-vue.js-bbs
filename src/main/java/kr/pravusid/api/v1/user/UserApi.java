@@ -2,14 +2,11 @@ package kr.pravusid.api.v1.user;
 
 import kr.pravusid.dto.UserDto;
 import kr.pravusid.service.UserService;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import kr.pravusid.domain.user.User;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -22,8 +19,9 @@ public class UserApi {
     }
 
     @GetMapping("")
-    public List<User> userList() {
-        return userService.findAll();
+    public List<UserDto> userList() {
+        return userService.findAll()
+                .stream().map(UserDto::of).collect(Collectors.toList());
     }
 
     @PostMapping("/signup")
@@ -32,8 +30,8 @@ public class UserApi {
     }
 
     @GetMapping("/{username}")
-    public User userDetails(@PathVariable String username) {
-        return userService.findOne(username);
+    public UserDto userDetails(@PathVariable String username) {
+        return UserDto.of(userService.findOne(username));
     }
 
 }

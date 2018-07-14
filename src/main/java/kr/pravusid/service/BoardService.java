@@ -8,7 +8,6 @@ import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import kr.pravusid.dto.BoardDto;
 import kr.pravusid.dto.Pagination;
-import kr.pravusid.util.UserSessionUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specifications;
@@ -19,59 +18,62 @@ import javax.transaction.Transactional;
 @Service
 public class BoardService {
 
-    private UserRepository userRepo;
-    private BoardRepository boardRepo;
-    private CommentRepository commentRepo;
+    private UserService userService;
 
-    public BoardService(UserRepository userRepo, BoardRepository boardRepo, CommentRepository commentRepo) {
-        this.userRepo = userRepo;
-        this.boardRepo = boardRepo;
-        this.commentRepo = commentRepo;
+    private UserRepository userRepository;
+    private BoardRepository boardRepository;
+    private CommentRepository commentRepository;
+
+    public BoardService(UserService userService, UserRepository userRepository,
+                        BoardRepository boardRepository, CommentRepository commentRepository) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.boardRepository = boardRepository;
+        this.commentRepository = commentRepository;
     }
 
     public Page<Board> findAll(Pageable pageable, Pagination pagination) {
         if (pagination.getKeyword() == null) {
-            return boardRepo.findAll(pageable);
+            return boardRepository.findAll(pageable);
         }
 
         String keyword = pagination.getKeyword();
         return (pagination.filterMatcher(Pagination.FilterType.ALL))?
-                boardRepo.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable):
-                boardRepo.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
+                boardRepository.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable):
+                boardRepository.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
     }
 
-    public void save(BoardDto boardDto) {
-        User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
-        boardRepo.save(boardDto.toEntity(user));
+    public void save(String username, BoardDto dto) {
+        User user = userRepository.findByUsername(username);
+        boardRepository.save(dto.toEntity(user));
     }
 
     @Transactional
-    public void update(Long boardId, BoardDto reqBoard) {
-        Board board = boardRepo.findOne(boardId);
-        UserSessionUtil.permissionCheck(board);
-        User user = userRepo.findByUsername(UserSessionUtil.getAuthenticatedUsername());
-        board.update(reqBoard.toEntity(user));
+    public void update(String username, Long id, BoardDto dto) {
+        Board board = boardRepository.findOne(id);
+        userService.permissionCheck(username, board);
+        board.update(dto.getTitle(), dto.getContent());
     }
 
     public Board findOneAndHit(Long id) {
-        Board board = boardRepo.findOne(id);
+        Board board = boardRepository.findOne(id);
         board.increaseHit();
-        boardRepo.save(board);
+        boardRepository.save(board);
         return board;
     }
 
-    public Board findOneForMod(Long id) {
-        Board board = boardRepo.findOne(id);
-        UserSessionUtil.permissionCheck(board);
+    public Board findOneForMod(String username, Long id) {
+        Board board = boardRepository.findOne(id);
+        userService.permissionCheck(username, board);
         return board;
     }
 
     @Transactional
-    public void delete(Long boardId) {
-        Board board = boardRepo.findOne(boardId);
-        UserSessionUtil.permissionCheck(board);
-        commentRepo.delete(board.getComments());
-        boardRepo.delete(boardId);
+    public void delete(String username, Long id) {
+        Board board = boardRepository.findOne(id);
+        userService.permissionCheck(username, board);
+        commentRepository.delete(board.getComments());
+        boardRepository.delete(id);
     }
 
 }
