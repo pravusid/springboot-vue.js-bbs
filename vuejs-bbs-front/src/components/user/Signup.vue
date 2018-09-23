@@ -68,13 +68,19 @@ export default {
             this.$notify({
               group: 'noti',
               type: 'success',
-              title: '',
               text: '가입성공',
             });
             this.$router.push('/');
           }
-        }).catch(() => {
-          console.log('가입실패');
+        }).catch((err) => {
+          err.response.data.errors.forEach((error) => {
+            this.$notify({
+              group: 'noti',
+              type: 'error',
+              duration: 6000,
+              text: error.defaultMessage,
+            });
+          });
         });
     },
   },

@@ -68,7 +68,6 @@ export default {
           this.$notify({
             group: 'noti',
             type: 'success',
-            title: '',
             text: '회원정보가 수정되었습니다',
           });
           this.$router.push('/user');
@@ -81,7 +80,6 @@ export default {
       this.$notify({
         group: 'noti',
         type: 'error',
-        title: '',
         text: '접근권한이 없습니다',
       });
       this.$router.push('/');

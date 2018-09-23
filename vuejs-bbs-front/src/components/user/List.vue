@@ -36,7 +36,6 @@ export default {
         this.$notify({
           group: 'noti',
           type: 'error',
-          title: '',
           text: '접근권한이 없습니다',
         });
         this.$router.push('/');
