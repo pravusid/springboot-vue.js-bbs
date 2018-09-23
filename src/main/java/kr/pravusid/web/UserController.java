@@ -51,7 +51,6 @@ public class UserController {
     @PreAuthorize("#id==principal.id")
     @PutMapping("/user/{id}")
     public String modify(@PathVariable Long id, UserDto userDto) {
-        userDto.setId(id);
         sessionUserService.applyAuthToCtxHolder(userService.update(userDto));
         return "redirect:/user";
     }
