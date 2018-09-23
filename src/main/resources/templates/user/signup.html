@@ -11,7 +11,7 @@
     <h1>회원 가입</h1>
   </div>
   <div class="row">
-    <form class="col s12" action="#" th:action="@{/user}" th:object="${userDto}" method="post">
+    <form class="col s12" action="#" th:action="@{/signup}" th:object="${userDto}" method="post">
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
       <div class="row">
         <div class="input-field col s12">

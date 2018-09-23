@@ -1,42 +1,24 @@
 package kr.pravusid.dto.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class CustomValidationException extends RuntimeException {
 
-    private Error[] errors;
+    private FieldError error;
 
-    public CustomValidationException(String defaultMessage, String field){
-        this.errors = new Error[]{new Error(defaultMessage, field)};
+    public CustomValidationException(String objectName, String field, String defaultMessage){
+        this.error = new FieldError(objectName, field, defaultMessage);
     }
 
-    public CustomValidationException(Error[] errors) {
-        this.errors = errors;
+    public CustomValidationException(FieldError error) {
+        this.error = error;
     }
 
-    public Error[] getErrors() {
-        return errors;
-    }
-
-    public static class Error {
-
-        private String defaultMessage;
-        private String field;
-
-        private Error(String defaultMessage, String field) {
-            this.defaultMessage = defaultMessage;
-            this.field = field;
-        }
-
-        public String getDefaultMessage() {
-            return defaultMessage;
-        }
-
-        public String getField() {
-            return field;
-        }
+    public FieldError getError() {
+        return error;
     }
 
 }

@@ -20,7 +20,7 @@ public class WebConfig {
                 Map<String, Object> errorAttributes = super.getErrorAttributes(requestAttributes, includeStackTrace);
                 Throwable error = getError(requestAttributes);
                 if (error instanceof CustomValidationException) {
-                    errorAttributes.put("errors", ((CustomValidationException)error).getErrors());
+                    errorAttributes.put("errors", ((CustomValidationException)error).getError());
                 }
                 return errorAttributes;
             }

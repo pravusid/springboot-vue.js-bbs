@@ -42,10 +42,10 @@ dependencies {
 
 jar {
     manifest {
-        attributes  'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'kr.pravusid.WebApplication'
+        attributes 'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'kr.pravusid.WebApplication'
     }
     dependsOn configurations.runtime
     from {
-        configurations.compile.collect {it.isDirectory()? it: zipTree(it)}
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }

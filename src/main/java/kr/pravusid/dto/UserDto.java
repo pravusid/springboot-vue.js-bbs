@@ -43,8 +43,16 @@ public class UserDto extends BaseDto {
         this.username = username;
     }
 
+    public String getPassword() {
+        return null;
+    }
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmpassword() {
+        return null;
     }
 
     public void setConfirmpassword(String confirmpassword) {

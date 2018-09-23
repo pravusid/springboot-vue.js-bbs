@@ -1,8 +1,11 @@
 package kr.pravusid.web;
 
 import kr.pravusid.dto.UserDto;
-import kr.pravusid.service.UserService;
+import kr.pravusid.dto.exception.CustomValidationException;
 import kr.pravusid.service.SessionUserService;
+import kr.pravusid.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private SessionUserService sessionUserService;
     private UserService userService;
@@ -36,15 +41,6 @@ public class UserController {
         return "user/list";
     }
 
-    @PostMapping("/user")
-    public String signup(@Valid UserDto userDto, BindingResult binding) {
-        if (binding.hasErrors()) {
-            return "user/signup";
-        }
-        sessionUserService.applyAuthToCtxHolder(userService.save(userDto));
-        return "redirect:/";
-    }
-
     @PreAuthorize("#id==principal.id")
     @GetMapping("/user/{id}")
     public String detail(@PathVariable Long id, Model model) {
@@ -61,8 +57,22 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signup() {
+    public String signup(UserDto userDto) {
         return "user/signup";
+    }
+
+    @PostMapping("/signup")
+    public String signup(@Valid UserDto userDto, BindingResult binding) {
+        if (binding.hasErrors()) {
+            return "user/signup";
+        }
+        try {
+            sessionUserService.applyAuthToCtxHolder(userService.save(userDto));
+        } catch (CustomValidationException e) {
+            binding.addError(e.getError());
+            return "user/signup";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/login")

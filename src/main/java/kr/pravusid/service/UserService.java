@@ -64,10 +64,10 @@ public class UserService implements UserDetailsService {
 
     private void duplicateCheck(UserDto dto) {
         if (userRepository.findByUsername(dto.getUsername()) != null) {
-            throw new CustomValidationException("이미 존재하는 아이디 입니다", "username");
+            throw new CustomValidationException("userDto", "username", "이미 존재하는 아이디 입니다");
         }
         if (userRepository.findByEmail(dto.getEmail()) != null) {
-            throw new CustomValidationException("사용중인 이메일 입니다", "email");
+            throw new CustomValidationException("userDto", "email", "사용중인 이메일 입니다");
         }
     }
 
