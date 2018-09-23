@@ -19,7 +19,7 @@ public class UserApi {
     }
 
     @GetMapping("")
-    public List<UserDto> userList() {
+    public List<UserDto> list() {
         return userService.findAll()
                 .stream().map(UserDto::of).collect(Collectors.toList());
     }
@@ -30,8 +30,13 @@ public class UserApi {
     }
 
     @GetMapping("/{username}")
-    public UserDto userDetails(@PathVariable String username) {
+    public UserDto detail(@PathVariable String username) {
         return UserDto.of(userService.findOne(username));
+    }
+
+    @PutMapping("/{id}")
+    public boolean modify() {
+        return false;
     }
 
 }

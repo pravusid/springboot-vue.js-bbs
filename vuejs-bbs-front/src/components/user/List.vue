@@ -13,13 +13,38 @@
         </tr>
         </thead>
         <tbody>
-        <tr data-th-each="data : ${list}">
-          <td th:text="${data.username}"></td>
-          <td th:text="${data.name}"></td>
-          <td th:text="${data.email}"></td>
+        <tr v-for="user in users" v-bind:key="user.id">
+          <td>{{ user.username }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
         </tr>
         </tbody>
       </table>
     </div>
   </div>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  mounted() {
+    axios.get('/api/v1/user').then((res) => {
+      this.users = res.data;
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        this.$notify({
+          group: 'noti',
+          type: 'error',
+          title: '',
+          text: '접근권한이 없습니다',
+        });
+        this.$router.push('/');
+      }
+    });
+  },
+  data: () => ({
+    users: [],
+  }),
+};
+</script>
