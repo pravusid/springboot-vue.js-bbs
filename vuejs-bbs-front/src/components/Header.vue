@@ -34,7 +34,7 @@ export default {
   mounted() {
     const user = localStorage.user;
     if (user) {
-      this.$store.dispatch('setuser', qstr.parse(user));
+      this.$store.dispatch('SET_USER', qstr.parse(user));
       this.loggedIn = true;
     }
   },
@@ -48,7 +48,7 @@ export default {
 
       this.popupWatcher(popup, this.originHost).then((param) => {
         this.loggedIn = true;
-        this.$store.dispatch('setuser', param);
+        this.$store.dispatch('SET_USER', param);
       });
     },
 
@@ -83,7 +83,8 @@ export default {
 
     logout() {
       this.loggedIn = false;
-      this.$store.dispatch('setuser', null);
+      this.$store.dispatch('SET_USER', null);
+      this.$router.push('/');
     },
   },
 

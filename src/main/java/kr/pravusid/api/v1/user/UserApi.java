@@ -1,7 +1,11 @@
 package kr.pravusid.api.v1.user;
 
+import kr.pravusid.domain.user.exception.InvalidUserException;
 import kr.pravusid.dto.UserDto;
+import kr.pravusid.service.JwtUserService;
 import kr.pravusid.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -12,9 +16,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/user")
 public class UserApi {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserApi.class);
+
+    private JwtUserService jwtUserService;
     private UserService userService;
 
-    public UserApi(UserService userService) {
+    public UserApi(JwtUserService jwtUserService, UserService userService) {
+        this.jwtUserService = jwtUserService;
         this.userService = userService;
     }
 
@@ -30,13 +38,25 @@ public class UserApi {
     }
 
     @GetMapping("/{username}")
-    public UserDto detail(@PathVariable String username) {
-        return UserDto.of(userService.findOne(username));
+    public UserDto detail(@PathVariable String username,
+                          @RequestHeader(value = "Authorization") String authorization) {
+        if (jwtUserService.isValidUser(authorization, username)) {
+            return UserDto.of(userService.findOne(username));
+        } else {
+            throw new InvalidUserException();
+        }
     }
 
-    @PutMapping("/{id}")
-    public boolean modify() {
-        return false;
+    @PutMapping("/{username}")
+    public void modify(@PathVariable String username,
+                       @RequestBody UserDto userDto,
+                       @RequestHeader(value = "Authorization") String authorization) {
+        if (username.equals(userDto.getUsername()) && jwtUserService.isValidUser(authorization, username)) {
+            userDto.setId(userService.findOne(username).getId());
+            userService.update(userDto);
+        } else {
+            throw new InvalidUserException();
+        }
     }
 
 }

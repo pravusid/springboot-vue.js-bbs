@@ -3,40 +3,89 @@
     <div class="row">
       <h1>회원 정보 수정</h1>
     </div>
-    <form method="post" th:action="|/user/${detail.id}?${_csrf.parameterName}=${_csrf.token}|">
-      <input type="hidden" name="_method" value="put">
-      <div class="row">
-        <table>
-          <thead>
-          <tr>
-            <th>아이디</th>
-            <th>비밀번호</th>
-            <th>이름</th>
-            <th>이메일</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>
-              <input type="hidden" name="id" th:value="${detail.id}">
-              <input type="text" name="username" th:value="${detail.username}" disabled>
-            </td>
-            <td>
-              <input type="password" name="password">
-            </td>
-            <td>
-              <input type="text" name="name" th:value="${detail.name}">
-            </td>
-            <td>
-              <input type="email" name="email" th:value="${detail.email}">
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row center">
-        <button class="btn" type="submit">정보 수정</button>
-      </div>
-    </form>
+    <div class="row">
+      <table>
+        <thead>
+        <tr>
+          <th>아이디</th>
+          <th>비밀번호</th>
+          <th>이름</th>
+          <th>이메일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <input type="text" name="username" :value="detail.username" disabled>
+          </td>
+          <td>
+            <input type="password" name="password" v-model="detail.password">
+          </td>
+          <td>
+            <input type="text" name="name" v-model="detail.name">
+          </td>
+          <td>
+            <input type="email" name="email" v-model="detail.email">
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row center">
+      <button class="btn" @click="modify">정보 수정</button>
+    </div>
   </div>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  mounted() {
+    if (this.$store.getters.user === null) {
+      this.warning();
+    }
+
+    const username = this.$store.getters.username;
+    axios.get(`/api/v1/user/${username}`).then((res) => {
+      this.detail = res.data;
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        this.warning();
+      }
+    });
+  },
+
+  data: () => ({
+    detail: {},
+  }),
+
+  methods: {
+    modify() {
+      const username = this.$store.getters.username;
+      axios.put(`/api/v1/user/${username}`, this.detail).then((res) => {
+        if (res.status === 200) {
+          this.$notify({
+            group: 'noti',
+            type: 'success',
+            title: '',
+            text: '회원정보가 수정되었습니다',
+          });
+          this.$router.push('/user');
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+    },
+    warning() {
+      this.$notify({
+        group: 'noti',
+        type: 'error',
+        title: '',
+        text: '접근권한이 없습니다',
+      });
+      this.$router.push('/');
+    },
+  },
+};
+</script>
