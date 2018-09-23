@@ -26,9 +26,9 @@ export default {
     params: {
       response_type: 'token',
       client_id: 'vueclient',
-      redirect_uri: 'http://localhost:3000/login?success',
+      redirect_uri: `${process.env.VUE_APP_ORIGIN}/login?success`,
     },
-    originHost: 'http://localhost:3000',
+    originHost: process.env.VUE_APP_ORIGIN,
   }),
 
   mounted() {
@@ -41,7 +41,7 @@ export default {
 
   methods: {
     login() {
-      const url = `/oauth/authorize?${qstr.stringify(this.params)}`;
+      const url = `${process.env.VUE_APP_API}/oauth/authorize?${qstr.stringify(this.params)}`;
       const options = 'width=600, height=600';
 
       const popup = window.open(url, 'auth', options);
