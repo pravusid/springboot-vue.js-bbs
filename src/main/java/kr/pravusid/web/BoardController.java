@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
+@RequestMapping("/board")
 public class BoardController {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
@@ -31,7 +32,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    @GetMapping("/board")
+    @GetMapping("")
     public String list(@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
                        Pagination pagination, Model model) {
         Page<BoardDto> list = boardService.findAll(pageable, pagination).map(BoardDto::of);
@@ -43,13 +44,13 @@ public class BoardController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/board")
+    @PostMapping("")
     public String write(BoardDto boardDto) {
         boardService.save(sessionUserService.getAuthUsername(), boardDto);
         return "redirect:/board";
     }
 
-    @GetMapping("/board/{id}")
+    @GetMapping("/{id}")
     public String detail(@PathVariable Long id, HttpServletRequest request, Authentication auth, Model model) {
         model.addAttribute("auth", auth);
         model.addAttribute("query", request.getQueryString());
@@ -57,13 +58,13 @@ public class BoardController {
         return "board/detail";
     }
 
-    @PutMapping("/board/{id}")
+    @PutMapping("/{id}")
     public String modify(@PathVariable Long id, BoardDto boardDto, String query) {
         boardService.update(sessionUserService.getAuthUsername(), id, boardDto);
         return "redirect:/board/" + id + "?" + query;
     }
 
-    @DeleteMapping("/board")
+    @DeleteMapping("")
     public @ResponseBody
     String delete(@RequestBody BoardDto boardDto) {
         try {
@@ -76,13 +77,13 @@ public class BoardController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/board/write")
+    @GetMapping("/write")
     public String write() {
         return "board/write";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/board/{id}/modify")
+    @GetMapping("/{id}/modify")
     public String modify(@PathVariable Long id, HttpServletRequest request, Model model) {
         model.addAttribute("query", request.getQueryString());
         model.addAttribute("detail",
