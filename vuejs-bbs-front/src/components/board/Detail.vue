@@ -43,8 +43,7 @@
                   <a href="javascript:" class="replyBtn" th:value="${comment.id}">대댓글</a>
                   <th:block th:if="${auth != null && auth.principal.id == comment.user.id}">
                     <a href="javascript:" class="modBtn" th:value="${comment.id}">수정</a>
-                    <form class="inline" th:id="|del${comment.id}|" method="post"
-                          th:action="|/board/${detail.id}/comment/${comment.id}?${_csrf.parameterName}=${_csrf.token}||">
+                    <form class="inline" th:id="|del${comment.id}|" method="post">
                       <input type="hidden" name="_method" value="delete">
                       <input type="hidden" name="id" th:value="${comment.id}">
                       <input type="hidden" name="query" th:value="${query}">
@@ -60,11 +59,12 @@
             <div class="row">
               <!-- 수정 -->
               <div th:id="|mod${comment.id}|" th:class="|col s12 hide ${comment.id}|">
-                <form method="post" th:action="|/board/${detail.id}/comment/${comment.id}?${_csrf.parameterName}=${_csrf.token}||">
+                <form method="post">
                   <input type="hidden" name="_method" value="put">
                   <input type="hidden" name="id" th:value="${comment.id}">
                   <input type="hidden" name="query" th:value="${query}">
-                  <textarea class="materialize-textarea col s10" name="content" th:text="${comment.content}"></textarea>
+                  <textarea class="materialize-textarea col s10" name="content"
+                      th:text="${comment.content}"></textarea>
                   <button class="btn col s2">댓글수정</button>
                 </form>
               </div>
@@ -75,7 +75,8 @@
                   <input type="hidden" name="replyRoot" th:value="${comment.replyRoot}">
                   <input type="hidden" name="replyDepth" th:value="${comment.replyDepth}">
                   <input type="hidden" name="replyOrder" th:value="${comment.replyOrder}">
-                  <textarea class="materialize-textarea col s10" name="content" placeholder="대댓글을 입력하세요"></textarea>
+                  <textarea class="materialize-textarea col s10" name="content"
+                      placeholder="대댓글을 입력하세요"></textarea>
                   <button class="btn col s2">대댓글작성</button>
                 </form>
               </div>
