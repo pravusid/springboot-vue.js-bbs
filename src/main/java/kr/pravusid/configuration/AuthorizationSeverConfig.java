@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -28,10 +29,13 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
 
     private DataSource dataSource;
     private AuthenticationManager authenticationManager;
+    private UserDetailsService userDetailsService;
 
-    public AuthorizationSeverConfig(DataSource dataSource, AuthenticationManager authenticationManager) {
+    public AuthorizationSeverConfig(DataSource dataSource, AuthenticationManager authenticationManager,
+                                    UserDetailsService userDetailsService) {
         this.dataSource = dataSource;
         this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -48,6 +52,7 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService)
                 .tokenStore(tokenStore())
                 .accessTokenConverter(accessTokenConverter());
     }
@@ -65,7 +70,8 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        KeyStoreKeyFactory keyFactory =new KeyStoreKeyFactory(new ClassPathResource("private.jks"), "storepass".toCharArray());
+        KeyStoreKeyFactory keyFactory =
+                new KeyStoreKeyFactory(new ClassPathResource("private.jks"), "storepass".toCharArray());
         converter.setKeyPair(keyFactory.getKeyPair("jwtserver", "keypass".toCharArray()));
         converter.setVerifierKey(publicKey);
         return converter;
