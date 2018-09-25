@@ -6,32 +6,32 @@
     <div class="row">
       <div class="row">
         <div class="input-field col s12">
-          <input id="username" v-model="user.username" type="text" class="validate">
-          <label for="username">사용자 아이디</label>
+          <input id="username" v-model="user.username"
+            type="text" class="validate" placeholder="사용자 아이디">
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="password" v-model="user.password" type="password" class="validate">
-          <label for="password">비밀번호</label>
+          <input id="password" v-model="user.password" type="password"
+            class="validate" placeholder="비밀번호">
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="passwordre" v-model="user.confirmpassword" type="password" class="validate">
-          <label for="password">비밀번호확인</label>
+          <input id="passwordre" v-model="user.confirmpassword" type="password"
+            class="validate" placeholder="비밀번호 확인">
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="name" v-model="user.name" type="text" class="validate">
-          <label for="name">이름</label>
+          <input id="name" v-model="user.name" type="text" class="validate"
+            placeholder="이름">
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="email" v-model="user.email" type="email" class="validate">
-          <label for="email">이메일</label>
+          <input id="email" v-model="user.email" type="email" class="validate"
+            placeholder="이메일">
         </div>
       </div>
       <button class="btn waves-effect waves-light" @click="signup">회원가입

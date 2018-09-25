@@ -41,11 +41,13 @@
 import axios from 'axios';
 
 export default {
-  mounted() {
+  beforeMount() {
     if (this.$store.getters.user === null) {
       this.warning();
     }
+  },
 
+  mounted() {
     const username = this.$store.getters.username;
     axios.get(`/api/v1/user/${username}`).then((res) => {
       this.detail = res.data;

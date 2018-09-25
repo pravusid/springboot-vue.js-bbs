@@ -18,8 +18,16 @@
 
 <script>
 import qstr from 'query-string';
+import axios from 'axios';
 
 export default {
+  mounted() {
+    const user = localStorage.user;
+    if (user) {
+      this.$store.dispatch('SET_USER', qstr.parse(user));
+      this.getUserDetails();
+    }
+  },
 
   data: () => ({
     loggedIn: false,
@@ -31,14 +39,6 @@ export default {
     originHost: process.env.VUE_APP_ORIGIN,
   }),
 
-  mounted() {
-    const user = localStorage.user;
-    if (user) {
-      this.$store.dispatch('SET_USER', qstr.parse(user));
-      this.loggedIn = true;
-    }
-  },
-
   methods: {
     login() {
       const url = `${process.env.VUE_APP_API}/oauth/authorize?${qstr.stringify(this.params)}`;
@@ -47,8 +47,8 @@ export default {
       const popup = window.open(url, 'auth', options);
 
       this.popupWatcher(popup, this.originHost).then((param) => {
-        this.loggedIn = true;
         this.$store.dispatch('SET_USER', param);
+        this.getUserDetails();
       });
     },
 
@@ -81,9 +81,24 @@ export default {
       });
     },
 
+    getUserDetails() {
+      const username = this.$store.getters.username;
+      axios.get(`/api/v1/user/${username}`).then((res) => {
+        if (res.status === 200) {
+          this.$store.dispatch('SET_USER_DETAIL', res.data);
+          this.loggedIn = true;
+        }
+      }).catch((err) => {
+        if (err.response.status === 401) {
+          this.logout();
+        }
+      });
+    },
+
     logout() {
       this.loggedIn = false;
       this.$store.dispatch('SET_USER', null);
+      this.$store.dispatch('SET_USER_DETAIL', null);
       this.$router.push('/');
     },
   },

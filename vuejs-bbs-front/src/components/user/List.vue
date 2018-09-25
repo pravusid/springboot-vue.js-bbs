@@ -28,7 +28,7 @@
 import axios from 'axios';
 
 export default {
-  mounted() {
+  beforeMount() {
     axios.get('/api/v1/user').then((res) => {
       this.users = res.data;
     }).catch((err) => {
@@ -38,7 +38,7 @@ export default {
           type: 'error',
           text: '접근권한이 없습니다',
         });
-        this.$router.push('/');
+        this.$router.go(-1);
       }
     });
   },

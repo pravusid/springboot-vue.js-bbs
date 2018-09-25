@@ -11,15 +11,23 @@ const store = new Vuex.Store({
   state: {
     user: null,
     token: null,
+    userDetail: null,
   },
+
   getters: {
     user(state) {
       return state.user;
     },
+
     username(state) {
-      return state.token.user_name;
+      return (state.token) ? state.token.user_name : null;
+    },
+
+    userDetail(state) {
+      return state.userDetail;
     },
   },
+
   mutations: {
     SET_USER(state, payload) {
       state.user = payload;
@@ -27,10 +35,19 @@ const store = new Vuex.Store({
       localStorage.user = qstr.stringify(payload);
       setAxiosHeader(payload);
     },
+
+    SET_USER_DETAIL(state, payload) {
+      state.userDetail = payload;
+    },
   },
+
   actions: {
     SET_USER({ commit }, payload) {
       commit('SET_USER', payload);
+    },
+
+    SET_USER_DETAIL({ commit }, payload) {
+      commit('SET_USER_DETAIL', payload);
     },
   },
 });
