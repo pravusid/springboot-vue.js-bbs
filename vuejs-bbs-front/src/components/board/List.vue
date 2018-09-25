@@ -24,19 +24,18 @@
       </div>
 
       <div class="collection">
-        <a class="collection-item row" v-for="one in list" :key="one.id">
-          <router-link :to="{ path: '/board/' + one.id }">
+        <router-link tag="a" :to="{ path: '/board/' + one.id }"
+            class="collection-item row" v-for="one in list" :key="one.id">
           <span class="col s7">
             <span>{{ one.title }}</span>&nbsp;
             <span class="red-text">
-              [<span>0</span>]
+              [<span>{{ one.comments.length }}</span>]
             </span>
           </span>
-          <small class="col s2 center-align">{{ one.name }}</small>
+          <small class="col s2 center-align">{{ one.user.name }}</small>
           <small class="col s2 center-align">{{ one.regdate }}</small>
           <small class="col s1 center-align">{{ one.hit }}</small>
-          </router-link>
-        </a>
+        </router-link>
       </div>
 
       <div class="row valign-wrapper">
@@ -132,10 +131,10 @@ export default {
   },
 
   beforeRouteUpdate(to, from, next) {
+    this.loadPage(to.query.page);
     if (to.query.page === undefined) {
       this.$router.push('/board?page=0');
     } else {
-      this.loadPage(to.query.page);
       next();
     }
   },
