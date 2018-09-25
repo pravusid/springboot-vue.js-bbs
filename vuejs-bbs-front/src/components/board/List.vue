@@ -79,15 +79,7 @@ export default {
   },
 
   data: () => ({
-    pagination: {
-      numberOfElements: 0,
-      totalElements: 0,
-      isFirst: 0,
-      isLast: 0,
-      currentPage: 0,
-      totalPages: 0,
-      pageSize: 0,
-    },
+    pagination: {},
     list: [],
     blockSize: 5,
   }),
@@ -113,13 +105,15 @@ export default {
     },
 
     previous() {
-      const page = (_.first(this.presentedPages) - 1 < 0) ? 0 : _.first(this.presentedPages) - 1;
+      const page = (_.first(this.presentedPages) - 1 < 0) ?
+        0 : _.first(this.presentedPages) - 1;
       this.$router.push(this.fullPath(page));
     },
 
     forward() {
-      const page = (_.last(this.presentedPages) + 1 === this.pagination.totalPages) ?
-        this.pagination.totalPages - 1 : _.last(this.presentedPages) + 1;
+      const total = (this.pagination.totalPages === 0) ? 0 : this.pagination.totalPages - 1;
+      const page = (_.last(this.presentedPages) === total) ?
+        total : _.last(this.presentedPages) + 1;
       this.$router.push(this.fullPath(page));
     },
   },
@@ -128,11 +122,11 @@ export default {
     presentedPages() {
       const current = this.pagination.currentPage;
       const blockSize = this.blockSize;
-      const total = this.pagination.totalPages;
+      const total = (this.pagination.totalPages === 0) ? 0 : this.pagination.totalPages - 1;
 
-      const startOfBlock = parseInt(current / blockSize, 10) * blockSize;
+      const startOfBlock = current - (current % blockSize);
       const endOfBlock = startOfBlock + blockSize;
-      const complimentedEOB = (endOfBlock > total) ? total : endOfBlock;
+      const complimentedEOB = (endOfBlock > (total + 1)) ? total + 1 : endOfBlock;
       return _.range(startOfBlock, complimentedEOB);
     },
   },

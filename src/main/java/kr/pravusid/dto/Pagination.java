@@ -21,40 +21,40 @@ public class Pagination {
         TITLE, CONTENT, USER, COMMENTS, ALL;
     }
 
-    public Pagination calcPage(Page<? extends Object> page, int blockSize) {
-        this.currPage = page.getNumber() + 1;
-        this.totalPages = (page.getTotalPages() == 0) ? 1 : page.getTotalPages();
+    public Pagination calcPage(Page page, int blockSize) {
+        this.currPage = page.getNumber();
+        this.totalPages= (page.getTotalPages() == 0) ? 0 : page.getTotalPages() - 1;
 
-        firstBlock = currPage - ((currPage - 1) % blockSize);
-        lastBlock = ((firstBlock + blockSize - 1) > totalPages) ? totalPages : firstBlock + blockSize - 1;
-        prev = (firstBlock == 1) ? 1 : firstBlock - 1;
+        firstBlock = currPage - (currPage % blockSize);
+        lastBlock = (firstBlock + (blockSize - 1) > totalPages) ? totalPages : firstBlock + (blockSize - 1);
+        prev = (firstBlock == 0) ? 0 : firstBlock - 1;
         next = (lastBlock == totalPages) ? totalPages : lastBlock + 1;
 
         return this;
     }
 
     public int getCurrPage() {
-        return currPage - 1;
+        return currPage;
     }
 
     public int getTotalPages() {
-        return totalPages - 1;
+        return totalPages;
     }
 
     public int getFirstBlock() {
-        return firstBlock - 1;
+        return firstBlock;
     }
 
     public int getLastBlock() {
-        return lastBlock - 1;
+        return lastBlock;
     }
 
     public int getPrev() {
-        return prev - 1;
+        return prev;
     }
 
     public int getNext() {
-        return next - 1;
+        return next;
     }
 
     public String getFilter() {
@@ -62,9 +62,7 @@ public class Pagination {
     }
 
     public void setFilter(String filter) {
-        if (FilterType.valueOf(filter.toUpperCase()) != null) {
-            this.filter = filter;
-        }
+        this.filter = filter;
     }
 
     public boolean filterMatcher(FilterType type) {
