@@ -41,20 +41,10 @@
 import axios from 'axios';
 
 export default {
-  beforeMount() {
-    if (this.$store.getters.user === null) {
-      this.warning();
-    }
-  },
-
-  mounted() {
+  created() {
     const username = this.$store.getters.username;
     axios.get(`/api/v1/user/${username}`).then((res) => {
       this.detail = res.data;
-    }).catch((err) => {
-      if (err.response.status === 401) {
-        this.warning();
-      }
     });
   },
 
@@ -77,14 +67,6 @@ export default {
       }).catch((err) => {
         console.error(err);
       });
-    },
-    warning() {
-      this.$notify({
-        group: 'noti',
-        type: 'error',
-        text: '접근권한이 없습니다',
-      });
-      this.$router.push('/');
     },
   },
 };

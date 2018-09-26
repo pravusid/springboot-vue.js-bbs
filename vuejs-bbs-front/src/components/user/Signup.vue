@@ -45,7 +45,6 @@
 import axios from 'axios';
 
 export default {
-
   data: () => ({
     user: {
       username: null,
@@ -57,10 +56,6 @@ export default {
   }),
 
   methods: {
-    validate() {
-
-    },
-
     signup() {
       axios.post('/api/v1/user/signup', this.user)
         .then((res) => {
@@ -84,6 +79,5 @@ export default {
         });
     },
   },
-
 };
 </script>

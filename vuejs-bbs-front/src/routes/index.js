@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+import auth from '../lib/authentication';
+
 import BoardList from '../components/board/List.vue';
 import BoardDetail from '../components/board/Detail.vue';
 import BoardWrite from '../components/board/Write.vue';
@@ -27,6 +29,7 @@ const router = new Router({
       path: '/board/write',
       name: 'Board/Write',
       component: BoardWrite,
+      beforeEnter: auth.isAuthenticated,
     },
     {
       path: '/board/:id',
@@ -37,11 +40,13 @@ const router = new Router({
       path: '/user',
       name: 'User/List',
       component: UserList,
+      beforeEnter: auth.isAuthenticated,
     },
     {
       path: '/user/modify',
       name: 'User/Modify',
       component: UserDetail,
+      beforeEnter: auth.isAuthenticated,
     },
     {
       path: '/signup',

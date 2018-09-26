@@ -68,7 +68,7 @@ import axios from 'axios';
 import _ from 'lodash';
 
 export default {
-  mounted() {
+  created() {
     const page = this.$route.query.page;
     if (page === undefined) {
       this.$router.push('/board?page=0');

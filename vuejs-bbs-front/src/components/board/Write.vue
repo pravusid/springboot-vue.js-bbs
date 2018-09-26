@@ -46,7 +46,7 @@ export default {
     quillEditor,
   },
 
-  mounted() {
+  created() {
     this.name = this.$store.getters.userDetail.name;
   },
 

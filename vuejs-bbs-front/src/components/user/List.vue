@@ -28,20 +28,12 @@
 import axios from 'axios';
 
 export default {
-  beforeMount() {
+  created() {
     axios.get('/api/v1/user').then((res) => {
       this.users = res.data;
-    }).catch((err) => {
-      if (err.response.status === 401) {
-        this.$notify({
-          group: 'noti',
-          type: 'error',
-          text: '접근권한이 없습니다',
-        });
-        this.$router.go(-1);
-      }
     });
   },
+
   data: () => ({
     users: [],
   }),
