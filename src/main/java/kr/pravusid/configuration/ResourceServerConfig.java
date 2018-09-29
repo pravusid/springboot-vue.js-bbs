@@ -25,7 +25,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/**")
                 .and()
             .authorizeRequests()
-                .antMatchers("/api/**/board").permitAll()
+                .antMatchers("/api/**/board/**").permitAll()
                 .antMatchers("/api/**/user/signup").permitAll()
                 .antMatchers("/api/**").hasAuthority(Authority.USER.getAuthority())
                 .and()
