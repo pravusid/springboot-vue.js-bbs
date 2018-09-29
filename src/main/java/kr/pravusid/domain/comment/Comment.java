@@ -19,6 +19,7 @@ public class Comment extends BaseEntity implements UserVerifiable {
     private Board board;
 
     @Lob
+    @Column(nullable = false)
     private String content;
 
     private long replyDepth;

@@ -31,7 +31,7 @@ public class CommentService {
     }
 
     public List<Comment> findAll(Long boardId) {
-        return commentRepository.findByBoardId(boardId);
+        return commentRepository.findByBoardIdOrderByReplyOrderAsc(boardId);
     }
 
     @Transactional

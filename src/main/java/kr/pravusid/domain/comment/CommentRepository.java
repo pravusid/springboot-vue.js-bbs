@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findByBoardId(Long boardId);
+    List<Comment> findByBoardIdOrderByReplyOrderAsc(Long boardId);
 
     @Query("SELECT coalesce(max(cmt.replyOrder), 0) FROM Comment cmt")
     Long getMaximumReplyOrder();

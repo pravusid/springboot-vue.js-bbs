@@ -35,8 +35,8 @@ public class CommentRepositoryTest {
         commentRepository.save(comment2);
 
         // WHEN
-        List<Comment> list1 = commentRepository.findByBoardId(saved1.getId());
-        List<Comment> list2 = commentRepository.findByBoardId(saved2.getId());
+        List<Comment> list1 = commentRepository.findByBoardIdOrderByReplyOrderAsc(saved1.getId());
+        List<Comment> list2 = commentRepository.findByBoardIdOrderByReplyOrderAsc(saved2.getId());
 
         // THEN
         Assert.assertEquals(2, list1.size());

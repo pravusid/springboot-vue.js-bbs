@@ -40,6 +40,7 @@ import axios from 'axios';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
+import notification from '../../lib/notification';
 
 export default {
   components: {
@@ -67,33 +68,31 @@ export default {
         name: this.name,
         title: this.title,
         content: this.content,
-      }).then(() => {
-        this.$notify({
-          group: 'noti',
-          type: 'success',
-          text: '게시물이 등록되었습니다.',
+      }).then((res) => {
+        notification.success(res, '게시물이 등록되었습니다', () => {
+          this.$router.push('/');
         });
-        this.$router.push('/');
-      }).catch(() => {
-        this.$notify({
-          group: 'noti',
-          type: 'error',
-          text: '게시물 등록 실패!\n다시 시도해주세요',
-        });
+      }).catch((err) => {
+        notification.error(err, '게시물 등록 실패!\n다시 시도해주세요');
       });
     },
+
     cancel() {
       this.$router.go(-1);
     },
+
     onEditorBlur(quill) {
       this.actions.push(quill);
     },
+
     onEditorFocus(quill) {
       this.actions.push(quill);
     },
+
     onEditorReady(quill) {
       this.actions.push(quill);
     },
+
     onEditorChange({ quill, html }) {
       this.content = html;
       this.actions.push(quill);

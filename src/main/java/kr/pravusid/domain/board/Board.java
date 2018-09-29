@@ -19,6 +19,7 @@ public class Board extends BaseEntity implements UserVerifiable {
     private String title;
 
     @Lob
+    @Column(nullable = false)
     private String content;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)

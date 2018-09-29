@@ -15,9 +15,9 @@
       <p v-html="detail.content"></p>
     </div>
     <div class="row right-align">
-      <a class="btn" @click="modify">수정</a>&nbsp;
-      <a class="btn red" @click="remove">삭제</a>&nbsp;
-      <a class="btn grey" @click="toList">목록</a>
+      <button class="btn" @click="modify">수정</button>&nbsp;
+      <button class="btn red" @click="remove">삭제</button>&nbsp;
+      <button class="btn grey" @click="toList">목록</button>
     </div>
     <div class="divider"></div>
 
@@ -64,7 +64,7 @@ export default {
     },
 
     toList() {
-
+      this.$router.go(-1);
     },
   },
 };

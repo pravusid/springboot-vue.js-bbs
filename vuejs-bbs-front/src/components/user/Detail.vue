@@ -39,6 +39,7 @@
 
 <script>
 import axios from 'axios';
+import notification from '../../lib/notification';
 
 export default {
   created() {
@@ -56,16 +57,11 @@ export default {
     modify() {
       const username = this.$store.getters.username;
       axios.put(`/api/v1/user/${username}`, this.detail).then((res) => {
-        if (res.status === 200) {
-          this.$notify({
-            group: 'noti',
-            type: 'success',
-            text: '회원정보가 수정되었습니다',
-          });
+        notification.success(res, '회원정보가 수정되었습니다', () => {
           this.$router.push('/user');
-        }
+        });
       }).catch((err) => {
-        console.error(err);
+        notification.error(err, '회원정보 수정중 오류 발생');
       });
     },
   },

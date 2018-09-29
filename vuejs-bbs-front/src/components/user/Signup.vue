@@ -43,6 +43,7 @@
 
 <script>
 import axios from 'axios';
+import notification from '../../lib/notification';
 
 export default {
   data: () => ({
@@ -59,14 +60,9 @@ export default {
     signup() {
       axios.post('/api/v1/user/signup', this.user)
         .then((res) => {
-          if (res.status === 200) {
-            this.$notify({
-              group: 'noti',
-              type: 'success',
-              text: '가입성공',
-            });
+          notification.success(res, '가입성공', () => {
             this.$router.push('/');
-          }
+          });
         }).catch((err) => {
           err.response.data.errors.forEach((error) => {
             this.$notify({
