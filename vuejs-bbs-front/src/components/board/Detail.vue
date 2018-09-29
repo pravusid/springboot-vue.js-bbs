@@ -15,12 +15,14 @@
       <p v-html="detail.content"></p>
     </div>
     <div class="row right-align">
-      <a class="btn" @click="toModify">수정</a>&nbsp;
-      <a class="btn red" @click="remove = true" v-if="!remove">삭제</a>
-      <template v-else>
-        <button class="grey" @click="remove = false">취소</button>&nbsp;
-        <button class="red" @click="toRemove">삭제</button>
-      </template>&nbsp;
+      <template v-if="authorized">
+        <a class="btn" @click="toModify">수정</a>&nbsp;
+        <a class="btn red" @click="remove = true" v-if="!remove">삭제</a>
+        <template v-else>
+          <button class="grey" @click="remove = false">취소</button>&nbsp;
+          <button class="red" @click="toRemove">삭제</button>
+        </template>&nbsp;
+      </template>
       <a class="btn grey" @click="toList">목록</a>
     </div>
     <div class="divider"></div>
@@ -77,6 +79,12 @@ export default {
 
     toList() {
       this.$router.go(-1);
+    },
+  },
+
+  computed: {
+    authorized() {
+      return this.$store.getters.username === this.detail.user.username;
     },
   },
 };

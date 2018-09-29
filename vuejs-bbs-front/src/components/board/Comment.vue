@@ -12,13 +12,16 @@
           <p v-html="comment.content">댓글</p>
         </div>
         <div class="card-action right-align">
-          <a id="reply" @click="toggle" :style="{ cursor: 'pointer'}">대댓글</a>
-          <a id="modify" @click="toggle" :style="{ cursor: 'pointer'}">수정</a>
-          <a id="remove" @click="remove = true"
-              v-if="!remove" :style="{ cursor: 'pointer'}">삭제</a>
-          <template v-else>
-            <button class="grey" @click="remove = false">취소</button>&nbsp;
-            <button class="red" @click="toRemove">삭제</button>
+          <a id="reply" v-if="authenticated" @click="toggle"
+              :style="{ cursor: 'pointer'}">대댓글</a>
+          <template v-if="authorized">
+            <a id="modify" @click="toggle" :style="{ cursor: 'pointer'}">수정</a>
+            <a id="remove" @click="remove = true"
+                v-if="!remove" :style="{ cursor: 'pointer'}">삭제</a>
+            <template v-else>
+              <button class="grey" @click="remove = false">취소</button>&nbsp;
+              <button class="red" @click="toRemove">삭제</button>
+            </template>
           </template>
         </div>
       </div>
@@ -124,6 +127,16 @@ export default {
       }).catch((err) => {
         notification.error(err, '댓글 삭제 실패\n다시 시도해 주세요');
       });
+    },
+  },
+
+  computed: {
+    authenticated() {
+      return this.$store.getters.user !== null;
+    },
+
+    authorized() {
+      return this.$store.getters.username === this.comment.user.username;
     },
   },
 };
