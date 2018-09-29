@@ -35,18 +35,21 @@ public class BoardApi {
     }
 
     @GetMapping("/{id}")
-    public String readOne() {
-        return "hello";
+    public BoardDto readOne(@PathVariable Long id) {
+        return BoardDto.of(boardService.findOneAndHit(id));
     }
 
     @PutMapping("/{id}")
-    public String modifyOne() {
-        return null;
+    public void modifyOne(@RequestHeader("Authorization") String authorization,
+                          @PathVariable Long id,
+                          @RequestBody BoardDto boardDto) {
+        boardService.update(jwtUserService.getTokenUsername(authorization), id, boardDto);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteOne() {
-        return null;
+    public void deleteOne(@RequestHeader("Authorization") String authorization,
+                          @PathVariable Long id) {
+        boardService.delete(jwtUserService.getTokenUsername(authorization), id);
     }
 
 }

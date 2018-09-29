@@ -15,8 +15,12 @@
       <p v-html="detail.content"></p>
     </div>
     <div class="row right-align">
-      <a class="btn" @click="modify">수정</a>&nbsp;
-      <a class="btn red" @click="remove">삭제</a>&nbsp;
+      <a class="btn" @click="toModify">수정</a>&nbsp;
+      <a class="btn red" @click="remove = true" v-if="!remove">삭제</a>
+      <template v-else>
+        <button class="grey" @click="remove = false">취소</button>&nbsp;
+        <button class="red" @click="toRemove">삭제</button>
+      </template>&nbsp;
       <a class="btn grey" @click="toList">목록</a>
     </div>
     <div class="divider"></div>
@@ -29,6 +33,7 @@
 
 <script>
 import axios from 'axios';
+import notification from '../../lib/notification';
 import Comments from './Comments.vue';
 
 export default {
@@ -46,6 +51,7 @@ export default {
     detail: {
       user: {},
     },
+    remove: false,
   }),
 
   methods: {
@@ -55,12 +61,18 @@ export default {
       });
     },
 
-    modify() {
+    toModify() {
 
     },
 
-    remove() {
-
+    toRemove() {
+      axios.delete(`/api/v1/board/${this.detail.id}`).then((res) => {
+        notification.success(res, '게시물 삭제 성공', () => {
+          this.$router.push('/');
+        });
+      }).catch((err) => {
+        notification.error(err, '게시물 삭제 실패');
+      });
     },
 
     toList() {

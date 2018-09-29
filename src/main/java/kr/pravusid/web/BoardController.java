@@ -65,8 +65,7 @@ public class BoardController {
     }
 
     @DeleteMapping("")
-    public @ResponseBody
-    String delete(@RequestBody BoardDto boardDto) {
+    public @ResponseBody String delete(@RequestBody BoardDto boardDto) {
         try {
             boardService.delete(sessionUserService.getAuthUsername(), boardDto.getId());
 

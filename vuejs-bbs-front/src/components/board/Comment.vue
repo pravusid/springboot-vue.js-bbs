@@ -12,12 +12,13 @@
           <p v-html="comment.content">댓글</p>
         </div>
         <div class="card-action right-align">
-          <a id="reply" @click="toggle">대댓글</a>
-          <a id="modify" @click="toggle">수정</a>
-          <a id="remove" @click="remove = true" v-if="!remove">삭제</a>
+          <a id="reply" @click="toggle" :style="{ cursor: 'pointer'}">대댓글</a>
+          <a id="modify" @click="toggle" :style="{ cursor: 'pointer'}">수정</a>
+          <a id="remove" @click="remove = true"
+              v-if="!remove" :style="{ cursor: 'pointer'}">삭제</a>
           <template v-else>
-            <button class="btn grey" @click="remove = false">취소</button>&nbsp;
-            <button class="btn red" @click="toRemove">삭제</button>
+            <button class="grey" @click="remove = false">취소</button>&nbsp;
+            <button class="red" @click="toRemove">삭제</button>
           </template>
         </div>
       </div>
