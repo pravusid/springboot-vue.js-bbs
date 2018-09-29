@@ -29,8 +29,8 @@
       </div>
     </div>
     <div class="row center">
-      <button class="btn" @click="write">작성 완료</button>&nbsp;&nbsp;
-      <button class="btn grey" @click="cancel">취소</button>
+      <a class="btn" @click="write">작성 완료</a>&nbsp;&nbsp;
+      <a class="btn grey" @click="cancel">취소</a>
     </div>
   </div>
 </template>

@@ -32,7 +32,7 @@
       </table>
     </div>
     <div class="row center">
-      <button class="btn" @click="modify">정보 수정</button>
+      <a class="btn" @click="modify">정보 수정</a>
     </div>
   </div>
 </template>

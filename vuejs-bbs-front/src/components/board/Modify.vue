@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="row center">
-        <button class="btn" type="submit">수정하기</button>
+        <a class="btn" type="submit">수정하기</a>
         <a class="btn grey" th:href="|/board/${detail.id}?${query}|">취소</a>
       </div>
     </form>

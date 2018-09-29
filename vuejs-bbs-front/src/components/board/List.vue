@@ -18,8 +18,8 @@
           <input id="keyword" type="text" class="validate">
         </div>
         <div class="col s1">
-          <button id="searchBtn" class="col s12 waves-effect btn teal lighten-2">
-            <i class="material-icons center">search</i></button>
+          <a id="searchBtn" class="col s12 waves-effect btn teal lighten-2">
+            <i class="material-icons center">search</i></a>
         </div>
       </div>
 

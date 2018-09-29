@@ -34,9 +34,9 @@
             placeholder="이메일">
         </div>
       </div>
-      <button class="btn waves-effect waves-light" @click="signup">회원가입
+      <a class="btn waves-effect waves-light" @click="signup">회원가입
         <i class="material-icons right">send</i>
-      </button>
+      </a>
     </div>
   </div>
 </template>
