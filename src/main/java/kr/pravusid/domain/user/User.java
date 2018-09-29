@@ -35,6 +35,10 @@ public class User extends BaseEntity implements UserVerifiable, UserDetails {
     @Column(name = "authority")
     private Set<Authority> authorities;
 
+    public User(Long id) {
+        super(id);
+    }
+
     public User(String username, String password, String name, String email) {
         this();
         this.username = username;

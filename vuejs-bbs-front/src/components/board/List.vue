@@ -24,7 +24,7 @@
       </div>
 
       <div class="collection">
-        <router-link tag="a" :to="{ path: '/board/' + one.id }"
+        <router-link tag="a" :to="{ name: 'Board/Detail', params: { id: one.id } }"
             class="collection-item row" v-for="one in list" :key="one.id">
           <span class="col s7">
             <span>{{ one.title }}</span>&nbsp;

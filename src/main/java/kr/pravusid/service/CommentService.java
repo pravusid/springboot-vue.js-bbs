@@ -30,6 +30,10 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
+    public List<Comment> findAll(Long boardId) {
+        return commentRepository.findByBoardId(boardId);
+    }
+
     @Transactional
     public void save(String username, Long boardId, CommentDto dto) {
         User user = userRepository.findByUsername(username);

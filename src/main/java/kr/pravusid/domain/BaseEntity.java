@@ -1,17 +1,12 @@
 package kr.pravusid.domain;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Convert;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -28,6 +23,13 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     private LocalDateTime moddate;
+
+    protected BaseEntity() {
+    }
+
+    protected BaseEntity(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

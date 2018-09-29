@@ -10,18 +10,18 @@ import java.util.Map;
 @Service
 public class JwtUserService {
 
-    public boolean isValidUser(String requestToken, String username) {
-        return getTokenUsername(requestToken).equals(username);
+    public boolean isValidUser(String accessToken, String username) {
+        return getTokenUsername(accessToken).equals(username);
     }
 
-    public String getTokenUsername(String requestToken) {
-        Jwt jwt = getParsedToken(requestToken);
+    public String getTokenUsername(String accessToken) {
+        Jwt jwt = getParsedToken(accessToken);
         Map claim = JsonParserFactory.create().parseMap(jwt.getClaims());
         return (String) claim.get("user_name");
     }
 
-    private Jwt getParsedToken(String requestToken){
-        return JwtHelper.decode(requestToken.split(" ")[1]);
+    private Jwt getParsedToken(String accessToken){
+        return JwtHelper.decode(accessToken.split(" ")[1]);
     }
 
 }

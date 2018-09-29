@@ -6,9 +6,11 @@ import java.time.format.DateTimeFormatter;
 
 public abstract class BaseDto {
 
-    protected Long id;
-    protected String regdate;
-    protected String moddate;
+    private Long id;
+
+    private String regdate;
+
+    private String moddate;
 
     protected BaseDto() {
     }

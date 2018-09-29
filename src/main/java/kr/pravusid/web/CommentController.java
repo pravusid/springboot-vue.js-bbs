@@ -1,13 +1,12 @@
 package kr.pravusid.web;
 
+import kr.pravusid.dto.CommentDto;
 import kr.pravusid.service.CommentService;
 import kr.pravusid.service.SessionUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import kr.pravusid.dto.CommentDto;
 
 @Controller
 @RequestMapping("/board")
