@@ -14,7 +14,11 @@
         <div class="card-action right-align">
           <a id="reply" @click="toggle">대댓글</a>
           <a id="modify" @click="toggle">수정</a>
-          <a id="remove" @click="remove">삭제</a>
+          <a id="remove" @click="remove = true" v-if="!remove">삭제</a>
+          <template v-else>
+            <button class="btn grey" @click="remove = false">취소</button>&nbsp;
+            <button class="btn red" @click="toRemove">삭제</button>
+          </template>
         </div>
       </div>
     </div>
@@ -26,12 +30,12 @@
         <div class="col s12" :class="{hide : !reply.isActive}">
           <textarea class="materialize-textarea col s10" v-model="reply.content"
               placeholder="대댓글을 입력하세요"></textarea>
-          <button class="btn col s2" @click="toReply">대댓글작성</button>
+          <a class="btn col s2" @click="toReply">대댓글작성</a>
         </div>
         <!-- 수정 -->
         <div class="col s12" :class="{hide : !modify.isActive}">
           <textarea class="materialize-textarea col s10" v-model="modify.content"></textarea>
-          <button class="btn col s2" @click="toModify">댓글수정</button>
+          <a class="btn col s2" @click="toModify">댓글수정</a>
         </div>
       </div>
     </div>
@@ -60,6 +64,7 @@ export default {
     modify: {
       isActive: false,
     },
+    remove: false,
   }),
 
   methods: {
@@ -110,8 +115,14 @@ export default {
       });
     },
 
-    remove() {
-
+    toRemove() {
+      axios.delete(`/api/v1/board/${this.id}/comment/${this.comment.id}`).then((res) => {
+        notification.success(res, '댓글 삭제 성공', () => {
+          this.$emit('reload');
+        });
+      }).catch((err) => {
+        notification.error(err, '댓글 삭제 실패\n다시 시도해 주세요');
+      });
     },
   },
 };
