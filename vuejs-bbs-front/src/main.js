@@ -3,6 +3,7 @@
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import Notifications from 'vue-notification';
+import VueScrollTo from 'vue-scrollto';
 
 import App from './App.vue';
 
@@ -11,6 +12,7 @@ import store from './store';
 
 Vue.use(VueCookies);
 Vue.use(Notifications);
+Vue.use(VueScrollTo);
 
 Vue.config.productionTip = false;
 

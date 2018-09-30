@@ -6,11 +6,11 @@
       </h5>
       <template v-for="comment in comments">
         <comment :key="comment.id" :id="id" :comment="comment"
-            v-on:reload="requestReload"></comment>
+            v-on:reload="reloadRequest"></comment>
       </template>
     </div>
 
-    <div class="section row">
+    <div class="section row" id="new-comment">
       <textarea class="materialize-textarea col s10" v-model="comment.content"></textarea>
       <a class="btn col s2" @click="writeComment">댓글작성</a>
     </div>
@@ -46,7 +46,8 @@ export default {
         .then((res) => {
           notification.success(res, '댓글이 등록되었습니다', () => {
             this.$el.scrollTop = this.$el.scrollHeight;
-            this.requestReload();
+            this.reloadRequest();
+            this.$scrollTo('#new-comment');
             this.comment = {};
           });
         }).catch((err) => {
@@ -54,7 +55,7 @@ export default {
         });
     },
 
-    requestReload() {
+    reloadRequest() {
       this.$emit('reload');
     },
   },
