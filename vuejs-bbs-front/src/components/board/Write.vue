@@ -1,25 +1,25 @@
 <template>
   <div class="container">
     <div class="row">
-      <h1>게시물 작성</h1>
+      <h1>{{ job }}</h1>
     </div>
     <div class="row">
       <div class="input-field">
         <i class="material-icons prefix">account_circle</i>
         <input id="name" name="name" type="text" class="validate"
-          :value="name" placeholder="작성자" disabled>
+          :value="article.name" placeholder="작성자" disabled>
       </div>
     </div>
     <div class="row">
       <div class="input-field">
         <i class="material-icons prefix">subject</i>
         <input id="title" name="title" type="text" class="validate"
-          v-model="title" placeholder="제목">
+          v-model="article.title" placeholder="제목">
       </div>
     </div>
     <div class="row">
       <div class="col s12">
-        <quill-editor v-model="content"
+        <quill-editor v-model="article.content"
             ref="myQuillEditor"
             :options="editorOption"
             @blur="onEditorBlur($event)"
@@ -48,13 +48,16 @@ export default {
   },
 
   created() {
-    this.name = this.$store.getters.userDetail.name;
+    this.article.name = this.$store.getters.userDetail.name;
   },
 
   data: () => ({
-    name: '',
-    title: '',
-    content: '',
+    job: '게시물 작성',
+    article: {
+      name: '',
+      title: '',
+      content: '',
+    },
     editorOption: {
       placeholder: '여기에 내용을 입력해주세요',
       theme: 'snow',
@@ -64,11 +67,7 @@ export default {
 
   methods: {
     write() {
-      axios.post('/api/v1/board', {
-        name: this.name,
-        title: this.title,
-        content: this.content,
-      }).then((res) => {
+      axios.post('/api/v1/board', this.article).then((res) => {
         notification.success(res, '게시물이 등록되었습니다', () => {
           this.$router.push('/');
         });
@@ -78,7 +77,7 @@ export default {
     },
 
     cancel() {
-      this.$router.go(-1);
+      this.$router.push('/board');
     },
 
     onEditorBlur(quill) {

@@ -35,6 +35,7 @@
 
 <script>
 import axios from 'axios';
+import qstr from 'query-string';
 import notification from '../../lib/notification';
 import Comments from './Comments.vue';
 
@@ -64,7 +65,8 @@ export default {
     },
 
     toModify() {
-
+      const query = qstr.stringify(this.$route.query);
+      this.$router.push(`/board/${this.$route.params.id}/modify?${query}`);
     },
 
     toRemove() {
@@ -78,7 +80,7 @@ export default {
     },
 
     toList() {
-      this.$router.go(-1);
+      this.$router.push({ path: '/board', query: this.$route.query });
     },
   },
 

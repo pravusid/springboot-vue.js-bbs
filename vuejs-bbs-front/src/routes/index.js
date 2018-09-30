@@ -6,6 +6,7 @@ import auth from '../lib/authentication';
 import BoardList from '../components/board/List.vue';
 import BoardDetail from '../components/board/Detail.vue';
 import BoardWrite from '../components/board/Write.vue';
+import BoardModify from '../components/board/Modify.vue';
 import UserList from '../components/user/List.vue';
 import Signup from '../components/user/Signup.vue';
 import UserDetail from '../components/user/Detail.vue';
@@ -35,6 +36,11 @@ const router = new Router({
       path: '/board/:id',
       name: 'Board/Detail',
       component: BoardDetail,
+    },
+    {
+      path: '/board/:id/modify',
+      name: 'Board/Modify',
+      component: BoardModify,
     },
     {
       path: '/user',

@@ -24,7 +24,8 @@
       </div>
 
       <div class="collection">
-        <router-link tag="a" :to="{ name: 'Board/Detail', params: { id: one.id } }"
+        <router-link tag="a"
+            :to="{ name: 'Board/Detail', params: { id: one.id }, query: query }"
             class="collection-item row" v-for="one in list" :key="one.id">
           <span class="col s7">
             <span>{{ one.title }}</span>&nbsp;
@@ -45,8 +46,7 @@
               <a @click="previous"><i class="material-icons">chevron_left</i></a>
             </li>
             <router-link tag="li" v-for="present in presentedPages" :key="present"
-                active-class="active"
-                :to="fullPath(present)" exact>
+                active-class="active" :to="fullPath(present)" exact>
               <a>{{ present + 1 }}</a>
             </router-link>
             <li class="waves-effect">
@@ -69,23 +69,28 @@ import _ from 'lodash';
 
 export default {
   created() {
-    const page = this.$route.query.page;
-    if (page === undefined) {
-      this.$router.push('/board?page=0');
-    } else {
-      this.loadPage(page);
-    }
+    this.beforeLoadPage();
   },
 
   data: () => ({
     pagination: {},
     list: [],
     blockSize: 5,
+    query: {},
   }),
 
   methods: {
-    loadPage(pageNo) {
-      axios.get(`/api/v1/board?page=${pageNo}`).then((res) => {
+    beforeLoadPage() {
+      this.query = this.$route.query;
+      if (this.query.page === undefined) {
+        this.$router.push({ path: '/board', query: { page: 0 } });
+      } else {
+        this.loadPage();
+      }
+    },
+
+    loadPage() {
+      axios.get(`/api/v1/board?page=${this.query.page}`).then((res) => {
         this.list = res.data.content;
         this.pagination = {
           numberOfElements: res.data.numberOfElements,
@@ -100,7 +105,9 @@ export default {
     },
 
     fullPath(val) {
-      return { path: '/board', query: { page: val } };
+      const target = _.cloneDeep(this.query);
+      target.page = val;
+      return { path: '/board', query: target };
     },
 
     previous() {
@@ -131,12 +138,8 @@ export default {
   },
 
   beforeRouteUpdate(to, from, next) {
-    this.loadPage(to.query.page);
-    if (to.query.page === undefined) {
-      this.$router.push('/board?page=0');
-    } else {
-      next();
-    }
+    next();
+    this.beforeLoadPage();
   },
 
 };
