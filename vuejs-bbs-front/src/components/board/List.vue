@@ -93,8 +93,8 @@ export default {
     beforeLoadPage() {
       this.query = this.$route.query;
       this.search = {
-        filter: this.query.filter ? this.query.filter : 'title',
-        keyword: this.query.keyword ? this.query.keyword : '',
+        filter: (this.query.filter !== undefined) ? this.query.filter : 'title',
+        keyword: (this.query.keyword !== undefined) ? this.query.keyword : '',
       };
       if (this.query.page === undefined) {
         this.$router.push({ path: '/board', query: { page: 0 } });
@@ -104,7 +104,8 @@ export default {
     },
 
     loadPage() {
-      const query = this.$route.query.page ? qstr.stringify(this.$route.query) : 'page=0';
+      const query = (this.$route.query.page !== undefined) ?
+        qstr.stringify(this.$route.query) : 'page=0';
       axios.get(`/api/v1/board?${query}`).then((res) => {
         this.list = res.data.content;
         this.pagination = {
@@ -159,4 +160,3 @@ export default {
 
 };
 </script>
->
