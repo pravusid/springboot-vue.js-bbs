@@ -6,19 +6,19 @@
           <h1>게시판</h1>
         </div>
         <div class="col s2">
-          <select id="filter">
-            <option class="filter" value="title">제목</option>
-            <option class="filter" value="content">내용</option>
-            <option class="filter" value="user">작성자</option>
-            <option class="filter" value="comment">댓글</option>
-            <option class="filter" value="all">제목+내용+작성자</option>
+          <select class="browser-default" v-model="search.filter">
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+            <option value="user">작성자</option>
+            <option value="comments">댓글</option>
+            <option value="all">제목+내용+작성자</option>
           </select>
         </div>
         <div class="col s3">
-          <input id="keyword" type="text" class="validate">
+          <input type="text" class="validate" v-model="search.keyword">
         </div>
         <div class="col s1">
-          <a id="searchBtn" class="col s12 waves-effect btn teal lighten-2">
+          <a class="col s12 waves-effect btn teal lighten-2" @click="searching">
             <i class="material-icons center">search</i></a>
         </div>
       </div>
@@ -66,6 +66,7 @@
 <script>
 import axios from 'axios';
 import _ from 'lodash';
+import qstr from 'query-string';
 
 export default {
   created() {
@@ -74,14 +75,27 @@ export default {
 
   data: () => ({
     pagination: {},
+    search: {},
     list: [],
     blockSize: 5,
     query: {},
   }),
 
   methods: {
+    searching() {
+      const filter = this.search.filter.trim();
+      const keyword = this.search.keyword.trim();
+      if (filter !== '' && keyword !== '') {
+        this.$router.push(`/board?page=0&${qstr.stringify(this.search)}`);
+      }
+    },
+
     beforeLoadPage() {
       this.query = this.$route.query;
+      this.search = {
+        filter: this.query.filter ? this.query.filter : 'title',
+        keyword: this.query.keyword ? this.query.keyword : '',
+      };
       if (this.query.page === undefined) {
         this.$router.push({ path: '/board', query: { page: 0 } });
       } else {
@@ -90,7 +104,8 @@ export default {
     },
 
     loadPage() {
-      axios.get(`/api/v1/board?page=${this.query.page}`).then((res) => {
+      const query = this.$route.query.page ? qstr.stringify(this.$route.query) : 'page=0';
+      axios.get(`/api/v1/board?${query}`).then((res) => {
         this.list = res.data.content;
         this.pagination = {
           numberOfElements: res.data.numberOfElements,
@@ -144,3 +159,4 @@ export default {
 
 };
 </script>
+>
