@@ -7,42 +7,82 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@DataJpaTest
 public class CommentRepositoryTest {
 
     @Autowired
-    private BoardRepository boardRepository;
-    @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private BoardRepository boardRepository;
+
     @Test
-    public void 특정게시물의_댓글_전체를_가져온다() {
+    public void 댓글이_2개인_특정게시물의_댓글_전체를_가져온다() {
+        // GIVEN
+        Board board = 댓글_2개를_입력한_게시물_반환();
+
+        // WHEN
+        List<Comment> list = commentRepository.findByBoardIdOrderByReplyOrderAsc(board.getId());
+
+        // THEN
+        Assert.assertEquals(2, list.size());
+        Assert.assertEquals("댓글내용1", list.get(0).getContent());
+        Assert.assertEquals("댓글내용2", list.get(1).getContent());
+    }
+
+    @Test
+    public void 댓글이_0개인_특정게시물의_댓글_전체를_가져온다() {
         // GIVEN
         User user = new User(1L);
-        Board board1 = new Board(user, "제목1", "내용2");
-        Board board2 = new Board(user, "제목1", "내용2");
-        Board saved1 = boardRepository.save(board1);
-        Board saved2 = boardRepository.save(board2);
-        Comment comment1 = new Comment(user, saved1, "댓글내용1", 0, 0);
-        Comment comment2 = new Comment(user, saved1, "댓글내용2", 0, 0);
+        Board board = new Board(user, "제목1", "내용2");
+        Board saved = boardRepository.save(board);
+
+        // WHEN
+        List<Comment> list = commentRepository.findByBoardIdOrderByReplyOrderAsc(saved.getId());
+
+        // THEN
+        Assert.assertEquals(0, list.size());
+    }
+
+    @Test
+    public void 댓글_Order의_최고값을_가지고_온다() {
+        // GIVEN
+        댓글_2개를_입력한_게시물_반환();
+
+        // WHEN
+        long max = commentRepository.getMaximumReplyOrder();
+
+        // THEN
+        Assert.assertEquals(2, max);
+    }
+
+    @Test
+    public void 댓글_Order는_댓글이없으면_0을_반환함() {
+        // GIVEN
+        // WHEN
+        long max = commentRepository.getMaximumReplyOrder();
+
+        // THEN
+        Assert.assertEquals(0, max);
+    }
+
+    private Board 댓글_2개를_입력한_게시물_반환() {
+        User user = new User(1L);
+        Board board = boardRepository.save(new Board(user, "제목1", "내용2"));
+
+        Comment comment1 = new Comment(user, board, "댓글내용1", 0, 1);
+        Comment comment2 = new Comment(user, board, "댓글내용2", 0, 2);
+
         commentRepository.save(comment1);
         commentRepository.save(comment2);
 
-        // WHEN
-        List<Comment> list1 = commentRepository.findByBoardIdOrderByReplyOrderAsc(saved1.getId());
-        List<Comment> list2 = commentRepository.findByBoardIdOrderByReplyOrderAsc(saved2.getId());
-
-        // THEN
-        Assert.assertEquals(2, list1.size());
-        Assert.assertEquals("댓글내용1", list1.get(0).getContent());
-        Assert.assertEquals("댓글내용2", list1.get(1).getContent());
-        Assert.assertEquals(0, list2.size());
+        return board;
     }
 
 }
