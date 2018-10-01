@@ -5,12 +5,11 @@ import kr.pravusid.domain.user.UserRepository;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-
-import javax.transaction.Transactional;
 
 @Component
 public class PersistentTokenRepositoryImpl implements PersistentTokenRepository {

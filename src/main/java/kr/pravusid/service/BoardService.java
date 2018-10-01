@@ -12,8 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Service
 public class BoardService {
@@ -32,6 +32,7 @@ public class BoardService {
         this.commentRepository = commentRepository;
     }
 
+    @Transactional(readOnly = true)
     public Page<Board> findAll(Pageable pageable, Pagination pagination) {
         if (pagination.getKeyword() == null) {
             return boardRepository.findAll(pageable);
