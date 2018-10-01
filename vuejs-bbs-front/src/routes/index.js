@@ -36,11 +36,13 @@ const router = new Router({
       path: '/board/:id',
       name: 'Board/Detail',
       component: BoardDetail,
+      props: true,
     },
     {
       path: '/board/:id/modify',
       name: 'Board/Modify',
       component: BoardModify,
+      props: true,
     },
     {
       path: '/user',

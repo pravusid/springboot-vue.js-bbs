@@ -44,8 +44,10 @@ export default {
     Comments,
   },
 
+  props: ['id'],
+
   created() {
-    axios.get(`/api/v1/board/${this.$route.params.id}`).then((res) => {
+    axios.get(`/api/v1/board/${this.id}`).then((res) => {
       this.detail = res.data;
     });
   },
@@ -59,14 +61,14 @@ export default {
 
   methods: {
     loadComments() {
-      axios.get(`/api/v1/board/${this.$route.params.id}/comment`).then((res) => {
+      axios.get(`/api/v1/board/${this.id}/comment`).then((res) => {
         this.detail.comments = res.data;
       });
     },
 
     toModify() {
       const query = qstr.stringify(this.$route.query);
-      this.$router.push(`/board/${this.$route.params.id}/modify?${query}`);
+      this.$router.push(`/board/${this.id}/modify?${query}`);
     },
 
     toRemove() {

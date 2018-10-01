@@ -6,8 +6,10 @@ import Write from './Write.vue';
 export default {
   mixins: [Write],
 
+  props: ['id'],
+
   created() {
-    axios.get(`/api/v1/board/${this.$route.params.id}`).then((res) => {
+    axios.get(`/api/v1/board/${this.id}`).then((res) => {
       this.article.title = res.data.title;
       this.article.content = res.data.content;
     });
@@ -19,10 +21,10 @@ export default {
 
   methods: {
     write() {
-      axios.put(`/api/v1/board/${this.$route.params.id}`, this.article).then((res) => {
+      axios.put(`/api/v1/board/${this.id}`, this.article).then((res) => {
         notification.success(res, '게시물을 수정하였습니다', () => {
           this.$router.push({
-            path: `/board/${this.$route.params.id}`, query: this.$route.query,
+            path: `/board/${this.id}`, query: this.$route.query,
           });
         });
       }).catch((err) => {
@@ -32,7 +34,7 @@ export default {
 
     cancel() {
       this.$router.push({
-        path: `/board/${this.$route.params.id}`, query: this.$route.query,
+        path: `/board/${this.id}`, query: this.$route.query,
       });
     },
   },
