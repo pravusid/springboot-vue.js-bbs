@@ -48,11 +48,11 @@ import notification from '../../lib/notification';
 export default {
   data: () => ({
     user: {
-      username: null,
-      password: null,
-      confirmpassword: null,
-      name: null,
-      email: null,
+      username: '',
+      password: '',
+      confirmpassword: '',
+      name: '',
+      email: '',
     },
   }),
 
