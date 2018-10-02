@@ -68,13 +68,13 @@ public class CommentTest {
     @Test
     public void 동일회원의_댓글인지_확인한다() {
         // GIVEN
-        User tester = new User("user", "1234", "테스터", "test@kr");
+        User tester = new User("tester", "1234", "테스터", "test@kr");
 
         // WHEN
         Comment comment = new Comment(tester, board, "댓글내용", 0, 0);
 
         // THEN
-        Assert.assertTrue(comment.verifyUser("user"));
+        Assert.assertTrue(comment.verifyUser("tester"));
     }
 
 }
