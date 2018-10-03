@@ -61,9 +61,10 @@ public class Board extends BaseEntity implements UserVerifiable {
         this.hit += 1;
     }
 
-    public void update(String title, String content) {
+    public Board update(String title, String content) {
         this.title = title;
         this.content = content;
+        return this;
     }
 
     @Override

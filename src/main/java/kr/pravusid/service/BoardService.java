@@ -44,16 +44,16 @@ public class BoardService {
                 boardRepository.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
     }
 
-    public void save(String username, BoardDto dto) {
+    public Board save(String username, BoardDto dto) {
         User user = userRepository.findByUsername(username);
-        boardRepository.save(dto.toEntity(user));
+        return boardRepository.save(dto.toEntity(user));
     }
 
     @Transactional
-    public void update(String username, Long id, BoardDto dto) {
+    public Board update(String username, Long id, BoardDto dto) {
         Board board = boardRepository.findOne(id);
         userService.permissionCheck(username, board);
-        board.update(dto.getTitle(), dto.getContent());
+        return board.update(dto.getTitle(), dto.getContent());
     }
 
     public Board findOneAndHit(Long id) {
