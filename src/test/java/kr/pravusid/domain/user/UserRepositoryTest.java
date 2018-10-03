@@ -25,6 +25,7 @@ public class UserRepositoryTest {
     public void Username으로_회원을_찾는다() {
         // WHEN
         User user = userRepository.findByUsername("tester");
+
         // THEN
         Assert.assertEquals("test@kr", user.getEmail());
     }
@@ -33,6 +34,7 @@ public class UserRepositoryTest {
     public void 잘못된_Username은_빈결과를_반환한다() {
         // WHEN
         User user = userRepository.findByUsername("admin");
+
         // THEN
         Assert.assertNull(user);
     }
@@ -41,6 +43,7 @@ public class UserRepositoryTest {
     public void Email으로_회원을_찾는다() {
         // WHEN
         User user = userRepository.findByEmail("test@kr");
+
         // THEN
         Assert.assertEquals("tester", user.getUsername());
     }
@@ -49,6 +52,7 @@ public class UserRepositoryTest {
     public void 잘못된_Email은_빈결과를_반환한다() {
         // WHEN
         User user = userRepository.findByEmail("admin@kr");
+
         // THEN
         Assert.assertNull(user);
     }

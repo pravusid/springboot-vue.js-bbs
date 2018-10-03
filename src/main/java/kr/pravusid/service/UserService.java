@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(username);
@@ -37,7 +37,8 @@ public class UserService implements UserDetailsService {
     }
 
     public User save(UserDto dto) {
-        duplicateCheck(dto);
+        duplicateCheckForUsername(dto);
+        duplicateCheckForEmail(dto);
         return userRepository.save(dto.toEntity());
     }
 
@@ -52,6 +53,9 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User update(UserDto dto) {
         User user = userRepository.findOne(dto.getId());
+        if (!dto.getEmail().equals(user.getEmail())) {
+            duplicateCheckForEmail(dto);
+        }
         user.update(dto.toEntity());
         return user;
     }
@@ -62,10 +66,13 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    private void duplicateCheck(UserDto dto) {
+    private void duplicateCheckForUsername(UserDto dto) {
         if (userRepository.findByUsername(dto.getUsername()) != null) {
             throw new CustomValidationException("userDto", "username", "이미 존재하는 아이디 입니다");
         }
+    }
+
+    private void duplicateCheckForEmail(UserDto dto) {
         if (userRepository.findByEmail(dto.getEmail()) != null) {
             throw new CustomValidationException("userDto", "email", "사용중인 이메일 입니다");
         }

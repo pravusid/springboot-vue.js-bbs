@@ -23,6 +23,7 @@ public class UserTest {
     public void 평문_비밀번호를_입력하면_BCrypt_암호화_처리가_되어있다() {
         // WHEN
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
         // THEN
         Assert.assertTrue(encoder.matches("1234", user.getPassword()));
     }
@@ -32,8 +33,10 @@ public class UserTest {
         // GIVEN
         User origin = new User("tester", "1234", "테스터", "test@kr");
         User request = new User("new", "4321", "수정", "new@kr");
+
         // WHEN
         origin.update(request);
+
         // THEN
         Assert.assertNotEquals(request.getUsername(), origin.getUsername());
         Assert.assertEquals(request.getPassword(), origin.getPassword());
