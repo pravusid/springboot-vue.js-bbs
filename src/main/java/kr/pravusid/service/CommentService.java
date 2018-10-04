@@ -46,7 +46,7 @@ public class CommentService {
     }
 
     private void saveParentComment(User user, Long boardId, CommentDto dto) {
-        dto.setReplyOrder(commentRepository.getMaximumReplyOrder() + 1);
+        dto.setReplyOrder(commentRepository.getMaximumReplyOrder(boardId) + 1);
         Comment comment = commentRepository.save(dto.toEntity(user, boardRepository.findOne(boardId)));
         comment.adjustReplyDepth();
         commentRepository.save(comment);
@@ -61,7 +61,7 @@ public class CommentService {
 
         targets.stream()
                 .filter(c -> c.getReplyOrder() >= replyOrder)
-                .forEach(c -> c.adjustReplyOrder());
+                .forEach(Comment::adjustReplyOrder);
         commentRepository.save(targets);
 
         comment.adjustReplyDepth();
