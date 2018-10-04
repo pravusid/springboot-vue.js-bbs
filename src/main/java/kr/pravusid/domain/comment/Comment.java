@@ -56,9 +56,9 @@ public class Comment extends BaseEntity implements UserVerifiable {
         return replyOrder;
     }
 
-    public void initializeRoot(long order) {
-        replyDepth = 1;
-        replyOrder = order;
+    public void initializeRoot(long replyOrder) {
+        this.replyDepth = 1;
+        this.replyOrder = replyOrder;
     }
 
     public void initializeChild(long replyDepth, long replyOrder) {
