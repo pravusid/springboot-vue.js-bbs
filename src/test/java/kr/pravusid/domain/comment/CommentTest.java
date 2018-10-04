@@ -2,9 +2,11 @@ package kr.pravusid.domain.comment;
 
 import kr.pravusid.domain.board.Board;
 import kr.pravusid.domain.user.User;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CommentTest {
 
@@ -18,15 +20,29 @@ public class CommentTest {
     }
 
     @Test
-    public void 댓글_Depth를_증가시킨다() {
+    public void 상위_댓글을_초기화하면_Depth_1과_지정한_Order가_된다() {
         // GIVEN
         Comment comment = new Comment(user, board, "댓글내용", 0, 0);
 
         // WHEN
-        comment.adjustReplyDepth();
+        comment.initializeRoot(5);
 
         // THEN
-        Assert.assertEquals(1, comment.getReplyDepth());
+        assertEquals(1, comment.getReplyDepth());
+        assertEquals(5, comment.getReplyOrder());
+    }
+
+    @Test
+    public void 하위_댓글을_초기화하면_Depth_1추가_지정한_Order가_된다() {
+        // GIVEN
+        Comment comment = new Comment(user, board, "댓글내용", 0, 0);
+
+        // WHEN
+        comment.initializeChild(3, 12);
+
+        // THEN
+        assertEquals(4, comment.getReplyDepth());
+        assertEquals(12, comment.getReplyOrder());
     }
 
     @Test
@@ -38,7 +54,7 @@ public class CommentTest {
         comment.adjustReplyOrder();
 
         // THEN
-        Assert.assertEquals(1, comment.getReplyOrder());
+        assertEquals(1, comment.getReplyOrder());
     }
 
     @Test
@@ -50,7 +66,7 @@ public class CommentTest {
         comment.adjustReplyOrder(5);
 
         // THEN
-        Assert.assertEquals(5, comment.getReplyOrder());
+        assertEquals(5, comment.getReplyOrder());
     }
 
     @Test
@@ -62,7 +78,7 @@ public class CommentTest {
         comment.update("수정된내용");
 
         // THEN
-        Assert.assertEquals("수정된내용", comment.getContent());
+        assertEquals("수정된내용", comment.getContent());
     }
 
     @Test
@@ -74,7 +90,7 @@ public class CommentTest {
         Comment comment = new Comment(tester, board, "댓글내용", 0, 0);
 
         // THEN
-        Assert.assertTrue(comment.verifyUser("tester"));
+        assertTrue(comment.verifyUser("tester"));
     }
 
 }

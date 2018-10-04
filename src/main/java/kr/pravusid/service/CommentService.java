@@ -4,6 +4,7 @@ import kr.pravusid.domain.board.Board;
 import kr.pravusid.domain.board.BoardRepository;
 import kr.pravusid.domain.comment.Comment;
 import kr.pravusid.domain.comment.CommentRepository;
+import kr.pravusid.domain.comment.exception.InvalidCommentRootException;
 import kr.pravusid.domain.user.User;
 import kr.pravusid.domain.user.UserRepository;
 import kr.pravusid.dto.CommentDto;
@@ -38,34 +39,35 @@ public class CommentService {
     public void save(String username, Long boardId, CommentDto dto) {
         User user = userRepository.findByUsername(username);
 
-        if (dto.getReplyDepth() == 0) {
-            saveParentComment(user, boardId, dto);
+        if (dto.getReplyOrder() == 0) {
+            saveRootComment(user, boardId, dto);
         } else {
             saveChildComment(user, boardId, dto);
         }
     }
 
-    private void saveParentComment(User user, Long boardId, CommentDto dto) {
-        dto.setReplyOrder(commentRepository.getMaximumReplyOrder(boardId) + 1);
+    private void saveRootComment(User user, Long boardId, CommentDto dto) {
         Comment comment = commentRepository.save(dto.toEntity(user, boardRepository.findOne(boardId)));
-        comment.adjustReplyDepth();
+        comment.initializeRoot(commentRepository.getMaximumReplyOrder(boardId) + 1);
         commentRepository.save(comment);
     }
 
     private void saveChildComment(User user, Long boardId, CommentDto dto) {
         Board board = boardRepository.findOne(boardId);
-        Comment comment = dto.toEntity(user, board);
+        Comment parent = board.getComments().stream()
+                .filter(c -> c.getReplyOrder() == dto.getReplyOrder())
+                .findFirst().orElseThrow(InvalidCommentRootException::new);
 
-        List<Comment> targets = findTargets(board.getComments(), comment);
-        long replyOrder = findReplyOrder(targets, comment);
+        List<Comment> targets = findTargets(board.getComments(), parent);
+        long replyOrder = findReplyOrder(targets, parent);
 
         targets.stream()
                 .filter(c -> c.getReplyOrder() >= replyOrder)
                 .forEach(Comment::adjustReplyOrder);
         commentRepository.save(targets);
 
-        comment.adjustReplyDepth();
-        comment.adjustReplyOrder(replyOrder);
+        Comment comment = dto.toEntity(user, board);
+        comment.initializeChild(parent.getReplyDepth(), replyOrder);
         commentRepository.save(comment);
     }
 
