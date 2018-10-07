@@ -1,4 +1,4 @@
-package kr.pravusid.api.v1.comment;
+package kr.pravusid.api.v1;
 
 import kr.pravusid.dto.CommentDto;
 import kr.pravusid.service.CommentService;

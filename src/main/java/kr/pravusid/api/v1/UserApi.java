@@ -1,4 +1,4 @@
-package kr.pravusid.api.v1.user;
+package kr.pravusid.api.v1;
 
 import kr.pravusid.domain.user.exception.InvalidUserException;
 import kr.pravusid.dto.UserDto;

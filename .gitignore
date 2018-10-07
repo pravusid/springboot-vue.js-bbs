@@ -21,3 +21,4 @@ out/
 application.yml
 .tern-project
 logs/
+insomnia-data.json

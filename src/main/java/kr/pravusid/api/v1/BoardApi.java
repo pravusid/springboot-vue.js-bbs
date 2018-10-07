@@ -1,4 +1,4 @@
-package kr.pravusid.api.v1.board;
+package kr.pravusid.api.v1;
 
 import kr.pravusid.dto.BoardDto;
 import kr.pravusid.dto.Pagination;
