@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pravusid/springboot-vue.js-bbs.svg?branch=master)](https://travis-ci.org/pravusid/springboot-vue.js-bbs)
+
 # Toy Project: Spring Boot + SSR / CSR
 
 1. Spring Boot + Thymeleaf
