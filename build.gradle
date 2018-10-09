@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.13.RELEASE'
+        springBootVersion = '1.5.16.RELEASE'
         thymeleafVersion = '3.0.1.RELEASE'
     }
     repositories {
@@ -13,7 +13,6 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 version = '1.0.0'
@@ -34,18 +33,8 @@ dependencies {
     compile("org.thymeleaf:thymeleaf-spring4:${thymeleafVersion}")
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:${thymeleafVersion}")
     compile("mysql:mysql-connector-java")
-    runtime("com.h2database:h2")
+    compile("com.h2database:h2")
     runtime("org.springframework.boot:spring-boot-devtools")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.springframework.security:spring-security-test")
-}
-
-jar {
-    manifest {
-        attributes 'Title': 'boot-vue', 'Version': 1.0, 'Main-Class': 'kr.pravusid.WebApplication'
-    }
-    dependsOn configurations.runtime
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
 }
