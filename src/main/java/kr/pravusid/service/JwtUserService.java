@@ -20,7 +20,7 @@ public class JwtUserService {
         return (String) claim.get("user_name");
     }
 
-    private Jwt getParsedToken(String accessToken){
+    private Jwt getParsedToken(String accessToken) {
         return JwtHelper.decode(accessToken.split(" ")[1]);
     }
 

@@ -34,6 +34,10 @@ public class BoardDto extends BaseDto {
         this.hit = board.getHit();
     }
 
+    public static BoardDto of(Board it) {
+        return new BoardDto(it);
+    }
+
     public UserDto getUser() {
         return user;
     }
@@ -80,10 +84,6 @@ public class BoardDto extends BaseDto {
 
     public Board toEntity(User user) {
         return new Board(user, title, content);
-    }
-
-    public static BoardDto of(Board it) {
-        return new BoardDto(it);
     }
 
 }

@@ -48,7 +48,7 @@ public class BoardServiceTest {
     @Test
     public void 전체_게시물을_조회한다() {
         // WHEN
-        Pageable pageable = new PageRequest(0, 10, Sort.Direction.DESC,"id");
+        Pageable pageable = new PageRequest(0, 10, Sort.Direction.DESC, "id");
         // pagination은 검색 필터, 키워드 추출에 사용됨
         Pagination pagination = new Pagination();
         Page<Board> list = boardService.findAll(pageable, pagination);
@@ -57,8 +57,8 @@ public class BoardServiceTest {
         int total = boardRepository.findAll().size();
         assertEquals(0, list.getNumber());
         assertEquals(total, list.getTotalElements());
-        assertEquals("내용3", list.getContent().get(0).getContent() );
-        assertEquals("내용1", list.getContent().get(2).getContent() );
+        assertEquals("내용3", list.getContent().get(0).getContent());
+        assertEquals("내용1", list.getContent().get(2).getContent());
     }
 
     @Test

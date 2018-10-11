@@ -1,12 +1,11 @@
 package kr.pravusid.domain.board;
 
+import kr.pravusid.dto.Pagination;
+import org.springframework.data.jpa.domain.Specification;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import org.springframework.data.jpa.domain.Specification;
-
-import kr.pravusid.dto.Pagination;
 
 public class BoardSpecification {
 
@@ -20,10 +19,10 @@ public class BoardSpecification {
 
             } else if (pagination.filterMatcher(Pagination.FilterType.TITLE)) {
                 return cb.like(cb.lower(root.get(pagination.getFilter())), "%" + keyword + "%");
-                
+
             } else if (pagination.filterMatcher(Pagination.FilterType.CONTENT)) {
                 return cb.like(cb.lower(root.get(pagination.getFilter())), "%" + keyword + "%");
-                
+
             } else if (pagination.filterMatcher(Pagination.FilterType.COMMENTS)) {
                 return cb.like(cb.lower(root.join(pagination.getFilter()).get("content")), "%" + keyword + "%");
             }

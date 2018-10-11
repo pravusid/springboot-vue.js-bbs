@@ -9,7 +9,7 @@ public class CustomValidationException extends RuntimeException {
 
     private FieldError error;
 
-    public CustomValidationException(String objectName, String field, String defaultMessage){
+    public CustomValidationException(String objectName, String field, String defaultMessage) {
         this.error = new FieldError(objectName, field, defaultMessage);
     }
 

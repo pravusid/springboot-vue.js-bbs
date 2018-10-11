@@ -26,6 +26,10 @@ public class CommentDto extends BaseDto {
         this.replyOrder = comment.getReplyOrder();
     }
 
+    public static CommentDto of(Comment it) {
+        return new CommentDto(it);
+    }
+
     public UserDto getUser() {
         return user;
     }
@@ -60,10 +64,6 @@ public class CommentDto extends BaseDto {
 
     public Comment toEntity(User user, Board board) {
         return new Comment(user, board, content, replyDepth, replyOrder);
-    }
-
-    public static CommentDto of(Comment it) {
-        return new CommentDto(it);
     }
 
 }

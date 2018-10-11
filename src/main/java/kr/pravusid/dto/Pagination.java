@@ -17,13 +17,9 @@ public class Pagination {
     private String filter;
     private String keyword;
 
-    public enum FilterType {
-        TITLE, CONTENT, USER, COMMENTS, ALL;
-    }
-
     public Pagination calcPage(Page page, int blockSize) {
         this.currPage = page.getNumber();
-        this.totalPages= (page.getTotalPages() == 0) ? 0 : page.getTotalPages() - 1;
+        this.totalPages = (page.getTotalPages() == 0) ? 0 : page.getTotalPages() - 1;
 
         firstBlock = currPage - (currPage % blockSize);
         lastBlock = (firstBlock + (blockSize - 1) > totalPages) ? totalPages : firstBlock + (blockSize - 1);
@@ -79,6 +75,10 @@ public class Pagination {
 
     public String getSearchQuery() {
         return (filter == null || keyword == null) ? "" : "&filter=" + filter + "&keyword=" + keyword;
+    }
+
+    public enum FilterType {
+        TITLE, CONTENT, USER, COMMENTS, ALL;
     }
 
 }

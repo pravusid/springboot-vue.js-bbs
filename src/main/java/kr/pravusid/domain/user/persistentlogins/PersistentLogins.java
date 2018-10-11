@@ -2,13 +2,8 @@ package kr.pravusid.domain.user.persistentlogins;
 
 import kr.pravusid.domain.user.User;
 
+import javax.persistence.*;
 import java.time.LocalDate;
-
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 @Entity
 public class PersistentLogins {

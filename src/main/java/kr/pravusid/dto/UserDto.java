@@ -35,6 +35,10 @@ public class UserDto extends BaseDto {
         this.email = user.getEmail();
     }
 
+    public static UserDto of(User it) {
+        return new UserDto(it);
+    }
+
     public String getUsername() {
         return username;
     }
@@ -77,10 +81,6 @@ public class UserDto extends BaseDto {
 
     public User toEntity() {
         return new User(username, password, name, email);
-    }
-
-    public static UserDto of(User it) {
-        return new UserDto(it);
     }
 
 }

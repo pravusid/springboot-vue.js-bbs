@@ -1,10 +1,10 @@
-var logout = function() {
+var logout = function () {
   document.getElementById("logout").submit();
 };
 
-window.onload = function() {
+window.onload = function () {
   var auth = document.getElementById("auth");
-  if (auth!=null && auth.value === "") {
+  if (auth != null && auth.value === "") {
     logout();
   }
 };

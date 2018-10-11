@@ -112,8 +112,7 @@ public class CommentService {
                 .findFirst().map(Comment::getReplyOrder)
                 .orElse(targets.stream()
                         .mapToLong(c -> c.getReplyOrder() + 1).max()
-                        .orElse(comment.getReplyOrder() + 1)
-                        );
+                        .orElse(comment.getReplyOrder() + 1));
     }
 
 }

@@ -39,8 +39,8 @@ public class BoardService {
         }
 
         String keyword = pagination.getKeyword();
-        return (pagination.filterMatcher(Pagination.FilterType.ALL))?
-                boardRepository.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable):
+        return (pagination.filterMatcher(Pagination.FilterType.ALL)) ?
+                boardRepository.findAll(Specifications.where(BoardSpecification.findByAll(keyword)), pageable) :
                 boardRepository.findAll(Specifications.where(BoardSpecification.findByFilter(pagination)), pageable);
     }
 

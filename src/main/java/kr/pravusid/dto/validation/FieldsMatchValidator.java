@@ -1,9 +1,8 @@
 package kr.pravusid.dto.validation;
 
-import java.lang.reflect.Field;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.lang.reflect.Field;
 
 public class FieldsMatchValidator implements ConstraintValidator<FieldsMatcher, Object> {
 

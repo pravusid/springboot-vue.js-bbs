@@ -5,7 +5,7 @@ $(function () {
       return;
     }
     var data = {"id": $(this).val()};
-    var URL = "/board"+csrf;
+    var URL = "/board" + csrf;
     $.ajax({
       type: "delete",
       contentType: "application/json",
