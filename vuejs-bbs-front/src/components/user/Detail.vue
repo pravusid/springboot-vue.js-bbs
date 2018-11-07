@@ -39,7 +39,7 @@
 
 <script>
 import axios from 'axios';
-import notification from '../../lib/notification';
+import notification from '../../libs/notification';
 
 export default {
   created() {

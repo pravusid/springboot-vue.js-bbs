@@ -40,7 +40,7 @@ import axios from 'axios';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
-import notification from '../../lib/notification';
+import notification from '../../libs/notification';
 
 export default {
   components: {

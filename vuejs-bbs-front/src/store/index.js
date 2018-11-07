@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import qstr from 'query-string';
 import jwtDecode from 'jsonwebtoken/decode';
 
-import { setAxiosHeader } from '../lib/axios-option';
+import { setAxiosHeader } from '../libs/axios-option';
 
 Vue.use(Vuex);
 

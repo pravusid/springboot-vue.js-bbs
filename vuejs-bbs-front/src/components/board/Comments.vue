@@ -19,7 +19,7 @@
 
 <script>
 import axios from 'axios';
-import notification from '../../lib/notification';
+import notification from '../../libs/notification';
 import Comment from './Comment.vue';
 
 export default {

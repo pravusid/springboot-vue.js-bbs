@@ -36,7 +36,7 @@
 <script>
 import axios from 'axios';
 import qstr from 'query-string';
-import notification from '../../lib/notification';
+import notification from '../../libs/notification';
 import Comments from './Comments.vue';
 
 export default {

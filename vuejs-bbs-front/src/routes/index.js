@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import auth from '../lib/authentication';
+import auth from '../libs/authentication';
 
 import BoardList from '../components/board/List.vue';
 import BoardDetail from '../components/board/Detail.vue';
