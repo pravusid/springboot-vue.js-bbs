@@ -18,13 +18,13 @@
 
 <script>
 import qstr from 'query-string';
-import axios from 'axios';
+import axios from '../libs/axios.custom';
 
 export default {
-  mounted() {
+  created() {
     const user = localStorage.user;
     if (user) {
-      this.$store.dispatch('SET_USER', qstr.parse(user));
+      this.$store.dispatch('setUser', qstr.parse(user));
       this.getUserDetails();
     }
   },
@@ -40,16 +40,14 @@ export default {
   }),
 
   methods: {
-    login() {
+    async login() {
       const url = `${process.env.VUE_APP_API}/oauth/authorize?${qstr.stringify(this.params)}`;
       const options = 'width=600, height=600';
-
       const popup = window.open(url, 'auth', options);
 
-      this.popupWatcher(popup, this.originHost).then((param) => {
-        this.$store.dispatch('SET_USER', param);
-        this.getUserDetails();
-      });
+      const param = await this.popupWatcher(popup, this.originHost);
+      await this.$store.dispatch('setUser', param);
+      this.getUserDetails();
     },
 
     popupWatcher(popup, exitUrl) {
@@ -81,24 +79,25 @@ export default {
       });
     },
 
-    getUserDetails() {
-      const username = this.$store.getters.username;
-      axios.get(`/api/v1/user/${username}`).then((res) => {
+    async getUserDetails() {
+      try {
+        const username = this.$store.getters.username;
+        const res = await axios.get(`/api/v1/user/${username}`);
         if (res.status === 200) {
-          this.$store.dispatch('SET_USER_DETAIL', res.data);
+          this.$store.dispatch('setUserDetail', res.data);
           this.loggedIn = true;
         }
-      }).catch((err) => {
+      } catch (err) {
         if (err.response.status === 401) {
           this.logout();
         }
-      });
+      }
     },
 
     logout() {
       this.loggedIn = false;
-      this.$store.dispatch('SET_USER', null);
-      this.$store.dispatch('SET_USER_DETAIL', null);
+      this.$store.dispatch('setUser', null);
+      this.$store.dispatch('setUserDetail', null);
       this.$router.push('/');
     },
   },

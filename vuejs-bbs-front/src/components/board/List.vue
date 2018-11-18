@@ -64,9 +64,9 @@
 </template>
 
 <script>
-import axios from 'axios';
 import _ from 'lodash';
 import qstr from 'query-string';
+import axios from '../../libs/axios.custom';
 
 export default {
   created() {
@@ -103,21 +103,20 @@ export default {
       }
     },
 
-    loadPage() {
+    async loadPage() {
       const query = (this.$route.query.page !== undefined) ?
         qstr.stringify(this.$route.query) : 'page=0';
-      axios.get(`/api/v1/board?${query}`).then((res) => {
-        this.list = res.data.content;
-        this.pagination = {
-          numberOfElements: res.data.numberOfElements,
-          totalElements: res.data.totalElements,
-          isFirst: res.data.first,
-          isLast: res.data.last,
-          currentPage: res.data.number,
-          totalPages: res.data.totalPages,
-          pageSize: res.data.size,
-        };
-      });
+      const res = await axios.get(`/api/v1/board?${query}`);
+      this.list = res.data.content;
+      this.pagination = {
+        numberOfElements: res.data.numberOfElements,
+        totalElements: res.data.totalElements,
+        isFirst: res.data.first,
+        isLast: res.data.last,
+        currentPage: res.data.number,
+        totalPages: res.data.totalPages,
+        pageSize: res.data.size,
+      };
     },
 
     fullPath(val) {

@@ -38,15 +38,14 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../../libs/axios.custom';
 import notification from '../../libs/notification';
 
 export default {
-  created() {
+  async created() {
     const username = this.$store.getters.username;
-    axios.get(`/api/v1/user/${username}`).then((res) => {
-      this.detail = res.data;
-    });
+    const res = await axios.get(`/api/v1/user/${username}`);
+    this.detail = res.data;
   },
 
   data: () => ({
@@ -54,15 +53,16 @@ export default {
   }),
 
   methods: {
-    modify() {
-      const username = this.$store.getters.username;
-      axios.put(`/api/v1/user/${username}`, this.detail).then((res) => {
+    async modify() {
+      try {
+        const username = this.$store.getters.username;
+        const res = await axios.put(`/api/v1/user/${username}`, this.detail);
         notification.success(res, '회원정보가 수정되었습니다', () => {
           this.$router.push('/user');
         });
-      }).catch((err) => {
+      } catch (err) {
         notification.error(err, '회원정보 수정중 오류 발생');
-      });
+      }
     },
   },
 };

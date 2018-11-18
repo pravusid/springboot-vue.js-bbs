@@ -36,10 +36,11 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
+
+import axios from '../../libs/axios.custom';
 import notification from '../../libs/notification';
 
 export default {
@@ -66,14 +67,15 @@ export default {
   }),
 
   methods: {
-    write() {
-      axios.post('/api/v1/board', this.article).then((res) => {
+    async write() {
+      try {
+        const res = await axios.post('/api/v1/board', this.article);
         notification.success(res, '게시물이 등록되었습니다', () => {
           this.$router.push('/');
         });
-      }).catch((err) => {
+      } catch (err) {
         notification.error(err, '게시물 등록 실패!\n다시 시도해주세요');
-      });
+      }
     },
 
     cancel() {

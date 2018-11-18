@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import axios from 'axios';
 import qstr from 'query-string';
+import axios from '../../libs/axios.custom';
 import notification from '../../libs/notification';
 import Comments from './Comments.vue';
 
@@ -46,10 +46,9 @@ export default {
 
   props: ['id'],
 
-  created() {
-    axios.get(`/api/v1/board/${this.id}`).then((res) => {
-      this.detail = res.data;
-    });
+  async created() {
+    const res = await axios.get(`/api/v1/board/${this.id}`);
+    this.detail = res.data;
   },
 
   data: () => ({
@@ -60,10 +59,9 @@ export default {
   }),
 
   methods: {
-    loadComments() {
-      axios.get(`/api/v1/board/${this.id}/comment`).then((res) => {
-        this.detail.comments = res.data;
-      });
+    async loadComments() {
+      const res = await axios.get(`/api/v1/board/${this.id}/comment`);
+      this.detail.comments = res.data;
     },
 
     toModify() {
@@ -71,14 +69,15 @@ export default {
       this.$router.push(`/board/${this.id}/modify?${query}`);
     },
 
-    toRemove() {
-      axios.delete(`/api/v1/board/${this.detail.id}`).then((res) => {
+    async toRemove() {
+      try {
+        const res = await axios.delete(`/api/v1/board/${this.detail.id}`);
         notification.success(res, '게시물 삭제 성공', () => {
           this.$router.push('/');
         });
-      }).catch((err) => {
+      } catch (err) {
         notification.error(err, '게시물 삭제 실패');
-      });
+      }
     },
 
     toList() {

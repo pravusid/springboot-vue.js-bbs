@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../../libs/axios.custom';
 import notification from '../../libs/notification';
 import Comment from './Comment.vue';
 
@@ -37,22 +37,22 @@ export default {
   }),
 
   methods: {
-    writeComment() {
-      if (this.comment.content === undefined || this.comment.content === '') {
-        notification.warn('내용을 입력해 주세요');
-        return;
-      }
-      axios.post(`/api/v1/board/${this.id}/comment`, this.comment)
-        .then((res) => {
-          notification.success(res, '댓글이 등록되었습니다', () => {
-            this.$el.scrollTop = this.$el.scrollHeight;
-            this.reloadRequest();
-            this.$scrollTo('#new-comment');
-            this.comment = {};
-          });
-        }).catch((err) => {
-          notification.error(err, '댓글 등록중 오류 발생');
+    async writeComment() {
+      try {
+        if (this.comment.content === undefined || this.comment.content === '') {
+          notification.warn('내용을 입력해 주세요');
+          return;
+        }
+        const res = await axios.post(`/api/v1/board/${this.id}/comment`, this.comment);
+        notification.success(res, '댓글이 등록되었습니다', () => {
+          this.$el.scrollTop = this.$el.scrollHeight;
+          this.reloadRequest();
+          this.$scrollTo('#new-comment');
+          this.comment = {};
         });
+      } catch (err) {
+        notification.error(err, '댓글 등록중 오류 발생');
+      }
     },
 
     reloadRequest() {

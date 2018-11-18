@@ -3,11 +3,13 @@ import Vuex from 'vuex';
 import qstr from 'query-string';
 import jwtDecode from 'jsonwebtoken/decode';
 
-import { setAxiosHeader } from '../libs/axios-option';
+import { setHeader } from '../libs/axios.custom';
 
 Vue.use(Vuex);
 
-const store = new Vuex.Store({
+const debug = process.env.VUE_APP_PROFILE === 'development';
+
+export default new Vuex.Store({
   state: {
     user: null,
     token: null,
@@ -20,7 +22,7 @@ const store = new Vuex.Store({
     },
 
     username(state) {
-      return (state.token) ? state.token.user_name : null;
+      return state.token ? state.token.user_name : null;
     },
 
     userDetail(state) {
@@ -29,27 +31,27 @@ const store = new Vuex.Store({
   },
 
   mutations: {
-    SET_USER(state, payload) {
+    setUser(state, payload) {
       state.user = payload;
       state.token = payload ? jwtDecode(payload.access_token) : null;
       localStorage.user = qstr.stringify(payload);
-      setAxiosHeader(payload);
+      setHeader(payload);
     },
 
-    SET_USER_DETAIL(state, payload) {
+    setUserDetail(state, payload) {
       state.userDetail = payload;
     },
   },
 
   actions: {
-    SET_USER({ commit }, payload) {
-      commit('SET_USER', payload);
+    setUser({ commit }, payload) {
+      commit('setUser', payload);
     },
 
-    SET_USER_DETAIL({ commit }, payload) {
-      commit('SET_USER_DETAIL', payload);
+    setUserDetail({ commit }, payload) {
+      commit('setUserDetail', payload);
     },
   },
-});
 
-export default store;
+  strict: debug,
+});

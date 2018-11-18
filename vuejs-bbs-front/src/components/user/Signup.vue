@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../../libs/axios.custom';
 import notification from '../../libs/notification';
 
 export default {
@@ -57,22 +57,22 @@ export default {
   }),
 
   methods: {
-    signup() {
-      axios.post('/api/v1/user/signup', this.user)
-        .then((res) => {
-          notification.success(res, '가입성공', () => {
-            this.$router.push('/');
-          });
-        }).catch((err) => {
-          err.response.data.errors.forEach((error) => {
-            this.$notify({
-              group: 'noti',
-              type: 'error',
-              duration: 6000,
-              text: error.defaultMessage,
-            });
+    async signup() {
+      try {
+        const res = await axios.post('/api/v1/user/signup', this.user);
+        notification.success(res, '가입성공', () => {
+          this.$router.push('/');
+        });
+      } catch (err) {
+        err.response.data.errors.forEach((error) => {
+          this.$notify({
+            group: 'noti',
+            type: 'error',
+            duration: 6000,
+            text: error.defaultMessage,
           });
         });
+      }
     },
   },
 };

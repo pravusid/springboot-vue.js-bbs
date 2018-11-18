@@ -25,13 +25,12 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../../libs/axios.custom';
 
 export default {
-  created() {
-    axios.get('/api/v1/user').then((res) => {
-      this.users = res.data;
-    });
+  async created() {
+    const res = await axios.get('/api/v1/user');
+    this.users = res.data;
   },
 
   data: () => ({

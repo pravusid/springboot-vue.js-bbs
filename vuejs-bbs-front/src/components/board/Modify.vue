@@ -1,5 +1,5 @@
 <script>
-import axios from 'axios';
+import axios from '../../libs/axios.custom';
 import notification from '../../libs/notification';
 import Write from './Write.vue';
 
@@ -8,11 +8,10 @@ export default {
 
   props: ['id'],
 
-  created() {
-    axios.get(`/api/v1/board/${this.id}`).then((res) => {
-      this.article.title = res.data.title;
-      this.article.content = res.data.content;
-    });
+  async created() {
+    const res = await axios.get(`/api/v1/board/${this.id}`);
+    this.article.title = res.data.title;
+    this.article.content = res.data.content;
   },
 
   data: () => ({
@@ -20,16 +19,17 @@ export default {
   }),
 
   methods: {
-    write() {
-      axios.put(`/api/v1/board/${this.id}`, this.article).then((res) => {
+    async write() {
+      try {
+        const res = await axios.put(`/api/v1/board/${this.id}`, this.article);
         notification.success(res, '게시물을 수정하였습니다', () => {
           this.$router.push({
             path: `/board/${this.id}`, query: this.$route.query,
           });
         });
-      }).catch((err) => {
+      } catch (err) {
         notification.error(err, '게시물 수정 실패!\n다시 시도해주세요');
-      });
+      }
     },
 
     cancel() {
