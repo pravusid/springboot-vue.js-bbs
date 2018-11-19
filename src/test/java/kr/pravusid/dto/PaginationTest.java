@@ -1,6 +1,5 @@
 package kr.pravusid.dto;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -8,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PaginationTest {
 
@@ -18,12 +19,12 @@ public class PaginationTest {
         Pagination pagination = new Pagination();
         pagination.calcPage(page, 5);
 
-        Assert.assertEquals(pagination.getCurrPage(), 5);
-        Assert.assertEquals(pagination.getTotalPages(), 6);
-        Assert.assertEquals(pagination.getFirstBlock(), 5);
-        Assert.assertEquals(pagination.getLastBlock(), 6);
-        Assert.assertEquals(pagination.getPrev(), 4);
-        Assert.assertEquals(pagination.getNext(), 6);
+        assertThat(pagination.getCurrPage()).isEqualTo(5);
+        assertThat(pagination.getTotalPages()).isEqualTo(6);
+        assertThat(pagination.getFirstBlock()).isEqualTo(5);
+        assertThat(pagination.getLastBlock()).isEqualTo(6);
+        assertThat(pagination.getPrev()).isEqualTo(4);
+        assertThat(pagination.getNext()).isEqualTo(6);
     }
 
     @Test
@@ -33,12 +34,12 @@ public class PaginationTest {
         Pagination pagination = new Pagination();
         pagination.calcPage(page, 5);
 
-        Assert.assertEquals(pagination.getCurrPage(), 2);
-        Assert.assertEquals(pagination.getTotalPages(), 6);
-        Assert.assertEquals(pagination.getFirstBlock(), 0);
-        Assert.assertEquals(pagination.getLastBlock(), 4);
-        Assert.assertEquals(pagination.getPrev(), 0);
-        Assert.assertEquals(pagination.getNext(), 5);
+        assertThat(pagination.getCurrPage()).isEqualTo(2);
+        assertThat(pagination.getTotalPages()).isEqualTo(6);
+        assertThat(pagination.getFirstBlock()).isEqualTo(0);
+        assertThat(pagination.getLastBlock()).isEqualTo(4);
+        assertThat(pagination.getPrev()).isEqualTo(0);
+        assertThat(pagination.getNext()).isEqualTo(5);
     }
 
     @Test
@@ -48,12 +49,12 @@ public class PaginationTest {
         Pagination pagination = new Pagination();
         pagination.calcPage(page, 5);
 
-        Assert.assertEquals(pagination.getCurrPage(), 4);
-        Assert.assertEquals(pagination.getTotalPages(), 4);
-        Assert.assertEquals(pagination.getFirstBlock(), 0);
-        Assert.assertEquals(pagination.getLastBlock(), 4);
-        Assert.assertEquals(pagination.getPrev(), 0);
-        Assert.assertEquals(pagination.getNext(), 4);
+        assertThat(pagination.getCurrPage()).isEqualTo(4);
+        assertThat(pagination.getTotalPages()).isEqualTo(4);
+        assertThat(pagination.getFirstBlock()).isEqualTo(0);
+        assertThat(pagination.getLastBlock()).isEqualTo(4);
+        assertThat(pagination.getPrev()).isEqualTo(0);
+        assertThat(pagination.getNext()).isEqualTo(4);
     }
 
 }

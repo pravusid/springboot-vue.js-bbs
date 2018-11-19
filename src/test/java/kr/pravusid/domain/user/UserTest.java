@@ -1,22 +1,17 @@
 package kr.pravusid.domain.user;
 
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class UserTest {
 
-    private User user;
-
-    @Before
-    public void 회원_객체를_생성한다() {
-        user = new User("tester", "1234", "테스터", "test@kr");
-    }
+    private User user = new User("tester", "1234", "테스터", "test@kr");
 
     @Test
     public void 생성하면_USER_권한을_획득한상태이다() {
-        Assert.assertTrue(user.getAuthorities().contains(Authority.USER));
+        assertThat(user.getAuthorities().contains(Authority.USER)).isTrue();
     }
 
     @Test
@@ -25,7 +20,7 @@ public class UserTest {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         // THEN
-        Assert.assertTrue(encoder.matches("1234", user.getPassword()));
+        assertThat(encoder.matches("1234", user.getPassword())).isTrue();
     }
 
     @Test
@@ -38,15 +33,17 @@ public class UserTest {
         origin.update(request);
 
         // THEN
-        Assert.assertNotEquals(request.getUsername(), origin.getUsername());
-        Assert.assertEquals(request.getPassword(), origin.getPassword());
-        Assert.assertEquals(request.getName(), origin.getName());
-        Assert.assertEquals(request.getEmail(), origin.getEmail());
+        // 수정불가능
+        assertThat(origin.getUsername()).isNotEqualTo(request.getUsername());
+        // 수정가능
+        assertThat(origin.getPassword()).isEqualTo(request.getPassword());
+        assertThat(origin.getName()).isEqualTo(request.getName());
+        assertThat(origin.getEmail()).isEqualTo(request.getEmail());
     }
 
     @Test
     public void 동일회원인지_확인한다() {
-        Assert.assertTrue(user.verifyUser("tester"));
+        assertThat(user.verifyUser("tester")).isTrue();
     }
 
 }

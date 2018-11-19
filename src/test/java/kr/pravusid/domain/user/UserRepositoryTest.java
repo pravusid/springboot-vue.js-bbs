@@ -1,12 +1,14 @@
 package kr.pravusid.domain.user;
 
-import org.junit.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -16,9 +18,14 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Before
-    public void 회원을_DB에_저장한다() {
+    public void 반복_회원을_추가한다() {
         User user = new User("tester", "1234", "테스터", "test@kr");
         userRepository.save(user);
+    }
+
+    @After
+    public void 반복_회원을_삭제한다() {
+        userRepository.deleteAll();
     }
 
     @Test
@@ -27,7 +34,7 @@ public class UserRepositoryTest {
         User user = userRepository.findByUsername("tester");
 
         // THEN
-        Assert.assertEquals("test@kr", user.getEmail());
+        assertThat(user.getEmail()).isEqualTo("test@kr");
     }
 
     @Test
@@ -36,7 +43,7 @@ public class UserRepositoryTest {
         User user = userRepository.findByUsername("admin");
 
         // THEN
-        Assert.assertNull(user);
+        assertThat(user).isNull();
     }
 
     @Test
@@ -45,7 +52,7 @@ public class UserRepositoryTest {
         User user = userRepository.findByEmail("test@kr");
 
         // THEN
-        Assert.assertEquals("tester", user.getUsername());
+        assertThat(user.getUsername()).isEqualTo("tester");
     }
 
     @Test
@@ -54,7 +61,7 @@ public class UserRepositoryTest {
         User user = userRepository.findByEmail("admin@kr");
 
         // THEN
-        Assert.assertNull(user);
+        assertThat(user).isNull();
     }
 
 }

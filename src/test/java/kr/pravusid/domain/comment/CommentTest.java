@@ -2,22 +2,14 @@ package kr.pravusid.domain.comment;
 
 import kr.pravusid.domain.board.Board;
 import kr.pravusid.domain.user.User;
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommentTest {
 
-    private User user;
-    private Board board;
-
-    @Before
-    public void 회원과_게시물을_설정한다() {
-        user = new User(1L);
-        board = new Board(user, "테스트제목", "테스트내용");
-    }
+    private User user = new User(1L);
+    private Board board = new Board(user, "테스트제목", "테스트내용");
 
     @Test
     public void 상위_댓글을_초기화하면_Depth_1과_지정한_Order가_된다() {
@@ -28,8 +20,8 @@ public class CommentTest {
         comment.initializeRoot(5);
 
         // THEN
-        assertEquals(1, comment.getReplyDepth());
-        assertEquals(5, comment.getReplyOrder());
+        assertThat(comment.getReplyDepth()).isEqualTo(1);
+        assertThat(comment.getReplyOrder()).isEqualTo(5);
     }
 
     @Test
@@ -41,8 +33,8 @@ public class CommentTest {
         comment.initializeChild(3, 12);
 
         // THEN
-        assertEquals(4, comment.getReplyDepth());
-        assertEquals(12, comment.getReplyOrder());
+        assertThat(comment.getReplyDepth()).isEqualTo(4);
+        assertThat(comment.getReplyOrder()).isEqualTo(12);
     }
 
     @Test
@@ -54,7 +46,7 @@ public class CommentTest {
         comment.adjustReplyOrder();
 
         // THEN
-        assertEquals(1, comment.getReplyOrder());
+        assertThat(comment.getReplyOrder()).isEqualTo(1);
     }
 
     @Test
@@ -66,7 +58,7 @@ public class CommentTest {
         comment.adjustReplyOrder(5);
 
         // THEN
-        assertEquals(5, comment.getReplyOrder());
+        assertThat(comment.getReplyOrder()).isEqualTo(5);
     }
 
     @Test
@@ -78,7 +70,7 @@ public class CommentTest {
         comment.update("수정된내용");
 
         // THEN
-        assertEquals("수정된내용", comment.getContent());
+        assertThat(comment.getContent()).isEqualTo("수정된내용");
     }
 
     @Test
@@ -90,7 +82,7 @@ public class CommentTest {
         Comment comment = new Comment(tester, board, "댓글내용", 0, 0);
 
         // THEN
-        assertTrue(comment.verifyUser("tester"));
+        assertThat(comment.verifyUser("tester")).isTrue();
     }
 
 }

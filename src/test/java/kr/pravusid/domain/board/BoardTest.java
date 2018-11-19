@@ -1,9 +1,10 @@
 package kr.pravusid.domain.board;
 
 import kr.pravusid.domain.user.User;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BoardTest {
 
@@ -24,7 +25,7 @@ public class BoardTest {
         board.increaseHit();
 
         // THEN
-        Assert.assertEquals(hitAnte + 1, board.getHit());
+        assertThat(board.getHit()).isEqualTo(hitAnte + 1);
     }
 
     @Test
@@ -36,8 +37,8 @@ public class BoardTest {
         boardAnte.update("수정제목", "수정내용");
 
         // THEN
-        Assert.assertEquals("수정제목", boardAnte.getTitle());
-        Assert.assertEquals("수정내용", boardAnte.getContent());
+        assertThat(boardAnte.getTitle()).isEqualTo("수정제목");
+        assertThat(boardAnte.getContent()).isEqualTo("수정내용");
     }
 
     @Test
@@ -49,8 +50,8 @@ public class BoardTest {
         Board board = new Board(tester, "테스트제목", "테스트내용");
 
         // THEN
-        Assert.assertFalse(board.verifyUser("guest"));
-        Assert.assertTrue(board.verifyUser("tester"));
+        assertThat(board.verifyUser("guest")).isFalse();
+        assertThat(board.verifyUser("tester")).isTrue();
     }
 
 }

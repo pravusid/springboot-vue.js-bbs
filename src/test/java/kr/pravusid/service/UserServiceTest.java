@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,23 +34,13 @@ public class UserServiceTest {
                 .forEach(u -> userRepository.delete(u.getId()));
     }
 
-    private UserDto 요청을_생성한다() {
-        UserDto dto = new UserDto();
-        dto.setUsername("hogu");
-        dto.setPassword("1234");
-        dto.setConfirmpassword("1234");
-        dto.setName("호구");
-        dto.setEmail("test@kr");
-        return dto;
-    }
-
     @Test
     public void 요청한_Username의_UserDetails_반환() {
         // WHEN
         UserDetails user = userService.loadUserByUsername("user");
 
         // THEN
-        assertEquals("user", user.getUsername());
+        assertThat(user.getUsername()).isEqualTo("user");
     }
 
     @Test
@@ -63,38 +53,28 @@ public class UserServiceTest {
 
         // THEN
         User result = userRepository.findOne(user.getId());
-        assertEquals("hogu", result.getUsername());
-        assertEquals("test@kr", result.getEmail());
+        assertThat(result.getUsername()).isEqualTo("hogu");
+        assertThat(result.getEmail()).isEqualTo("test@kr");
     }
 
-    @Test
+    @Test(expected = CustomValidationException.class)
     public void 중복되는_Username이_있다면_회원등록중_예외발생() {
         // GIVEN
         UserDto dto = 요청을_생성한다();
         dto.setUsername("user");
 
         // WHEN THEN
-        try {
-            userService.save(dto);
-            fail();
-        } catch (Exception e) {
-            assertTrue(e instanceof CustomValidationException);
-        }
+        userService.save(dto);
     }
 
-    @Test
+    @Test(expected = CustomValidationException.class)
     public void 중복되는_Email이_있다면_회원등록중_예외발생() {
         // GIVEN
         UserDto dto = 요청을_생성한다();
         dto.setEmail("test@com");
 
         // WHEN THEN
-        try {
-            userService.save(dto);
-            fail();
-        } catch (Exception e) {
-            assertTrue(e instanceof CustomValidationException);
-        }
+        userService.save(dto);
     }
 
     @Test
@@ -102,7 +82,9 @@ public class UserServiceTest {
         // GIVEN
         User user = userRepository.findByUsername("user");
         UserDto dto = UserDto.of(user);
+        // 수정불가
         dto.setUsername("userAnte");
+        // 수정가능
         dto.setPassword("1234");
         dto.setName("참새");
         dto.setEmail("test@jp");
@@ -112,14 +94,14 @@ public class UserServiceTest {
 
         // THEN
         User result = userRepository.findOne(userPost.getId());
-        assertEquals("tester", user.getName());
-        assertEquals("test@com", user.getEmail());
-        assertEquals("참새", result.getName());
-        assertEquals("test@jp", result.getEmail());
-        assertNotEquals("userAnte", result.getUsername());
+        assertThat(user.getEmail()).isEqualTo("test@com");
+        assertThat(user.getUsername()).isEqualTo("user");
+
+        assertThat(result.getEmail()).isEqualTo("test@jp");
+        assertThat(result.getUsername()).isEqualTo("user");
     }
 
-    @Test
+    @Test(expected = CustomValidationException.class)
     public void 중복되는_Email이_있다면_정보수정중_예외발생() {
         // GIVEN
         UserDto dto = 요청을_생성한다();
@@ -130,11 +112,7 @@ public class UserServiceTest {
         request.setEmail(dto.getEmail());
 
         // WHEN THEN
-        try {
-            userService.update(request);
-        } catch (Exception e) {
-            assertTrue(e instanceof CustomValidationException);
-        }
+        userService.update(request);
     }
 
     @Test
@@ -143,7 +121,17 @@ public class UserServiceTest {
         User user = userRepository.findByUsername("user");
 
         // WHEN THEN
-        assertTrue(user.verifyUser("user"));
+        assertThat(user.verifyUser("user")).isTrue();
+    }
+
+    private UserDto 요청을_생성한다() {
+        UserDto dto = new UserDto();
+        dto.setUsername("hogu");
+        dto.setPassword("1234");
+        dto.setConfirmpassword("1234");
+        dto.setName("호구");
+        dto.setEmail("test@kr");
+        return dto;
     }
 
 }
