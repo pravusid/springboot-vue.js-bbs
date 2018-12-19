@@ -3,7 +3,6 @@ package kr.pravusid.api.v1;
 import kr.pravusid.dto.CommentDto;
 import kr.pravusid.service.CommentService;
 import kr.pravusid.service.JwtUserService;
-import kr.pravusid.web.CommentController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/board")
 public class CommentApi {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommentApi.class);
 
     private JwtUserService jwtUserService;
     private CommentService commentService;

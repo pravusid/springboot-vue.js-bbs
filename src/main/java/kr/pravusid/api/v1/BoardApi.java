@@ -4,6 +4,8 @@ import kr.pravusid.dto.BoardDto;
 import kr.pravusid.dto.Pagination;
 import kr.pravusid.service.BoardService;
 import kr.pravusid.service.JwtUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/board")
 public class BoardApi {
+
+    private static final Logger logger = LoggerFactory.getLogger(BoardApi.class);
 
     private JwtUserService jwtUserService;
     private BoardService boardService;
