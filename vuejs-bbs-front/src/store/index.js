@@ -7,7 +7,7 @@ import { setHeader } from '../libs/axios.custom';
 
 Vue.use(Vuex);
 
-const debug = process.env.VUE_APP_PROFILE === 'development';
+const debug = process.env.VUE_APP_ENV === 'development';
 
 export default new Vuex.Store({
   state: {
