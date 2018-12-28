@@ -56,6 +56,7 @@ export default {
     async modify() {
       try {
         const username = this.$store.getters.username;
+        if (this.detail.password) this.detail.password = '';
         const res = await axios.put(`/api/v1/user/${username}`, this.detail);
         notification.success(res, '회원정보가 수정되었습니다', () => {
           this.$router.push('/user');
