@@ -21,12 +21,8 @@ import qstr from 'query-string';
 import axios from '../libs/axios.custom';
 
 export default {
-  created() {
-    const user = localStorage.user;
-    if (user) {
-      this.$store.dispatch('setUser', qstr.parse(user));
-      this.getUserDetails();
-    }
+  async created() {
+    await this.getUserDetails();
   },
 
   data: () => ({
@@ -46,8 +42,8 @@ export default {
       const popup = window.open(url, 'auth', options);
 
       const param = await this.popupWatcher(popup, this.originHost);
-      await this.$store.dispatch('setUser', param);
-      this.getUserDetails();
+      await this.$store.commit('setUser', param);
+      await this.getUserDetails();
     },
 
     popupWatcher(popup, exitUrl) {
@@ -82,9 +78,11 @@ export default {
     async getUserDetails() {
       try {
         const username = this.$store.getters.username;
+        if (username === null) return;
+
         const res = await axios.get(`/api/v1/user/${username}`);
         if (res.status === 200) {
-          this.$store.dispatch('setUserDetail', res.data);
+          this.$store.commit('setUserDetail', res.data);
           this.loggedIn = true;
         }
       } catch (err) {
@@ -96,8 +94,8 @@ export default {
 
     logout() {
       this.loggedIn = false;
-      this.$store.dispatch('setUser', null);
-      this.$store.dispatch('setUserDetail', null);
+      this.$store.commit('setUser', null);
+      this.$store.commit('setUserDetail', null);
       this.$router.push('/');
     },
   },

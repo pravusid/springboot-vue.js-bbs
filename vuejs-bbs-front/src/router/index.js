@@ -43,6 +43,7 @@ const router = new Router({
       name: 'Board/Modify',
       component: BoardModify,
       props: true,
+      beforeEnter: auth.isAuthenticated,
     },
     {
       path: '/user',

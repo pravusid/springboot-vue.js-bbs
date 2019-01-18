@@ -9,30 +9,31 @@ Vue.use(Vuex);
 
 const debug = process.env.VUE_APP_ENV === 'development';
 
-export default new Vuex.Store({
+const initUser = (store) => {
+  const { user } = localStorage;
+  if (user) {
+    store.commit('setUser', qstr.parse(user));
+  }
+};
+
+const store = new Vuex.Store({
+  plugins: [initUser],
+
   state: {
-    user: null,
+    authentication: null,
     token: null,
     userDetail: null,
   },
 
   getters: {
-    user(state) {
-      return state.user;
-    },
-
     username(state) {
       return state.token ? state.token.user_name : null;
-    },
-
-    userDetail(state) {
-      return state.userDetail;
     },
   },
 
   mutations: {
     setUser(state, payload) {
-      state.user = payload;
+      state.authentication = payload;
       state.token = payload ? jwtDecode(payload.access_token) : null;
       localStorage.user = qstr.stringify(payload);
       setHeader(payload);
@@ -44,14 +45,9 @@ export default new Vuex.Store({
   },
 
   actions: {
-    setUser({ commit }, payload) {
-      commit('setUser', payload);
-    },
-
-    setUserDetail({ commit }, payload) {
-      commit('setUserDetail', payload);
-    },
   },
 
   strict: debug,
 });
+
+export default store;

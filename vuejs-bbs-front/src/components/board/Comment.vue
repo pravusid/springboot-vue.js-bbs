@@ -134,7 +134,7 @@ export default {
 
   computed: {
     authenticated() {
-      return this.$store.getters.user !== null;
+      return this.$store.state.authentication !== null;
     },
 
     authorized() {

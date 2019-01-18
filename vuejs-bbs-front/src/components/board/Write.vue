@@ -7,7 +7,7 @@
       <div class="input-field">
         <i class="material-icons prefix">account_circle</i>
         <input id="name" name="name" type="text" class="validate"
-          :value="article.name" placeholder="작성자" disabled>
+          :value="name" placeholder="작성자" disabled>
       </div>
     </div>
     <div class="row">
@@ -48,14 +48,9 @@ export default {
     quillEditor,
   },
 
-  created() {
-    this.article.name = this.$store.getters.userDetail.name;
-  },
-
   data: () => ({
     job: '게시물 작성',
     article: {
-      name: '',
       title: '',
       content: '',
     },
@@ -101,6 +96,10 @@ export default {
   },
 
   computed: {
+    name() {
+      return this.$store.state.userDetail ? this.$store.state.userDetail.name : '';
+    },
+
     editor() {
       return this.$refs.myQuillEditor.quill;
     },
