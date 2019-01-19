@@ -49,7 +49,6 @@ public class CommentService {
     private void saveRootComment(User user, Long boardId, CommentDto dto) {
         Comment comment = commentRepository.save(dto.toEntity(user, boardRepository.findOne(boardId)));
         comment.initializeRoot(commentRepository.getMaximumReplyOrder(boardId) + 1);
-        commentRepository.save(comment);
     }
 
     private void saveChildComment(User user, Long boardId, CommentDto dto) {
