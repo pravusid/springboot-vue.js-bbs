@@ -4,7 +4,7 @@
       <div class="nav-wrapper container teal">
         <router-link to="/" class="brand-logo">IDPRAVUS</router-link>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li><router-link to="/board">게시판</router-link></li>
+          <li><router-link to="/board?page=0">게시판</router-link></li>
           <li><router-link to="/user">회원 목록</router-link></li>
           <li v-if="!loggedIn"><router-link to="/signup">회원 가입</router-link></li>
           <li v-if="!loggedIn"><a @click="login">로그인</a></li>

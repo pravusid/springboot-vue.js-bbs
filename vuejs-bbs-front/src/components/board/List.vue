@@ -15,7 +15,8 @@
           </select>
         </div>
         <div class="col s3">
-          <input type="text" class="validate" v-model="search.keyword">
+          <input type="text" class="validate" v-model="search.keyword"
+            @keydown.enter="searching">
         </div>
         <div class="col s1">
           <a class="col s12 waves-effect btn teal lighten-2" @click="searching">
