@@ -1,22 +1,32 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.16.RELEASE'
-        thymeleafVersion = '3.0.1.RELEASE'
+        springBootVersion = "1.5.16.RELEASE"
+        thymeleafVersion = "3.0.1.RELEASE"
     }
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath 'io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE'
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'org.springframework.boot'
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "java"
+apply plugin: "idea"
 
-version = '1.0.0'
+version = "1.0.0"
 sourceCompatibility = 1.8
+
+jar {
+    baseName = "spring-boot-vue"
+    version = version
+}
+
+bootRepackage {
+    mainClass = "kr.pravusid.WebApplication"
+}
 
 repositories {
     mavenCentral()
