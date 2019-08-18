@@ -36,23 +36,16 @@ public class CommentService {
     }
 
     @Transactional
-    public void save(String username, Long boardId, CommentDto dto) {
+    public Comment save(String username, Long boardId, CommentDto dto) {
         User user = userRepository.findByUsername(username);
+        Board board = boardRepository.findOne(boardId);
 
         if (dto.getReplyOrder() == 0) {
-            saveRootComment(user, boardId, dto);
-        } else {
-            saveChildComment(user, boardId, dto);
+            Comment comment = dto.toEntity(user, board);
+            comment.initializeRoot(commentRepository.getMaximumReplyOrder(boardId) + 1);
+            return commentRepository.save(comment);
         }
-    }
 
-    private void saveRootComment(User user, Long boardId, CommentDto dto) {
-        Comment comment = commentRepository.save(dto.toEntity(user, boardRepository.findOne(boardId)));
-        comment.initializeRoot(commentRepository.getMaximumReplyOrder(boardId) + 1);
-    }
-
-    private void saveChildComment(User user, Long boardId, CommentDto dto) {
-        Board board = boardRepository.findOne(boardId);
         Comment parent = board.getComments().stream()
                 .filter(c -> c.getReplyOrder() == dto.getReplyOrder())
                 .findFirst().orElseThrow(InvalidCommentRootException::new);
@@ -67,7 +60,7 @@ public class CommentService {
 
         Comment comment = dto.toEntity(user, board);
         comment.initializeChild(parent.getReplyDepth(), replyOrder);
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     @Transactional
